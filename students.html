@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>الطلاب — التفوق</title>
+    <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#111}
+    .container{max-width:980px;margin:0 auto;padding:1rem}
+    .site-header{background:linear-gradient(90deg,#fff,#f8fbff);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:1rem}
+    .brand{margin:0;font-size:1.25rem}
+    .brand-accent{color:var(--accent)}
+    .card{background:var(--card);padding:1.2rem;border-radius:12px;box-shadow:0 6px 18px rgba(12,32,63,.06)}
+    .btn{display:inline-block;padding:.5rem .9rem;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--accent);text-decoration:none}
+    .btn.primary{background:var(--accent);color:#fff}
+    input{padding:.6rem .8rem;border:1px solid #e6e9ef;border-radius:8px}
+    .muted{color:var(--muted)}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="site-header"><div class="container"><h1 class="brand">منصة <span class="brand-accent">التفوق</span></h1>
+      <nav><a href="/dashboard.html">لوحة التحكم</a><a href="/profile.html">الملف الشخصي</a></nav>
+    </div></header>
+    <main class="container" style="padding:2rem 0">
+      <div class="card">
+        <h2 style="text-align:center;color:var(--accent);font-family:'Cairo',serif;margin-bottom:1.2rem">قائمة الطلاب</h2>
+        <div id="list"></div>
+      </div>
+    </main>
+    <script>
+    // inline app + page script
+    const Auth=(function(){
+      return {
+        requestRegistration: async (reg) => {
+          const regs = JSON.parse(localStorage.getItem('tf_registrations')||'[]');
+          if (regs.find(r=>r.studentNumber===reg.studentNumber)) throw new Error('يوجد طلب سابق لهذا الرقم');
+          reg.id = 'r_'+Date.now(); reg.status='pending'; regs.push(reg); localStorage.setItem('tf_registrations', JSON.stringify(regs)); return reg;
+        },
+        login: async ({studentNumber,password}) => {
+          const users = JSON.parse(localStorage.getItem('tf_users')||'[]');
+          const u = users.find(x=>x.studentNumber===studentNumber && x.password===password && x.status==='active');
+          if(!u) throw new Error('بيانات الدخول غير صحيحة');
+          const user = {id:u.id,name:u.name,studentNumber:u.studentNumber,role:u.role}; localStorage.setItem('tf_current', JSON.stringify(user)); return user;
+        },
+        logout: ()=>{ localStorage.removeItem('tf_current') },
+        currentUser: ()=> JSON.parse(localStorage.getItem('tf_current')||'null')
+      }
+    })();
+    function requireAuth(redirectTo='/login.html'){const u=Auth.currentUser();if(!u){window.location.href=redirectTo;return null}return u}
+    const Students=(function(){return{list:()=>JSON.parse(localStorage.getItem('tf_students')||'[]'),save:(student)=>{const all=Students.list();if(!student.id)student.id='s_'+Date.now();all.push(student);localStorage.setItem('tf_students',JSON.stringify(all));return student},delete:(id)=>{let all=Students.list().filter(s=>s.id!==id);localStorage.setItem('tf_students',JSON.stringify(all))}}})();
+    window.TF={Auth,Students,requireAuth};
+
+    (function page(){
+      const user = TF.requireAuth();
+      const listEl = document.getElementById('list');
+      function render(){
+        const items = TF.Students.list();
+        if(!items.length) return listEl.innerHTML = '<p class="muted">لا يوجد طلاب مسجلين بعد.</p>';
+        listEl.innerHTML = items.map(s=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem"><div style="flex:1"><strong>${s.name}</strong><div class="muted">${s.class||''}</div></div><button data-id="${s.id}" class="btn">حذف</button></div>`).join('')
+        document.querySelectorAll('[data-id]').forEach(btn=>btn.addEventListener('click',e=>{ TF.Students.delete(btn.dataset.id); render(); }))
+      }
+      render();
+    })();
+    // Theme toggle
+    document.addEventListener('DOMContentLoaded',()=>{
+      const themeBtn = document.getElementById('themeToggle');
+      if(themeBtn){
+        themeBtn.onclick = function(){
+          document.body.classList.toggle('dark');
+          localStorage.setItem('tf_theme',document.body.classList.contains('dark')?'dark':'light');
+        };
+        if(localStorage.getItem('tf_theme')==='dark') document.body.classList.add('dark');
+      }
+    });
+    </script>
+    <footer class="site-footer container">
+      <div class="footer-social">
+        <a href="https://wa.me/201234567890" target="_blank" title="واتساب"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-whatsapp.svg" alt="واتساب" /></a>
+        <a href="https://t.me/altafaoq" target="_blank" title="تليجرام"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-telegram.svg" alt="تليجرام" /></a>
+        <a href="https://facebook.com/altafaoq" target="_blank" title="فيسبوك"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-facebook.svg" alt="فيسبوك" /></a>
+        <a href="https://youtube.com/@altafaoq" target="_blank" title="يوتيوب"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-youtube.svg" alt="يوتيوب" /></a>
+        <a href="mailto:info@altafaoq.com" target="_blank" title="البريد الإلكتروني"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-email.svg" alt="البريد الإلكتروني" /></a>
+        <a href="tel:+201234567890" target="_blank" title="اتصل بنا"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-phone.svg" alt="اتصل بنا" /></a>
+      </div>
+      <p>© <span id="year"></span> منصة التفوق — جميع الحقوق محفوظة</p>
+    </footer>
+  </body>
+  </html>

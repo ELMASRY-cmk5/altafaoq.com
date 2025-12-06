@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>لوحة التحكم — التفوق</title>
+    <style>
+    :root{--bg:#f7f9fc;--card:#ffffff;--accent:#0b74ff;--muted:#6b7280;--radius:10px;font-family:"Segoe UI", Tahoma, Arial, sans-serif}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#111}
+    .container{max-width:980px;margin:0 auto;padding:1rem}
+    .site-header{background:linear-gradient(90deg,#fff,#f8fbff);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:1rem}
+    .brand{margin:0;font-size:1.25rem}
+    .brand-accent{color:var(--accent)}
+    nav a{margin-left:0.8rem;text-decoration:none;color:var(--muted)}
+    .card{background:var(--card);padding:1.2rem;border-radius:12px;box-shadow:0 6px 18px rgba(12,32,63,.06)}
+    .btn{display:inline-block;padding:.5rem .9rem;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--accent);text-decoration:none}
+    .btn.primary{background:var(--accent);color:#fff}
+    .muted{color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="container"><h1 class="brand">منصة <span class="brand-accent">التفوق</span></h1>
+      <nav><a href="/students.html">الطلاب</a><a href="/profile.html">الملف الشخصي</a><a id="logoutBtn" href="#">خروج</a></nav>
+    </div></header>
+    <main class="container" style="padding:2rem 0">
+      <div class="card">
+        <h2>لوحة التحكم</h2>
+        <p id="welcome"></p>
+        <div class="muted">روابط سريعة</div>
+        <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">
+          <a class="btn" href="/students.html">إدارة الطلاب</a>
+          <a class="btn" href="/profile.html">الملف الشخصي</a>
+        </div>
+      </div>
+    </main>
+    <script>
+    // inline app + page script
+    const Auth=(function(){
+      return {
+        requestRegistration: async (reg) => {
+          const regs = JSON.parse(localStorage.getItem('tf_registrations')||'[]');
+          if (regs.find(r=>r.studentNumber===reg.studentNumber)) throw new Error('يوجد طلب سابق لهذا الرقم');
+          reg.id = 'r_'+Date.now(); reg.status='pending'; regs.push(reg); localStorage.setItem('tf_registrations', JSON.stringify(regs)); return reg;
+        },
+        login: async ({studentNumber,password}) => {
+          const users = JSON.parse(localStorage.getItem('tf_users')||'[]');
+          const u = users.find(x=>x.studentNumber===studentNumber && x.password===password && x.status==='active');
+          if(!u) throw new Error('بيانات الدخول غير صحيحة');
+          const user = {id:u.id,name:u.name,studentNumber:u.studentNumber,role:u.role}; localStorage.setItem('tf_current', JSON.stringify(user)); return user;
+        },
+        logout: ()=>{ localStorage.removeItem('tf_current') },
+        currentUser: ()=> JSON.parse(localStorage.getItem('tf_current')||'null')
+      }
+    })();
+    function requireAuth(redirectTo='/login.html'){const u=Auth.currentUser();if(!u){window.location.href=redirectTo;return null}return u}
+    const Students=(function(){return{list:()=>JSON.parse(localStorage.getItem('tf_students')||'[]'),save:(student)=>{const all=Students.list();if(!student.id)student.id='s_'+Date.now();all.push(student);localStorage.setItem('tf_students',JSON.stringify(all));return student},delete:(id)=>{let all=Students.list().filter(s=>s.id!==id);localStorage.setItem('tf_students',JSON.stringify(all))}}})();
+    window.TF={Auth,Students,requireAuth};
+
+    (function page(){
+      const user = TF.requireAuth();
+      if(user){ document.getElementById('welcome').textContent = `مرحباً ${user.name} — الدور: ${user.role}` }
+      document.getElementById('logoutBtn').addEventListener('click',()=>{ TF.Auth.logout(); window.location.href='/home.html' })
+    })();
+    </script>
+  </body>
+  </html>

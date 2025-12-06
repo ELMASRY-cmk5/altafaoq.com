@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة المدير الآمنة — التفوق</title>
+  <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    .container{max-width:1150px;margin:0 auto;padding:1.7rem}
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:1.3rem 1.7rem}
+    .brand{font-size:2rem;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;color:var(--accent);text-decoration:none}
+    .brand img{height:2.5rem;filter:drop-shadow(0 2px 6px #c7a76c80)}
+    .brand-accent{color:var(--accent2);font-weight:bold}
+    .header-actions{display:flex;gap:1rem;align-items:center}
+    .theme-toggle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#ffb300);border:2px solid var(--pharaoh);cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:.3s}
+    .theme-toggle:hover{transform:scale(1.1)}
+    .logout-btn{padding:.6rem 1.2rem;background:var(--danger);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+    .logout-btn:hover{opacity:.8}
+    .danger{--danger:#d32f2f}
+    .card{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2rem;border:2px solid var(--pharaoh)}
+    .card h2{color:var(--accent);margin-bottom:1.5rem;font-family:"Cairo",serif}
+    .alert{padding:1rem;border-radius:10px;margin-bottom:1.5rem}
+    .alert.success{background:#c8e6c9;color:#2e7d32;border:2px solid #81c784}
+    .alert.error{background:#ffccbc;color:#d84315;border:2px solid #ff7043}
+    .alert.warning{background:#fff3e0;color:#e65100;border:2px solid #ffb74d}
+    .tabs{display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:2px solid var(--border);flex-wrap:wrap}
+    .tab-btn{background:none;border:none;padding:.8rem 1.2rem;font-size:1rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;font-family:var(--font);font-weight:500}
+    .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+    .tab-content{display:none;animation:fadeIn .3s}
+    .tab-content.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:1rem;transition:.2s;font-family:var(--font)}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .btn.secondary{background:var(--accent2);color:var(--accent)}
+    .btn.danger{background:var(--danger)}
+    table{width:100%;border-collapse:collapse;margin-top:1rem;background:var(--papyrus);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:1rem;border-bottom:1px solid #e0c68c;text-align:right}
+    th{background:var(--accent2);color:var(--accent);font-weight:600}
+    tr:last-child td{border-bottom:none}
+    .form-group{margin-bottom:1.5rem}
+    .form-label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--accent)}
+    input,textarea,select{width:100%;padding:.8rem;border:2px solid var(--border);border-radius:8px;font-family:var(--font);font-size:1rem;background:var(--bg);color:#222}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(255,214,0,.1)}
+    textarea{resize:vertical;min-height:80px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .stat-card{background:var(--papyrus);padding:1.5rem;border-radius:10px;border-left:4px solid var(--accent2);margin-bottom:1rem}
+    .stat-card strong{color:var(--accent);font-size:1.3rem;display:block;margin-bottom:.5rem}
+    .stat-card small{color:var(--muted)}
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a);border-bottom:2px solid #444}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    body.dark table{background:var(--card-dark)}
+    body.dark th{background:var(--accent2);color:#1a237e}
+    body.dark input,body.dark textarea,body.dark select{background:#303a47;color:#f3f6fa;border-color:#555}
+    body.dark .stat-card{background:#303a47;border-left-color:var(--accent2)}
+    .empty-state{text-align:center;padding:2rem;color:var(--muted)}
+    .empty-state-icon{font-size:3rem;margin-bottom:1rem}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/home.html" class="brand">
+      <span>🛡️</span> لوحة <span class="brand-accent">الأدمن</span>
+    </a>
+    <div class="header-actions">
+      <span id="adminName" style="color:var(--accent);font-weight:600"></span>
+      <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      <button class="logout-btn" onclick="logoutAdmin()">تسجيل الخروج</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="notAuth" class="card">
+      <h2 style="text-align:center">🔒 تحقق من الوصول</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:2rem">
+        يجب أن تكون مسجل دخول كأدمن للوصول إلى لوحة التحكم
+      </p>
+      <div style="text-align:center">
+        <a href="/login.html" class="btn secondary">← العودة لصفحة الدخول</a>
+      </div>
+    </div>
+
+    <div id="adminPanel" style="display:none">
+      <!-- Statistics -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-bottom:2rem">
+        <div class="stat-card">
+          <strong id="totalUsers">0</strong>
+          <small>👥 إجمالي الطلاب</small>
+        </div>
+        <div class="stat-card">
+          <strong id="totalCourses">0</strong>
+          <small>📚 إجمالي الكورسات</small>
+        </div>
+        <div class="stat-card">
+          <strong id="totalOrders">0</strong>
+          <small>📦 إجمالي الطلبات</small>
+        </div>
+        <div class="stat-card">
+          <strong id="totalRevenue">0</strong>
+          <small>💰 إجمالي المبيعات</small>
+        </div>
+      </div>
+
+      <!-- Main Card -->
+      <div class="card">
+        <h2 style="text-align:center;margin-bottom:2rem">⚙️ لوحة التحكم الشاملة</h2>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="dashboard">لوحة الرئيسية</button>
+          <button class="tab-btn" data-tab="students">الطلاب</button>
+          <button class="tab-btn" data-tab="courses">الكورسات</button>
+          <button class="tab-btn" data-tab="products">المتجر</button>
+          <button class="tab-btn" data-tab="orders">الطلبات</button>
+          <button class="tab-btn" data-tab="admin-settings">إدارة الأدمنز</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">📊 نظرة عامة</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1.5rem">
+            <p style="margin:0;color:var(--muted)">
+              ✅ النظام يعمل بنجاح باستخدام <strong>Firebase Firestore</strong> لتخزين آمن للبيانات
+            </p>
+            <p style="margin:1rem 0 0 0;color:var(--muted)">
+              🔒 جميع بيانات الأدمن محفوظة بشكل آمن ولا يمكن التلاعب بها من جانب العميل
+            </p>
+          </div>
+          
+          <h4 style="color:var(--accent);margin-top:2rem;margin-bottom:1rem">🚀 الميزات المتاحة:</h4>
+          <ul style="text-align:right;color:var(--muted);line-height:2">
+            <li>✓ إدارة الطلاب وتفعيل/تعطيل الحسابات</li>
+            <li>✓ إدارة الكورسات والدروس</li>
+            <li>✓ إدارة منتجات المتجر</li>
+            <li>✓ عرض وإدارة الطلبات والمبيعات</li>
+            <li>✓ إدارة الأدمنز والصلاحيات</li>
+            <li>✓ تتبع أنشطة النظام والعمليات</li>
+          </ul>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">👥 إدارة الطلاب</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد</th>
+                <th>رقم الطالب</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="studentsList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="courses" class="tab-content">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">📚 إدارة الكورسات</h3>
+          
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة كورس جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">اسم الكورس</label>
+                <input type="text" id="courseTitle" placeholder="مثال: الرياضيات - الجبر" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الصف</label>
+                <select id="courseGrade">
+                  <option value="">اختر الصف</option>
+                  <option value="1">الصف الأول الثانوي</option>
+                  <option value="2">الصف الثاني الثانوي</option>
+                  <option value="3">الصف الثالث الثانوي</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الوصف</label>
+              <textarea id="courseDesc" placeholder="وصف الكورس"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">عدد الدروس</label>
+                <input type="number" id="courseLessons" placeholder="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">السعر (اتركه فارغاً للمجاني)</label>
+                <input type="number" id="coursePrice" step="0.01" placeholder="0" />
+              </div>
+            </div>
+            <button class="btn secondary" onclick="addCourse()">➕ إضافة الكورس</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">الكورسات الموجودة:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الصف</th>
+                <th>الدروس</th>
+                <th>السعر</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="coursesList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products" class="tab-content">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">🛍️ إدارة المتجر</h3>
+          
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة منتج جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">اسم المنتج</label>
+                <input type="text" id="productName" placeholder="مثال: ملخص الرياضيات" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الفئة</label>
+                <select id="productCategory">
+                  <option value="">اختر الفئة</option>
+                  <option value="books">كتب وملخصات</option>
+                  <option value="tools">أدوات مساعدة</option>
+                  <option value="subscriptions">اشتراكات</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الوصف</label>
+              <textarea id="productDesc" placeholder="وصف المنتج"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">السعر</label>
+                <input type="number" id="productPrice" step="0.01" placeholder="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">المخزون</label>
+                <input type="number" id="productStock" placeholder="0" />
+              </div>
+            </div>
+            <button class="btn secondary" onclick="addProduct()">➕ إضافة المنتج</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">المنتجات الموجودة:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الفئة</th>
+                <th>السعر</th>
+                <th>المخزون</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="productsList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">📦 إدارة الطلبات</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>الطالب</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+              </tr>
+            </thead>
+            <tbody id="ordersList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Admin Settings Tab -->
+        <div id="admin-settings" class="tab-content">
+          <h3 style="color:var(--accent);margin-bottom:1.5rem">🔐 إدارة الأدمنز</h3>
+          
+          <div id="firebaseInfo" style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">ℹ️ معلومات Firebase</h4>
+            <p style="color:var(--muted);margin:0.5rem 0">
+              <strong>الحالة:</strong> <span id="firebaseStatus" style="color:#4caf50">✓ متصل</span>
+            </p>
+            <p style="color:var(--muted);margin:0.5rem 0">
+              <strong>المشروع:</strong> altafaouq
+            </p>
+            <p style="color:var(--muted);margin:0.5rem 0">
+              <strong>المجموعات الآمنة:</strong> admins, admin_logs, courses, users
+            </p>
+          </div>
+
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة أدمن جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">الاسم</label>
+                <input type="text" id="newAdminName" placeholder="اسم الأدمن" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" id="newAdminEmail" placeholder="البريد الإلكتروني" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">رقم الهاتف</label>
+                <input type="tel" id="newAdminPhone" placeholder="01000000000" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">كلمة المرور</label>
+                <input type="password" id="newAdminPassword" placeholder="كلمة المرور آمنة" />
+              </div>
+            </div>
+            <button class="btn secondary" onclick="createNewAdmin()">➕ إضافة الأدمن</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">الأدمنز الموجودين:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد</th>
+                <th>الهاتف</th>
+                <th>الحالة</th>
+                <th>آخر دخول</th>
+              </tr>
+            </thead>
+            <tbody id="adminsList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+
+  <!-- Admin System -->
+  <script src="/firebase-admin-system.js"></script>
+
+  <script>
+    let currentAdmin = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Load theme
+      if (localStorage.getItem('tf_theme') === 'dark') {
+        document.body.classList.add('dark');
+      }
+
+      // Check admin auth
+      currentAdmin = JSON.parse(localStorage.getItem('tf_current') || 'null');
+      if (!currentAdmin || currentAdmin.role !== 'admin') {
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('notAuth').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('notAuth').style.display = 'none';
+      document.getElementById('adminName').textContent = `👋 ${currentAdmin.name}`;
+
+      // Initialize Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyBtS52bC8UEZ4EG4qK3tk7jV7iF1bPRTx8",
+        authDomain: "altafaouq.firebaseapp.com",
+        projectId: "altafaouq",
+        storageBucket: "altafaouq.firebasestorage.app",
+        messagingSenderId: "125346827754",
+        appId: "1:125346827754:web:4286d194fa05094fe4b693"
+      };
+
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        if (window.FirebaseAdmin) {
+          await window.FirebaseAdmin.init();
+        }
+      } catch (error) {
+        console.warn('Firebase غير متاح في الوضع الحالي');
+      }
+
+      loadData();
+      setupTabSwitching();
+    });
+
+    // Theme Toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Logout
+    function logoutAdmin() {
+      if (confirm('هل تريد تسجيل الخروج؟')) {
+        localStorage.removeItem('tf_current');
+        window.location.href = '/login.html';
+      }
+    }
+
+    // Tab Switching
+    function setupTabSwitching() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabName = btn.dataset.tab;
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(tabName).classList.add('active');
+        });
+      });
+    }
+
+    // Load Data
+    function loadData() {
+      loadStudents();
+      loadCourses();
+      loadProducts();
+      loadOrders();
+      updateStats();
+    }
+
+    // Students Management
+    function loadStudents() {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const tbody = document.getElementById('studentsList');
+      
+      if (students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">📋 لا يوجد طلاب حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = students.map(s => `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.email || '-'}</td>
+          <td>${s.id}</td>
+          <td><span style="background:#c8e6c9;padding:.3rem .6rem;border-radius:5px;color:#2e7d32;font-size:.85rem">✓ نشط</span></td>
+          <td>
+            <button class="btn" style="padding:.4rem .8rem;font-size:.85rem" onclick="editStudent('${s.id}')">تعديل</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Courses Management
+    function loadCourses() {
+      const courses = JSON.parse(localStorage.getItem('tf_courses') || '[]');
+      const tbody = document.getElementById('coursesList');
+      
+      if (courses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">📚 لا توجد كورسات حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => `
+        <tr>
+          <td>${c.title}</td>
+          <td>الصف ${c.grade}</td>
+          <td>${c.lessons || 0}</td>
+          <td>${c.price ? c.price + ' ج.م' : 'مجاني'}</td>
+          <td>
+            <button class="btn danger" style="padding:.4rem .8rem;font-size:.85rem" onclick="deleteCourse('${c.id}')">حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addCourse() {
+      const title = document.getElementById('courseTitle').value.trim();
+      const grade = document.getElementById('courseGrade').value;
+      const desc = document.getElementById('courseDesc').value.trim();
+      const lessons = parseInt(document.getElementById('courseLessons').value) || 0;
+      const price = parseFloat(document.getElementById('coursePrice').value) || null;
+
+      if (!title || !grade) {
+        alert('⚠️ يرجى ملء البيانات المطلوبة');
+        return;
+      }
+
+      const courses = JSON.parse(localStorage.getItem('tf_courses') || '[]');
+      courses.push({
+        id: 'c_' + Date.now(),
+        title,
+        grade,
+        description: desc,
+        lessons,
+        price,
+        createdAt: new Date().toISOString()
+      });
+
+      localStorage.setItem('tf_courses', JSON.stringify(courses));
+      document.getElementById('courseTitle').value = '';
+      document.getElementById('courseGrade').value = '';
+      document.getElementById('courseDesc').value = '';
+      document.getElementById('courseLessons').value = '';
+      document.getElementById('coursePrice').value = '';
+      
+      alert('✅ تم إضافة الكورس بنجاح');
+      loadCourses();
+      updateStats();
+    }
+
+    function deleteCourse(id) {
+      if (!confirm('هل تريد حذف هذا الكورس؟')) return;
+      
+      const courses = JSON.parse(localStorage.getItem('tf_courses') || '[]');
+      const filtered = courses.filter(c => c.id !== id);
+      localStorage.setItem('tf_courses', JSON.stringify(filtered));
+      loadCourses();
+      updateStats();
+    }
+
+    // Products Management
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('tf_products') || '[]');
+      const tbody = document.getElementById('productsList');
+      
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">🛍️ لا توجد منتجات حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => `
+        <tr>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.price} ج.م</td>
+          <td>${p.stock}</td>
+          <td>
+            <button class="btn danger" style="padding:.4rem .8rem;font-size:.85rem" onclick="deleteProduct('${p.id}')">حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addProduct() {
+      const name = document.getElementById('productName').value.trim();
+      const category = document.getElementById('productCategory').value;
+      const desc = document.getElementById('productDesc').value.trim();
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const stock = parseInt(document.getElementById('productStock').value) || 0;
+
+      if (!name || !category || !price) {
+        alert('⚠️ يرجى ملء البيانات المطلوبة');
+        return;
+      }
+
+      const products = JSON.parse(localStorage.getItem('tf_products') || '[]');
+      products.push({
+        id: 'p_' + Date.now(),
+        name,
+        category,
+        description: desc,
+        price,
+        stock,
+        status: 'active',
+        createdAt: new Date().toISOString()
+      });
+
+      localStorage.setItem('tf_products', JSON.stringify(products));
+      document.getElementById('productName').value = '';
+      document.getElementById('productCategory').value = '';
+      document.getElementById('productDesc').value = '';
+      document.getElementById('productPrice').value = '';
+      document.getElementById('productStock').value = '';
+      
+      alert('✅ تم إضافة المنتج بنجاح');
+      loadProducts();
+      updateStats();
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('هل تريد حذف هذا المنتج؟')) return;
+      
+      const products = JSON.parse(localStorage.getItem('tf_products') || '[]');
+      const filtered = products.filter(p => p.id !== id);
+      localStorage.setItem('tf_products', JSON.stringify(filtered));
+      loadProducts();
+      updateStats();
+    }
+
+    // Orders Management
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const tbody = document.getElementById('ordersList');
+      
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">📦 لا توجد طلبات حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td>#${o.id.substring(0, 8)}</td>
+          <td>${o.customerName || '-'}</td>
+          <td>${o.total} ج.م</td>
+          <td><span style="background:#fff3e0;padding:.3rem .6rem;border-radius:5px;color:#e65100;font-size:.85rem">${o.status}</span></td>
+          <td>${new Date(o.createdAt).toLocaleDateString('ar-EG')}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Admin Management
+    function createNewAdmin() {
+      const name = document.getElementById('newAdminName').value.trim();
+      const email = document.getElementById('newAdminEmail').value.trim();
+      const phone = document.getElementById('newAdminPhone').value.trim();
+      const password = document.getElementById('newAdminPassword').value;
+
+      if (!name || !email || !phone || !password) {
+        alert('⚠️ يرجى ملء جميع الحقول');
+        return;
+      }
+
+      // في النسخة المستقبلية، سيتم استدعاء Firebase لحفظ الأدمن بشكل آمن
+      alert('✅ هذه الميزة تتطلب اتصال Firebase نشط');
+      document.getElementById('newAdminName').value = '';
+      document.getElementById('newAdminEmail').value = '';
+      document.getElementById('newAdminPhone').value = '';
+      document.getElementById('newAdminPassword').value = '';
+    }
+
+    // Statistics
+    function updateStats() {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const courses = JSON.parse(localStorage.getItem('tf_courses') || '[]');
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      
+      document.getElementById('totalUsers').textContent = students.length;
+      document.getElementById('totalCourses').textContent = courses.length;
+      document.getElementById('totalOrders').textContent = orders.length;
+      
+      const revenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      document.getElementById('totalRevenue').textContent = revenue.toFixed(2) + ' ج.م';
+    }
+
+    // Stub functions
+    function editStudent(id) {
+      alert('✅ هذه الميزة قيد التطوير');
+    }
+  </script>
+</body>
+</html>

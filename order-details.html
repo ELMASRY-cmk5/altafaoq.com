@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تفاصيل الطلب — التفوق</title>
+  <style>
+    :root{
+      --accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);padding:1.3rem 1.7rem}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between}
+    .brand{margin:0;font-size:2rem;letter-spacing:1px;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;text-decoration:none;color:var(--accent)}
+    
+    .container{max-width:900px;margin:0 auto;padding:1.7rem}
+    
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:2rem;color:var(--accent);text-decoration:none;font-weight:600}
+    .back-link:hover{color:var(--accent2)}
+    
+    .order-header{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;padding:2rem;border-radius:var(--radius);margin-bottom:2rem;box-shadow:var(--shadow)}
+    .order-header h1{font-size:2rem;margin-bottom:.5rem}
+    .order-header p{opacity:.9;margin:.3rem 0}
+    
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;border:2px solid var(--pharaoh);margin-bottom:1.5rem}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    
+    .card h2{color:var(--accent);margin-bottom:1rem;font-size:1.3rem}
+    
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+    
+    .info-item{background:var(--papyrus);padding:1rem;border-radius:10px}
+    body.dark .info-item{background:#303a47}
+    
+    .info-label{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
+    .info-value{font-size:1.1rem;font-weight:600;color:var(--accent)}
+    
+    .status-badge{display:inline-block;padding:.5rem 1rem;border-radius:8px;font-weight:600;font-size:.9rem}
+    .status-pending{background:#ff9800;color:#fff}
+    .status-processing{background:#2196F3;color:#fff}
+    .status-shipped{background:#4caf50;color:#fff}
+    .status-delivered{background:#8bc34a;color:#fff}
+    
+    .timeline{position:relative;padding:2rem 0}
+    .timeline-item{margin-bottom:2rem;padding-left:2rem;position:relative}
+    .timeline-item::before{content:'';position:absolute;left:0;top:0;width:15px;height:15px;background:var(--accent2);border-radius:50%;border:3px solid var(--accent);box-sizing:border-box}
+    .timeline-item.completed::before{background:var(--accent2)}
+    
+    .timeline-date{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
+    .timeline-title{font-weight:600;color:var(--accent);font-size:1rem;margin-bottom:.2rem}
+    .timeline-desc{font-size:.9rem;color:var(--muted)}
+    
+    .items-table{width:100%;border-collapse:collapse;margin-top:1rem}
+    .items-table th{background:var(--papyrus);padding:1rem;text-align:right;font-weight:600;color:var(--accent);border-bottom:2px solid var(--border)}
+    .items-table td{padding:1rem;border-bottom:1px solid var(--border)}
+    .items-table tr:last-child td{border-bottom:none}
+    
+    .shipping-info{background:linear-gradient(120deg,var(--papyrus),rgba(197,167,108,.1));padding:1.5rem;border-radius:10px;border-left:4px solid var(--accent2)}
+    body.dark .shipping-info{background:#303a47}
+    
+    .total-section{background:var(--papyrus);padding:1.5rem;border-radius:10px;text-align:right}
+    body.dark .total-section{background:#303a47}
+    
+    .total-row{display:flex;justify-content:space-between;margin-bottom:1rem;font-size:1rem}
+    .total-row.final{font-size:1.3rem;font-weight:bold;color:var(--accent);border-top:2px solid var(--border);padding-top:1rem;margin-top:1rem}
+    
+    .btn{display:inline-block;padding:.8rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:.2s}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a)}
+    
+    @media(max-width:768px){
+      .info-grid{grid-template-columns:1fr}
+      .order-header h1{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div style="margin-right:auto">
+      <a href="/home.html" class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="التفوق" />
+        التفوق
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="/student-dashboard.html?tab=orders" class="back-link">← العودة إلى الطلبات</a>
+
+    <div class="order-header" id="orderHeader">
+      <h1>الطلب #12345</h1>
+      <p>تم إنشاؤه في: 2024-12-06</p>
+    </div>
+
+    <!-- معلومات الطلب -->
+    <div class="card">
+      <h2>معلومات الطلب</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">رقم الطلب</div>
+          <div class="info-value" id="orderNum">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">حالة الطلب</div>
+          <div class="status-badge" id="orderStatus">قيد الانتظار</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">تاريخ الطلب</div>
+          <div class="info-value" id="orderDate">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">التاريخ المتوقع للتسليم</div>
+          <div class="info-value" id="deliveryDate">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- المنتجات -->
+    <div class="card">
+      <h2>المنتجات المطلوبة</h2>
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>اسم المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+            <th>الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <!-- يتم ملؤه ديناميكياً -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- عنوان التسليم -->
+    <div class="card">
+      <h2>عنوان التسليم</h2>
+      <div class="shipping-info">
+        <div style="margin-bottom:1rem">
+          <div style="font-weight:600;color:var(--accent);margin-bottom:.3rem">المستقبل</div>
+          <div id="recipientName">-</div>
+          <div id="recipientPhone" style="font-size:.9rem;color:var(--muted)">-</div>
+        </div>
+        
+        <div>
+          <div style="font-weight:600;color:var(--accent);margin-bottom:.3rem">العنوان</div>
+          <div id="shippingAddress">-</div>
+        </div>
+        
+        <div style="margin-top:1rem">
+          <div style="font-weight:600;color:var(--accent);margin-bottom:.3rem">ملاحظات</div>
+          <div id="shippingNotes" style="font-size:.9rem;color:var(--muted)">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- حالة الطلب -->
+    <div class="card">
+      <h2>حالة الطلب</h2>
+      <div class="timeline">
+        <div class="timeline-item completed">
+          <div class="timeline-date">تم الإنشاء</div>
+          <div class="timeline-title">✓ تم استقبال الطلب</div>
+          <div class="timeline-desc">تم تأكيد طلبك بنجاح</div>
+        </div>
+        
+        <div class="timeline-item" id="processingItem">
+          <div class="timeline-date" id="processingDate">قريباً</div>
+          <div class="timeline-title">قيد المعالجة</div>
+          <div class="timeline-desc">نحن نجهز طلبك الآن</div>
+        </div>
+        
+        <div class="timeline-item" id="shippingItem">
+          <div class="timeline-date" id="shippingDate">قريباً</div>
+          <div class="timeline-title">تم الشحن</div>
+          <div class="timeline-desc">في الطريق إليك</div>
+        </div>
+        
+        <div class="timeline-item" id="deliveryItem">
+          <div class="timeline-date" id="deliveryItemDate">قريباً</div>
+          <div class="timeline-title">تم التسليم</div>
+          <div class="timeline-desc">استقبلت الطلب بنجاح</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الملخص المالي -->
+    <div class="card">
+      <h2>ملخص الطلب</h2>
+      <div class="total-section">
+        <div class="total-row">
+          <span>السعر الفرعي</span>
+          <span id="subtotal">0.00</span>
+        </div>
+        <div class="total-row">
+          <span>رسوم التوصيل</span>
+          <span id="shipping">90.00</span>
+        </div>
+        <div class="total-row final">
+          <span>الإجمالي</span>
+          <span id="total">0.00</span>
+        </div>
+        <div style="margin-top:1.5rem;font-size:.9rem;color:var(--muted)">
+          <div>طريقة الدفع: <strong id="paymentMethod">-</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;display:flex;gap:1rem">
+      <button class="btn" onclick="window.print()">طباعة الطلب</button>
+      <button class="btn" id="editBtn" onclick="editOrder()" style="display:none">✏️ تعديل الطلب</button>
+      <button class="btn" onclick="goBack()" style="background:var(--accent2);color:var(--accent)">العودة للطلبات</button>
+    </div>
+  </main>
+
+  <script>
+  // Get order ID from URL
+  const orderId = new URLSearchParams(window.location.search).get('id');
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadOrderDetails();
+  });
+
+  function loadOrderDetails() {
+    const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+    const order = orders.find(o => o.id === orderId);
+
+    if(!order) {
+      document.body.innerHTML = '<div style="padding:2rem;text-align:center"><h2>الطلب غير موجود</h2></div>';
+      return;
+    }
+
+    // Header
+    document.getElementById('orderHeader').innerHTML = `
+      <h1>الطلب #${order.id}</h1>
+      <p>تم إنشاؤه في: ${new Date(order.createdAt).toLocaleDateString('ar-EG')}</p>
+    `;
+
+    // Order info
+    document.getElementById('orderNum').textContent = order.id;
+    document.getElementById('orderStatus').textContent = getStatusText(order.status);
+    document.getElementById('orderStatus').className = `status-badge status-${order.status}`;
+    document.getElementById('orderDate').textContent = new Date(order.createdAt).toLocaleDateString('ar-EG');
+    document.getElementById('deliveryDate').textContent = order.estimatedDelivery 
+      ? new Date(order.estimatedDelivery).toLocaleDateString('ar-EG') 
+      : 'قريباً';
+
+    // Items
+    let html = '';
+    let subtotal = 0;
+    order.items.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      subtotal += itemTotal;
+      html += `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price} ج.م</td>
+          <td>${itemTotal} ج.م</td>
+        </tr>
+      `;
+    });
+    document.getElementById('itemsBody').innerHTML = html;
+
+    // Shipping
+    document.getElementById('recipientName').textContent = order.customerName || '-';
+    document.getElementById('recipientPhone').textContent = order.phone || '-';
+    document.getElementById('shippingAddress').textContent = 
+      `${order.shippingAddress.governorate}, ${order.shippingAddress.city}, ${order.shippingAddress.address}`;
+    document.getElementById('shippingNotes').textContent = order.shippingAddress.notes || 'لا توجد ملاحظات';
+
+    // Timeline
+    updateTimeline(order.status);
+
+    // Totals
+    document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+    document.getElementById('shipping').textContent = order.shipping.toFixed(2);
+    document.getElementById('total').textContent = order.total.toFixed(2);
+    document.getElementById('paymentMethod').textContent = 
+      order.paymentMethod === 'vodafone_cash' ? 'Vodafone Cash' : 'الدفع عند الاستقبال';
+
+      // Show edit button only for pending orders
+      if (order.status === 'pending') {
+        document.getElementById('editBtn').style.display = 'inline-flex';
+      }
+  }
+
+  function getStatusText(status) {
+    const map = {
+      pending: 'قيد الانتظار',
+      processing: 'قيد المعالجة',
+      shipped: 'تم الشحن',
+      delivered: 'تم التسليم'
+    };
+    return map[status] || status;
+  }
+
+  function updateTimeline(status) {
+    const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+    const currentIndex = statusOrder.indexOf(status);
+
+    ['processingItem', 'shippingItem', 'deliveryItem'].forEach((itemId, idx) => {
+      if(idx < currentIndex) {
+        document.getElementById(itemId).classList.add('completed');
+      }
+    });
+  }
+
+  function goBack() {
+    window.history.back();
+
+    function editOrder() {
+      if (orderId) {
+        window.location.href = '/edit-order.html?id=' + orderId;
+      }
+    }
+  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>إنشاء حساب — التفوق</title>
+    <style>
+      :root {
+        --accent: #1a237e;
+        --accent2: #ffd600;
+        --bg: #f7f3e3;
+        --bg-dark: #181c24;
+        --card: #ffffff;
+        --card-dark: #252c38;
+        --text: #222222;
+        --text-dark: #e8e8e8;
+        --muted: #666;
+        --muted-dark: #bbb;
+        --pharaoh: #c7a76c;
+        --papyrus: #f5e6c2;
+        --radius: 8px;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+      }
+      
+      .site-header {
+        background-color: var(--card);
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s;
+        border-bottom: 2px solid var(--pharaoh);
+      }
+      
+      body.dark-mode .site-header {
+        background-color: var(--card-dark);
+      }
+      
+      .site-header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      
+      .brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .brand img {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .brand-accent {
+        color: var(--accent2);
+      }
+      
+      nav {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        align-items: center;
+      }
+      
+      nav a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 1.15rem;
+        letter-spacing: 0.5px;
+        transition: color 0.3s;
+      }
+      
+      body.dark-mode nav a {
+        color: var(--text-dark);
+      }
+      
+      nav a:hover,
+      nav a.active {
+        color: var(--accent2);
+      }
+      
+      .theme-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent2), #ffb300);
+        border: 2px solid var(--pharaoh);
+        cursor: pointer;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        box-shadow: 0 2px 8px #c7a76c30;
+      }
+      
+      .theme-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px #c7a76c50;
+      }
+      
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.5rem;
+      }
+      
+      .signup-hero {
+        padding: 2rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .signup-illus {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .signup-illus img {
+        max-width: 320px;
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .signup-form-wrap {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .card {
+        background-color: var(--card);
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 440px;
+        width: 100%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid var(--pharaoh);
+        transition: all 0.3s;
+      }
+      
+      body.dark-mode .card {
+        background-color: var(--card-dark);
+      }
+      
+      .card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+      
+      .card h2 {
+        color: var(--accent);
+      }
+      
+      form {
+        display: grid;
+        gap: 1rem;
+      }
+      
+      label {
+        display: block;
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+      
+      body.dark-mode label {
+        color: var(--text-dark);
+      }
+      
+      input,
+      select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1.5px solid var(--pharaoh);
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: var(--papyrus);
+        color: #222;
+        transition: border-color 0.3s;
+        margin-bottom: 0.5rem;
+      }
+      
+      body.dark-mode input,
+      body.dark-mode select {
+        background-color: #303a47;
+        border-color: #404a57;
+        color: var(--text-dark);
+      }
+      
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent2);
+        box-shadow: 0 0 8px #ffd60040;
+      }
+      
+      .muted {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      
+      body.dark-mode .muted {
+        color: var(--muted-dark);
+      }
+      
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--pharaoh);
+        background-color: var(--accent);
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(26, 35, 126, 0.2);
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .btn:hover {
+        background-color: #0d1b5e;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+      }
+      
+      .btn.outline {
+        background: transparent;
+        color: var(--accent);
+        border: 2px solid var(--accent);
+      }
+      
+      .btn.outline:hover {
+        background-color: rgba(26, 35, 126, 0.1);
+      }
+      
+      .btn.secondary {
+        background-color: var(--accent2);
+        color: #222;
+        border-color: var(--pharaoh);
+      }
+      
+      .btn.secondary:hover {
+        background-color: #ffcc00;
+        transform: translateY(-2px);
+      }
+      
+      footer {
+        background-color: var(--card);
+        padding: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+        border-top: 2px solid var(--pharaoh);
+        transition: background-color 0.3s;
+      }
+      
+      body.dark-mode footer {
+        background-color: var(--card-dark);
+      }
+      
+      footer p {
+        color: var(--muted);
+        margin-bottom: 1rem;
+      }
+      
+      body.dark-mode footer p {
+        color: var(--muted-dark);
+      }
+      
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+      
+      .social-links a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+      }
+      
+      .social-links a:hover {
+        color: var(--accent2);
+      }
+      
+      @media (max-width: 900px) {
+        .signup-hero {
+          flex-direction: column-reverse;
+          text-align: center;
+        }
+        
+        .site-header .container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        
+        nav {
+          margin-top: 1rem;
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <span class="brand">
+          <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+          منصة <span class="brand-accent">التفوق</span>
+        </span>
+        <nav>
+          <a href="/home.html">الرئيسية</a>
+          <a href="/store.html">التفوق ستور</a>
+          <a href="/login.html">تسجيل الدخول</a>
+          <a href="/signup.html" class="active">إنشاء حساب</a>
+          <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+        </nav>
+      </div>
+    </header>
+    <main class="signup-hero">
+      <div class="signup-illus">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/tf-signup.png" alt="إنشاء حساب التفوق" />
+      </div>
+      <div class="signup-form-wrap">
+        <div class="card">
+          <h2 style="text-align:center;margin-bottom:1.2rem">إنشاء حساب طالب جديد</h2>
+          <form id="signupForm">
+            <label>الاسم الكامل<input id="name" required /></label>
+            <label>رقم الطالب<input id="studentNumber" required placeholder="مثال: 2025-001" /></label>
+            <label>رقم ولي الأمر<input id="parentPhone" required placeholder="مثال: 01012345678" /></label>
+            <label>المحافظة
+              <select id="governorate">
+                <option value="">اختر المحافظة</option>
+                <option>القاهرة</option>
+                <option>الجيزة</option>
+                <option>الإسكندرية</option>
+                <option>القليوبية</option>
+                <option>المنيا</option>
+                <option>الشرقية</option>
+                <option>الدقهلية</option>
+                <option>الغربية</option>
+                <option>المنوفية</option>
+                <option>أسيوط</option>
+                <option>سوهاج</option>
+                <option>الفيوم</option>
+                <option>بني سويف</option>
+                <option>مطروح</option>
+                <option>السويس</option>
+                <option>البحر الأحمر</option>
+                <option>بورسعيد</option>
+                <option>دمياط</option>
+                <option>كفر الشيخ</option>
+                <option>الإسماعيلية</option>
+                <option>قنا</option>
+                <option>أسوان</option>
+                <option>الوادي الجديد</option>
+                <option>شمال سيناء</option>
+                <option>جنوب سيناء</option>
+              </select>
+            </label>
+            <label>السنة الدراسيّة<input id="academicYear" placeholder="مثال: 2024/2025" /></label>
+            <label>كلمة المرور<input type="password" id="password" required /></label>
+            <div style="display:flex;gap:.6rem;align-items:center;justify-content:center">
+              <button class="btn primary">إرسال طلب التسجيل</button>
+              <a href="/login.html" class="muted">لديك حساب؟ تسجيل الدخول</a>
+            </div>
+            <p id="msg" class="muted"></p>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="/advanced-storage.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+      const themeBtn = document.getElementById('themeToggle');
+      if(themeBtn){
+        themeBtn.onclick = function(){
+          document.body.classList.toggle('dark-mode');
+          advancedStorage.saveData('tf_theme',[document.body.classList.contains('dark-mode')?'dark':'light']);
+        };
+        const savedTheme = advancedStorage.getData('tf_theme');
+        if(savedTheme && savedTheme[0]==='dark') document.body.classList.add('dark-mode');
+      }
+    });
+
+    const Auth=(function(){
+      return {
+        login: async ({studentNumber,password}) => {
+          const students = advancedStorage.getAllStudents();
+          const student = students.find(s => s.studentNumber === studentNumber && s.password === btoa(password));
+          if (!student) throw new Error('بيانات الدخول غير صحيحة');
+          const user = {id:student.id,name:student.name,studentNumber:student.studentNumber,role:'student',email:student.email}; 
+          advancedStorage.setCurrentUser(user); 
+          return user;
+        },
+        logout: ()=>{ advancedStorage.saveData('tf_current', []) },
+        currentUser: ()=> advancedStorage.getCurrentUser()
+      }
+    })();
+
+    window.TF={Auth};
+
+    (function page(){
+      const f = document.getElementById('signupForm');
+      f.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const studentNumber = document.getElementById('studentNumber').value.trim();
+        const parentPhone = document.getElementById('parentPhone').value.trim();
+        const governorate = document.getElementById('governorate').value;
+        const academicYear = document.getElementById('academicYear').value.trim();
+        const password = document.getElementById('password').value;
+        const msg = document.getElementById('msg');
+        
+        try{
+          if(!name || !studentNumber || !parentPhone || !password) {
+            throw new Error('يرجى ملء جميع الحقول المطلوبة');
+          }
+          
+          const students = advancedStorage.getAllStudents();
+          if(students.find(s => s.studentNumber === studentNumber)) {
+            throw new Error('هذا الرقم الطالبي مسجل بالفعل');
+          }
+          
+          const result = advancedStorage.addStudent({
+            name,
+            studentNumber,
+            phone: parentPhone,
+            email: '',
+            governorate,
+            academicYear,
+            password: btoa(password),
+            status: 'active',
+            role: 'student'
+          });
+          
+          if(result.success) {
+            msg.textContent = '✅ تم إنشاء الحساب بنجاح! سيتم تحويلك...';
+            msg.style.color = '#4CAF50';
+            setTimeout(() => {
+              window.location.href = '/student-dashboard.html';
+            }, 1500);
+          } else {
+            throw new Error(result.error || 'حدث خطأ في التسجيل');
+          }
+        }catch(err){ 
+          msg.textContent = '❌ ' + err.message;
+          msg.style.color = '#f44336';
+        }
+      })
+    })();
+    </script>
+  </body>
+  </html>

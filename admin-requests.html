@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إدارة طلبات الأدمن — التفوق</title>
+  <style>
+    :root{
+      --accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border)}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:1.3rem 1.7rem}
+    .brand{margin:0;font-size:2.3rem;letter-spacing:1px;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;text-decoration:none;color:var(--accent)}
+    .brand img{height:2.7rem;vertical-align:middle;filter:drop-shadow(0 2px 6px #c7a76c80)}
+    .brand-accent{color:var(--accent2);font-weight:bold;text-shadow:0 2px 8px #c7a76c60}
+    
+    nav{display:flex;align-items:center;gap:1.3rem}
+    nav a{font-size:1.15rem;text-decoration:none;color:var(--muted);transition:.2s;font-weight:500;letter-spacing:.5px}
+    nav a.active,nav a:hover{color:var(--accent2);text-shadow:0 2px 8px #c7a76c40}
+    
+    .theme-toggle{cursor:pointer;font-size:1.5rem;background:none;border:none;color:var(--accent);padding:.5rem}
+    .theme-toggle:hover{transform:scale(1.15);transition:.2s}
+    
+    .container{max-width:1150px;margin:0 auto;padding:1.7rem}
+    
+    .admin-section{padding:2rem 0}
+    .section-title{font-size:2rem;color:var(--accent);margin-bottom:1.5rem;text-align:center}
+    
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;border:2px solid var(--pharaoh);transition:.2s;margin-bottom:1.5rem}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    
+    .request-item{background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1.5rem;border-left:4px solid var(--accent2)}
+    body.dark .request-item{background:#303a47}
+    
+    .request-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .request-name{font-size:1.2rem;font-weight:600;color:var(--accent)}
+    .request-status{padding:.4rem .8rem;border-radius:6px;font-size:.85rem;font-weight:600}
+    .status-pending{background:#ff9800;color:#fff}
+    .status-approved{background:#4caf50;color:#fff}
+    .status-rejected{background:#f44336;color:#fff}
+    
+    .request-info{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;font-size:.9rem}
+    .request-info strong{color:var(--accent)}
+    .request-info p{margin:.3rem 0}
+    
+    .request-reason{background:rgba(0,0,0,.05);padding:1rem;border-radius:8px;margin:1rem 0;font-size:.9rem;line-height:1.6}
+    body.dark .request-reason{background:rgba(255,255,255,.05)}
+    
+    .action-buttons{display:flex;gap:1rem}
+    .btn{display:inline-block;padding:.6rem 1.2rem;border-radius:8px;border:2px solid var(--pharaoh);background:var(--accent2);color:#1a237e;font-weight:600;font-size:.9rem;box-shadow:var(--shadow);transition:.2s;cursor:pointer;text-decoration:none}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(26,35,126,.2)}
+    .btn.approve{background:#4caf50;color:#fff}
+    .btn.reject{background:#f44336;color:#fff}
+    .btn.delete{background:#666;color:#fff}
+    
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+    .stat-card{background:var(--card);border-radius:var(--radius);padding:1.5rem;text-align:center;border:2px solid var(--pharaoh)}
+    body.dark .stat-card{background:var(--card-dark);border-color:#444}
+    .stat-number{font-size:2rem;font-weight:bold;color:var(--accent2)}
+    .stat-label{color:var(--muted);font-size:.9rem;margin-top:.5rem}
+    
+    .empty-state{text-align:center;padding:3rem;color:var(--muted)}
+    .empty-state .icon{font-size:4rem;margin-bottom:1rem}
+    
+    footer{background:var(--card);padding:2rem;text-align:center;margin-top:3rem;border-top:2px solid var(--pharaoh)}
+    body.dark footer{background:var(--card-dark);color:#f3f6fa;border-top-color:#444}
+    
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    
+    @media(max-width:768px){
+      .request-info{grid-template-columns:1fr}
+      .action-buttons{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/home.html" class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+        منصة <span class="brand-accent">التفوق</span>
+      </a>
+      <nav>
+        <a href="/admin.html">لوحة التحكم</a>
+        <a href="/admin-requests.html" class="active">طلبات الأدمن</a>
+        <a href="/login.html" onclick="logout()">تسجيل الخروج</a>
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-section">
+    <h1 class="section-title">إدارة طلبات حساب الأدمن</h1>
+
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="pendingCount">0</div>
+        <div class="stat-label">طلبات قيد الانتظار</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="approvedCount">0</div>
+        <div class="stat-label">حسابات موافق عليها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="rejectedCount">0</div>
+        <div class="stat-label">طلبات مرفوضة</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="text-align:center;color:var(--accent);margin-bottom:1.5rem">الطلبات المعلقة</h2>
+      <div id="pendingRequests">
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <p>لا توجد طلبات معلقة</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="text-align:center;color:var(--accent);margin-bottom:1.5rem">جميع الطلبات</h2>
+      <div id="allRequests">
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <p>لا توجد طلبات حتى الآن</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2024 منصة التفوق — جميع الحقوق محفوظة</p>
+    <p style="font-family:Georgia,Garamond,serif;letter-spacing:2px;color:var(--pharaoh);font-weight:bold">Developed by ELMASRY 🏛️</p>
+  </footer>
+
+  <script>
+  function logout() {
+    localStorage.removeItem('tf_current');
+    window.location.href = '/login.html';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const current = JSON.parse(localStorage.getItem('tf_current') || 'null');
+    if(!current || current.role !== 'admin') {
+      window.location.href = '/login.html';
+      return;
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    if(themeBtn){
+      themeBtn.onclick = function(){
+        document.body.classList.toggle('dark');
+        localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      };
+      if(localStorage.getItem('tf_theme') === 'dark') document.body.classList.add('dark');
+    }
+
+    // Load requests
+    loadRequests();
+  });
+
+  function loadRequests() {
+    const requests = JSON.parse(localStorage.getItem('tf_admin_requests') || '[]');
+    
+    const pending = requests.filter(r => r.status === 'pending');
+    const approved = requests.filter(r => r.status === 'approved');
+    const rejected = requests.filter(r => r.status === 'rejected');
+
+    // Update stats
+    document.getElementById('pendingCount').textContent = pending.length;
+    document.getElementById('approvedCount').textContent = approved.length;
+    document.getElementById('rejectedCount').textContent = rejected.length;
+
+    // Render pending
+    const pendingContainer = document.getElementById('pendingRequests');
+    if(pending.length === 0) {
+      pendingContainer.innerHTML = '<div class="empty-state"><div class="icon">✅</div><p>لا توجد طلبات معلقة</p></div>';
+    } else {
+      pendingContainer.innerHTML = pending.map(r => renderRequest(r)).join('');
+    }
+
+    // Render all
+    const allContainer = document.getElementById('allRequests');
+    if(requests.length === 0) {
+      allContainer.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>لا توجد طلبات حتى الآن</p></div>';
+    } else {
+      allContainer.innerHTML = requests.map(r => renderRequest(r, true)).join('');
+    }
+  }
+
+  function renderRequest(request, showAll = false) {
+    const statusClass = `status-${request.status}`;
+    const statusText = {
+      pending: 'قيد الانتظار',
+      approved: 'موافق عليه',
+      rejected: 'مرفوض'
+    }[request.status];
+
+    let buttons = '';
+    if(request.status === 'pending') {
+      buttons = `
+        <button class="btn approve" onclick="updateStatus('${request.id}', 'approved')">✓ موافقة</button>
+        <button class="btn reject" onclick="updateStatus('${request.id}', 'rejected')">✕ رفض</button>
+        <button class="btn delete" onclick="deleteRequest('${request.id}')">حذف</button>
+      `;
+    } else {
+      buttons = `<button class="btn delete" onclick="deleteRequest('${request.id}')">حذف</button>`;
+    }
+
+    const date = new Date(request.createdAt).toLocaleDateString('ar-EG');
+
+    return `
+      <div class="request-item">
+        <div class="request-header">
+          <div class="request-name">${request.fullName}</div>
+          <span class="request-status ${statusClass}">${statusText}</span>
+        </div>
+        
+        <div class="request-info">
+          <div>
+            <p><strong>البريد الإلكتروني:</strong> ${request.email}</p>
+            <p><strong>الهاتف:</strong> ${request.phone}</p>
+            <p><strong>اسم المستخدم:</strong> ${request.username}</p>
+          </div>
+          <div>
+            <p><strong>المؤهل:</strong> ${request.qualification}</p>
+            <p><strong>التخصص:</strong> ${request.specialization || 'غير محدد'}</p>
+            <p><strong>الخبرة:</strong> ${request.experience || 0} سنة</p>
+          </div>
+        </div>
+
+        <div class="request-reason">
+          <strong>السبب:</strong><br>
+          ${request.reason}
+        </div>
+
+        <div style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">
+          📅 تاريخ الطلب: ${date}
+        </div>
+
+        <div class="action-buttons">
+          ${buttons}
+        </div>
+      </div>
+    `;
+  }
+
+  function updateStatus(id, newStatus) {
+    const requests = JSON.parse(localStorage.getItem('tf_admin_requests') || '[]');
+    const request = requests.find(r => r.id === id);
+    
+    if(request) {
+      request.status = newStatus;
+      
+      if(newStatus === 'approved') {
+        // Add to users if approved
+        const users = JSON.parse(localStorage.getItem('tf_users') || '[]');
+        users.push({
+          id: 'u_' + Date.now(),
+          name: request.fullName,
+          email: request.email,
+          studentNumber: request.username,
+          password: request.password || 'temp_password',
+          role: 'admin',
+          status: 'active',
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('tf_users', JSON.stringify(users));
+        alert('✅ تم الموافقة على الطلب! تم إضافة الحساب.');
+      }
+      
+      localStorage.setItem('tf_admin_requests', JSON.stringify(requests));
+      loadRequests();
+    }
+  }
+
+  function deleteRequest(id) {
+    if(confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
+      const requests = JSON.parse(localStorage.getItem('tf_admin_requests') || '[]');
+      const filtered = requests.filter(r => r.id !== id);
+      localStorage.setItem('tf_admin_requests', JSON.stringify(filtered));
+      loadRequests();
+    }
+  }
+  </script>
+</body>
+</html>

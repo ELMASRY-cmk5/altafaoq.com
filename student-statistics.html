@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>إحصائيات الطلاب — التفوق</title>
+  <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    .container{max-width:1200px;margin:0 auto;padding:1.7rem}
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:1.3rem 1.7rem}
+    .brand{font-size:2rem;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;color:var(--accent);text-decoration:none}
+    .brand img{height:2.5rem}
+    .brand-accent{color:var(--accent2)}
+    .header-actions{display:flex;gap:1rem;align-items:center}
+    .theme-toggle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#ffb300);border:2px solid var(--pharaoh);cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:.3s}
+    .theme-toggle:hover{transform:scale(1.1)}
+    .back-btn{padding:.6rem 1.2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}
+    .back-btn:hover{opacity:.8}
+    .card{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2rem;border:2px solid var(--pharaoh)}
+    .card h2,.card h3{color:var(--accent);font-family:"Cairo",serif;margin-bottom:1.5rem}
+    table{width:100%;border-collapse:collapse;margin-top:1rem;background:var(--papyrus);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:1rem;border-bottom:1px solid #e0c68c;text-align:right}
+    th{background:var(--accent2);color:var(--accent);font-weight:600}
+    tr:hover{background:rgba(255,214,0,.1)}
+    .stat-box{background:var(--papyrus);padding:1.5rem;border-radius:10px;border-left:4px solid var(--accent2);margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+    .stat-number{font-size:2.5rem;font-weight:bold;color:var(--accent2)}
+    .stat-label{color:var(--muted);font-size:1.1rem}
+    .search-box{margin-bottom:2rem;display:flex;gap:1rem}
+    input[type="search"]{flex:1;padding:.8rem;border:2px solid var(--border);border-radius:8px;font-family:var(--font);font-size:1rem}
+    input[type="search"]:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(255,214,0,.1)}
+    .grade-card{background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1.5rem;border:2px solid var(--border)}
+    .grade-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .grade-header strong{color:var(--accent);font-size:1.2rem}
+    .grades-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1rem}
+    .grade-item{background:linear-gradient(135deg,var(--accent2),#ffb300);padding:1rem;border-radius:8px;text-align:center;color:var(--accent)}
+    .grade-item strong{font-size:1.8rem;display:block;margin-bottom:.5rem}
+    .grade-item small{opacity:.8}
+    .empty-state{text-align:center;padding:2rem;color:var(--muted)}
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a);border-bottom:2px solid #444}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    body.dark table{background:var(--card-dark)}
+    body.dark th{background:var(--accent2);color:#1a237e}
+    body.dark input[type="search"]{background:#303a47;color:#f3f6fa;border-color:#555}
+    body.dark .grade-card{background:#303a47;border-color:#555}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/admin-dashboard.html" class="brand">
+      <span>🛡️</span> لوحة <span class="brand-accent">الأدمن</span>
+    </a>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      <a href="/admin-dashboard.html" class="back-btn">← العودة</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Search Box -->
+    <div class="card">
+      <h2>🔍 البحث عن طالب</h2>
+      <div class="search-box">
+        <input type="search" id="searchInput" placeholder="ابحث برقم الجلسة أو الاسم أو البريد..." />
+        <button onclick="searchStudent()" style="padding:.8rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:var(--font)">🔍 بحث</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="resultsContainer"></div>
+  </main>
+
+  <script src="/advanced-storage.js"></script>
+  <script>
+    // Check admin auth
+    document.addEventListener('DOMContentLoaded', () => {
+      const current = JSON.parse(localStorage.getItem('tf_current') || 'null');
+      if (!current || current.role !== 'admin') {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      // Theme toggle
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      });
+      if (localStorage.getItem('tf_theme') === 'dark') document.body.classList.add('dark');
+
+      // Load all students
+      displayAllStudents();
+    });
+
+    function searchStudent() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (!query) {
+        displayAllStudents();
+        return;
+      }
+
+      const students = advancedStorage.getAllStudents();
+      const filtered = students.filter(s => 
+        s.name.toLowerCase().includes(query) ||
+        s.email.toLowerCase().includes(query) ||
+        s.studentNumber.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        document.getElementById('resultsContainer').innerHTML = '<div class="card"><p class="empty-state">❌ لم يتم العثور على طلاب</p></div>';
+        return;
+      }
+
+      displayStudents(filtered);
+    }
+
+    function displayAllStudents() {
+      const students = advancedStorage.getAllStudents();
+      if (students.length === 0) {
+        document.getElementById('resultsContainer').innerHTML = '<div class="card"><p class="empty-state">📋 لا يوجد طلاب حالياً</p></div>';
+        return;
+      }
+      displayStudents(students);
+    }
+
+    function displayStudents(students) {
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = students.map(student => `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:2rem">
+            <div>
+              <h2>${student.name}</h2>
+              <p style="color:var(--muted);margin:0.5rem 0">📧 البريد: ${student.email || '-'}</p>
+              <p style="color:var(--muted);margin:0">📱 الهاتف: ${student.phone || '-'}</p>
+            </div>
+            <div style="text-align:center">
+              <div style="color:var(--accent2);font-size:1.1rem;font-weight:600">الرقم الجامعي</div>
+              <div style="font-size:1.5rem;font-weight:bold">${student.studentNumber || '-'}</div>
+            </div>
+          </div>
+
+          <hr style="border:none;border-top:2px solid var(--border);margin:1.5rem 0">
+
+          <!-- Lectures Statistics -->
+          <div style="margin-bottom:2rem">
+            <h3>📚 إحصائيات المحاضرات</h3>
+            <div class="stat-box">
+              <div>
+                <div class="stat-number">${getStudentLectureCount(student.id)}</div>
+                <div class="stat-label">عدد المحاضرات</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:0.5rem;color:var(--muted);font-size:0.95rem">
+                <span>📖 كل المحاضرات مسجلة</span>
+                <span>⏱️ متابعة مستمرة</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assignments Statistics -->
+          <div style="margin-bottom:2rem">
+            <h3>✏️ إحصائيات الواجبات</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>الواجب</th>
+                  <th>الدرجة من</th>
+                  <th>الدرجة المحققة</th>
+                  <th>النسبة</th>
+                  <th>الحالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${getStudentAssignments(student.id).map(a => `
+                  <tr>
+                    <td>${a.name || 'واجب'}</td>
+                    <td>${a.totalGrade || 100}</td>
+                    <td style="color:${a.grade >= (a.totalGrade || 100) * 0.7 ? '#4caf50' : '#ff9800'};font-weight:bold">${a.grade || 0}</td>
+                    <td>${((a.grade / (a.totalGrade || 100)) * 100).toFixed(1)}%</td>
+                    <td>${a.submitted ? '✅ تم الإرسال' : '⏳ معلق'}</td>
+                  </tr>
+                `).join('') || '<tr><td colspan="5" class="empty-state">لا توجد واجبات بعد</td></tr>'}
+              </tbody>
+            </table>
+            ${getStudentAssignments(student.id).length > 0 ? `
+              <div style="margin-top:1rem;padding:1rem;background:rgba(0,0,0,.05);border-radius:8px">
+                <strong>📊 المتوسط العام للواجبات:</strong>
+                <div style="color:var(--accent2);font-size:1.3rem;font-weight:bold">${getAssignmentsAverage(student.id).toFixed(2)}%</div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Exams Statistics -->
+          <div>
+            <h3>🧪 إحصائيات الامتحانات</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>الامتحان</th>
+                  <th>الدرجة من</th>
+                  <th>الدرجة المحققة</th>
+                  <th>النسبة</th>
+                  <th>التقييم</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${getStudentExams(student.id).map(e => `
+                  <tr>
+                    <td>${e.subject || 'امتحان'}</td>
+                    <td>${e.totalGrade || 100}</td>
+                    <td style="color:${e.grade >= (e.totalGrade || 100) * 0.7 ? '#4caf50' : e.grade >= (e.totalGrade || 100) * 0.5 ? '#ff9800' : '#f44336'};font-weight:bold">${e.grade || 0}</td>
+                    <td>${((e.grade / (e.totalGrade || 100)) * 100).toFixed(1)}%</td>
+                    <td>${getGradeLevel(e.grade / (e.totalGrade || 100))}</td>
+                  </tr>
+                `).join('') || '<tr><td colspan="5" class="empty-state">لا توجد امتحانات بعد</td></tr>'}
+              </tbody>
+            </table>
+            ${getStudentExams(student.id).length > 0 ? `
+              <div style="margin-top:1rem;padding:1rem;background:rgba(0,0,0,.05);border-radius:8px">
+                <strong>🎯 المتوسط العام للامتحانات:</strong>
+                <div style="color:var(--accent2);font-size:1.3rem;font-weight:bold">${getExamsAverage(student.id).toFixed(2)}%</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getStudentLectureCount(studentId) {
+      const courses = advancedStorage.getCourses();
+      return courses.length > 0 ? courses.reduce((sum, c) => sum + (c.lessons || 0), 0) : 0;
+    }
+
+    function getStudentAssignments(studentId) {
+      const assignments = advancedStorage.getData('tf_assignments') || [];
+      return assignments.filter(a => a.studentId === studentId);
+    }
+
+    function getStudentExams(studentId) {
+      const exams = advancedStorage.getData('tf_exams') || [];
+      return exams.filter(e => e.studentId === studentId);
+    }
+
+    function getAssignmentsAverage(studentId) {
+      const assignments = getStudentAssignments(studentId);
+      if (assignments.length === 0) return 0;
+      const sum = assignments.reduce((acc, a) => acc + ((a.grade / (a.totalGrade || 100)) * 100), 0);
+      return sum / assignments.length;
+    }
+
+    function getExamsAverage(studentId) {
+      const exams = getStudentExams(studentId);
+      if (exams.length === 0) return 0;
+      const sum = exams.reduce((acc, e) => acc + ((e.grade / (e.totalGrade || 100)) * 100), 0);
+      return sum / exams.length;
+    }
+
+    function getGradeLevel(percentage) {
+      if (percentage >= 0.9) return '🏆 ممتاز جداً';
+      if (percentage >= 0.8) return '⭐ ممتاز';
+      if (percentage >= 0.7) return '✓ جيد جداً';
+      if (percentage >= 0.6) return '👍 جيد';
+      if (percentage >= 0.5) return '⚠️ مقبول';
+      return '❌ ضعيف';
+    }
+  </script>
+</body>
+</html>

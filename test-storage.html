@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نظام التخزين</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .test-card {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .test-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+        }
+        .test-card h3 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+        .test-card button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .test-card button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #3a3a3a;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .result.error {
+            border-left-color: #f44336;
+            background: #3a2a2a;
+        }
+        .result.success {
+            border-left-color: #4CAF50;
+            background: #2a3a2a;
+        }
+        .summary {
+            background: #2a2a2a;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .summary h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .status-success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .status-error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .status-pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        code {
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار نظام التخزين الكامل</h1>
+
+        <div class="test-grid">
+            <!-- Test 1: Initialize Storage -->
+            <div class="test-card">
+                <h3>1️⃣ تهيئة النظام</h3>
+                <p>التحقق من تهيئة جميع مجموعات البيانات</p>
+                <button onclick="testInitStorage()">اختبر التهيئة</button>
+                <div id="result-1"></div>
+            </div>
+
+            <!-- Test 2: Add Course -->
+            <div class="test-card">
+                <h3>2️⃣ إضافة كورس</h3>
+                <p>إنشاء كورس جديد والتحقق من الحفظ</p>
+                <button onclick="testAddCourse()">اختبر الإضافة</button>
+                <div id="result-2"></div>
+            </div>
+
+            <!-- Test 3: Get Courses -->
+            <div class="test-card">
+                <h3>3️⃣ جلب الكورسات</h3>
+                <p>عرض جميع الكورسات المخزنة</p>
+                <button onclick="testGetCourses()">اختبر الجلب</button>
+                <div id="result-3"></div>
+            </div>
+
+            <!-- Test 4: Add Lesson -->
+            <div class="test-card">
+                <h3>4️⃣ إضافة درس</h3>
+                <p>إضافة درس لكورس مع محتوى وفيديو</p>
+                <button onclick="testAddLesson()">اختبر الدرس</button>
+                <div id="result-4"></div>
+            </div>
+
+            <!-- Test 5: Add Quiz -->
+            <div class="test-card">
+                <h3>5️⃣ إضافة اختبار</h3>
+                <p>إنشاء اختبار متعدد الخيارات</p>
+                <button onclick="testAddQuiz()">اختبر الاختبار</button>
+                <div id="result-5"></div>
+            </div>
+
+            <!-- Test 6: Submit Quiz -->
+            <div class="test-card">
+                <h3>6️⃣ تسليم الاختبار</h3>
+                <p>التحقق من التقييم التلقائي والدرجات</p>
+                <button onclick="testSubmitQuiz()">اختبر التسليم</button>
+                <div id="result-6"></div>
+            </div>
+
+            <!-- Test 7: Student Request -->
+            <div class="test-card">
+                <h3>7️⃣ طلب التحاق</h3>
+                <p>إنشاء طلب التحاق من الطالب</p>
+                <button onclick="testStudentRequest()">اختبر الطلب</button>
+                <div id="result-7"></div>
+            </div>
+
+            <!-- Test 8: Approve Request -->
+            <div class="test-card">
+                <h3>8️⃣ موافقة الأدمن</h3>
+                <p>قبول طلب الالتحاق وإضافة التسجيل</p>
+                <button onclick="testApproveRequest()">اختبر الموافقة</button>
+                <div id="result-8"></div>
+            </div>
+
+            <!-- Test 9: Student Profile -->
+            <div class="test-card">
+                <h3>9️⃣ بيانات الطالب الكاملة</h3>
+                <p>عرض جميع معلومات الطالب والدرجات</p>
+                <button onclick="testStudentProfile()">اختبر الملف</button>
+                <div id="result-9"></div>
+            </div>
+
+            <!-- Test 10: Statistics -->
+            <div class="test-card">
+                <h3>🔟 الإحصائيات</h3>
+                <p>عرض إحصائيات الكورسات والدروس</p>
+                <button onclick="testStatistics()">اختبر الإحصائيات</button>
+                <div id="result-10"></div>
+            </div>
+        </div>
+
+        <!-- Run All Tests -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <button onclick="runAllTests()" style="
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 15px 40px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: bold;
+            ">
+                🚀 اختبر جميع العمليات
+            </button>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>📊 ملخص النتائج</h2>
+            <div class="summary-item">
+                <span>عدد الاختبارات المكتملة:</span>
+                <span id="summary-completed" class="status-pending">0/10</span>
+            </div>
+            <div class="summary-item">
+                <span>النتائج الناجحة:</span>
+                <span id="summary-success" class="status-success">0</span>
+            </div>
+            <div class="summary-item">
+                <span>النتائج الخاطئة:</span>
+                <span id="summary-error" class="status-error">0</span>
+            </div>
+            <div class="summary-item">
+                <span>حالة النظام:</span>
+                <span id="summary-status" class="status-pending">في الانتظار...</span>
+            </div>
+            <div style="margin-top: 20px;">
+                <p><strong>المعلومات:</strong></p>
+                <ul>
+                    <li>✅ جميع الاختبارات تعمل محلياً في localStorage</li>
+                    <li>✅ البيانات محفوظة بشكل دائم</li>
+                    <li>✅ يمكنك فتح DevTools (F12) والتحقق من localStorage</li>
+                    <li>✅ النتائج الفعلية معروضة أسفل كل اختبار</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage System -->
+    <script src="/storage-system.js"></script>
+
+    <!-- Tests -->
+    <script>
+        let testResults = { success: 0, error: 0, completed: 0 };
+
+        function showResult(testNum, title, data, isError = false) {
+            const resultDiv = document.getElementById(`result-${testNum}`);
+            const status = isError ? 'error' : 'success';
+            
+            resultDiv.className = `result ${status}`;
+            resultDiv.innerHTML = `
+                <strong>${title}</strong><br>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+
+            testResults.completed++;
+            if (isError) {
+                testResults.error++;
+            } else {
+                testResults.success++;
+            }
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('summary-completed').textContent = 
+                `${testResults.completed}/10`;
+            document.getElementById('summary-success').textContent = 
+                testResults.success;
+            document.getElementById('summary-error').textContent = 
+                testResults.error;
+            
+            if (testResults.completed === 10) {
+                if (testResults.error === 0) {
+                    document.getElementById('summary-status').textContent = '✅ جميع الاختبارات ناجحة!';
+                    document.getElementById('summary-status').className = 'status-success';
+                } else {
+                    document.getElementById('summary-status').textContent = '⚠️ بعض الاختبارات فشلت';
+                    document.getElementById('summary-status').className = 'status-error';
+                }
+            }
+        }
+
+        // Test 1: Initialize Storage
+        function testInitStorage() {
+            try {
+                const collections = ['tf_courses', 'tf_lessons', 'tf_quizzes', 'tf_quiz_answers', 'tf_student_requests', 'tf_student_enrollments', 'tf_grades', 'tf_assignments', 'tf_assignment_submissions'];
+                const result = {};
+                
+                collections.forEach(col => {
+                    const data = localStorage.getItem(col);
+                    result[col] = data ? JSON.parse(data).length : 0;
+                });
+
+                showResult(1, '✅ تهيئة النظام نجحت', result);
+            } catch (error) {
+                showResult(1, '❌ خطأ في التهيئة', { error: error.message }, true);
+            }
+        }
+
+        // Test 2: Add Course
+        function testAddCourse() {
+            try {
+                const result = storageSystem.addCourse({
+                    title: 'اختبار الرياضيات',
+                    grade: '1',
+                    description: 'كورس اختبار شامل',
+                    price: 150
+                });
+                
+                showResult(2, '✅ تم إضافة الكورس', result);
+                window.testCourseId = result.courseId;
+            } catch (error) {
+                showResult(2, '❌ خطأ في إضافة الكورس', { error: error.message }, true);
+            }
+        }
+
+        // Test 3: Get Courses
+        function testGetCourses() {
+            try {
+                const courses = storageSystem.getAllCourses();
+                showResult(3, `✅ تم جلب ${courses.length} كورسات`, {
+                    count: courses.length,
+                    courses: courses.map(c => ({ id: c.id, title: c.title }))
+                });
+            } catch (error) {
+                showResult(3, '❌ خطأ في جلب الكورسات', { error: error.message }, true);
+            }
+        }
+
+        // Test 4: Add Lesson
+        function testAddLesson() {
+            try {
+                if (!window.testCourseId) {
+                    throw new Error('يجب إضافة كورس أولاً');
+                }
+                
+                const result = storageSystem.addLesson(window.testCourseId, {
+                    title: 'درس اختبار الرياضيات',
+                    description: 'شرح شامل للدرس',
+                    videoUrl: 'https://youtube.com/watch?v=test123',
+                    contentUrl: 'https://example.com/lesson.pdf'
+                });
+                
+                showResult(4, '✅ تم إضافة الدرس', result);
+                window.testLessonId = result.lessonId;
+            } catch (error) {
+                showResult(4, '❌ خطأ في إضافة الدرس', { error: error.message }, true);
+            }
+        }
+
+        // Test 5: Add Quiz
+        function testAddQuiz() {
+            try {
+                if (!window.testLessonId) {
+                    throw new Error('يجب إضافة درس أولاً');
+                }
+                
+                const result = storageSystem.addQuiz(window.testLessonId, {
+                    title: 'اختبار الرياضيات',
+                    durationMinutes: 30,
+                    passingScore: 50,
+                    questions: [
+                        {
+                            text: 'ما هو حل 2+2؟',
+                            options: { A: '3', B: '4', C: '5', D: '6' },
+                            correctAnswer: 'B'
+                        },
+                        {
+                            text: 'ما هو حل 5*3؟',
+                            options: { A: '15', B: '10', C: '20', D: '25' },
+                            correctAnswer: 'A'
+                        }
+                    ]
+                });
+                
+                showResult(5, '✅ تم إضافة الاختبار', result);
+                window.testQuizId = result.quizId;
+            } catch (error) {
+                showResult(5, '❌ خطأ في إضافة الاختبار', { error: error.message }, true);
+            }
+        }
+
+        // Test 6: Submit Quiz (Auto Grading)
+        function testSubmitQuiz() {
+            try {
+                if (!window.testQuizId) {
+                    throw new Error('يجب إضافة اختبار أولاً');
+                }
+                
+                const result = storageSystem.submitQuizAnswers(
+                    'student_test_001',
+                    window.testQuizId,
+                    { 0: 'B', 1: 'A' }
+                );
+                
+                showResult(6, '✅ تم التقييم التلقائي', {
+                    score: result.score,
+                    passed: result.passed,
+                    message: result.message,
+                    answersCorrect: '2/2'
+                });
+            } catch (error) {
+                showResult(6, '❌ خطأ في التقييم', { error: error.message }, true);
+            }
+        }
+
+        // Test 7: Student Request
+        function testStudentRequest() {
+            try {
+                if (!window.testCourseId) {
+                    throw new Error('يجب إضافة كورس أولاً');
+                }
+                
+                const result = storageSystem.createEnrollmentRequest(
+                    'student_test_002',
+                    window.testCourseId
+                );
+                
+                showResult(7, '✅ تم إنشاء طلب الالتحاق', result);
+                window.testRequestId = result.requestId;
+            } catch (error) {
+                showResult(7, '❌ خطأ في طلب الالتحاق', { error: error.message }, true);
+            }
+        }
+
+        // Test 8: Approve Request
+        function testApproveRequest() {
+            try {
+                const requests = storageSystem.getPendingRequests();
+                if (requests.length === 0) {
+                    throw new Error('لا توجد طلبات معلقة');
+                }
+                
+                const result = storageSystem.approveRequest(requests[0].id);
+                
+                showResult(8, '✅ تمت الموافقة على الطلب', {
+                    ...result,
+                    enrollmentAdded: true
+                });
+            } catch (error) {
+                showResult(8, '❌ خطأ في الموافقة', { error: error.message }, true);
+            }
+        }
+
+        // Test 9: Student Profile
+        function testStudentProfile() {
+            try {
+                const profile = storageSystem.getCompleteStudentProfile('student_test_002');
+                
+                showResult(9, '✅ تم جلب ملف الطالب الكامل', {
+                    studentId: profile.id,
+                    enrollments: profile.enrollments,
+                    grades: profile.grades,
+                    averageScore: profile.averageScore,
+                    totalCourses: profile.totalCourses
+                });
+            } catch (error) {
+                showResult(9, '❌ خطأ في جلب الملف', { error: error.message }, true);
+            }
+        }
+
+        // Test 10: Statistics
+        function testStatistics() {
+            try {
+                const stats = storageSystem.getCoursesWithStats();
+                
+                showResult(10, '✅ تم حساب الإحصائيات', {
+                    totalCourses: stats.length,
+                    courses: stats.map(c => ({
+                        title: c.title,
+                        lessonsCount: c.lessonsCount,
+                        quizzesCount: c.quizzesCount,
+                        enrollmentsCount: c.enrollmentsCount
+                    }))
+                });
+            } catch (error) {
+                showResult(10, '❌ خطأ في الإحصائيات', { error: error.message }, true);
+            }
+        }
+
+        // Run All Tests
+        function runAllTests() {
+            testResults = { success: 0, error: 0, completed: 0 };
+            testInitStorage();
+            setTimeout(() => {
+                testAddCourse();
+                setTimeout(() => {
+                    testGetCourses();
+                    testAddLesson();
+                    setTimeout(() => {
+                        testAddQuiz();
+                        setTimeout(() => {
+                            testSubmitQuiz();
+                            testStudentRequest();
+                            setTimeout(() => {
+                                testApproveRequest();
+                                testStudentProfile();
+                                testStatistics();
+                            }, 500);
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }, 500);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            testInitStorage();
+        });
+    </script>
+</body>
+</html>

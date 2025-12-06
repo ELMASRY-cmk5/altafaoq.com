@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>الدفع والتوصيل — التفوق ستور</title>
+  <style>
+    :root {
+      --accent: #1a237e;
+      --accent2: #ffd600;
+      --bg: #f7f3e3;
+      --bg-dark: #181c24;
+      --card: #ffffff;
+      --card-dark: #252c38;
+      --text: #222222;
+      --text-dark: #e8e8e8;
+      --muted: #666;
+      --muted-dark: #bbb;
+      --pharaoh: #c7a76c;
+      --papyrus: #f5e6c2;
+      --radius: 8px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    .site-header {
+      background-color: var(--card);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s;
+      border-bottom: 2px solid var(--pharaoh);
+    }
+    
+    body.dark-mode .site-header {
+      background-color: var(--card-dark);
+    }
+    
+    .site-header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .brand img {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .brand-accent {
+      color: var(--accent2);
+    }
+    
+    nav {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1.15rem;
+      letter-spacing: 0.5px;
+      transition: color 0.3s;
+    }
+    
+    body.dark-mode nav a {
+      color: var(--text-dark);
+    }
+    
+    nav a:hover {
+      color: var(--accent2);
+    }
+    
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), #ffb300);
+      border: 2px solid var(--pharaoh);
+      cursor: pointer;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+      box-shadow: 0 2px 8px #c7a76c30;
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px #c7a76c50;
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    .checkout-hero {
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      background: linear-gradient(120deg, #f7f3e3 60%, #f5e6c2 100%);
+      border-bottom: 2px solid var(--pharaoh);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    
+    .checkout-hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.7rem;
+      color: var(--accent);
+    }
+    
+    .checkout-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .checkout-section {
+      background-color: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      border: 2px solid var(--pharaoh);
+      transition: all 0.3s;
+    }
+    
+    body.dark-mode .checkout-section {
+      background-color: var(--card-dark);
+    }
+    
+    .checkout-section h3 {
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      border-bottom: 2px solid var(--accent2);
+      padding-bottom: 0.8rem;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1.5px solid var(--pharaoh);
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: var(--papyrus);
+      color: #222;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: #303a47;
+      border-color: #404a57;
+      color: var(--text-dark);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 8px #ffd60040;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    body.dark-mode label {
+      color: var(--text-dark);
+    }
+    
+    .cart-item {
+      background: var(--papyrus);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--accent2);
+    }
+    
+    body.dark-mode .cart-item {
+      background: #303a47;
+    }
+    
+    .item-details {
+      flex: 1;
+    }
+    
+    .item-details h5 {
+      margin: 0 0 0.3rem 0;
+      color: var(--accent);
+    }
+    
+    .item-details small {
+      color: var(--muted);
+      display: block;
+    }
+    
+    .item-price {
+      color: var(--accent2);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0c68c;
+    }
+    
+    .summary-line strong {
+      color: var(--accent);
+    }
+    
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--accent2);
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent2);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--pharaoh);
+      background-color: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(26, 35, 126, 0.2);
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .btn:hover {
+      background-color: #0d1b5e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+    }
+    
+    .shipping-cost {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    
+    body.dark-mode .shipping-cost {
+      background: #e65100;
+      border-left-color: #ff9800;
+    }
+    
+    .shipping-cost strong {
+      color: #ff6f00;
+    }
+    
+    .site-footer {
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-top: 2px solid var(--pharaoh);
+      background-color: var(--card);
+      transition: background-color 0.3s;
+      margin-top: 2rem;
+    }
+    
+    body.dark-mode .site-footer {
+      background-color: var(--card-dark);
+      border-top-color: #404a57;
+      color: var(--muted-dark);
+    }
+    
+    @media (max-width: 900px) {
+      .site-header .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .checkout-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <span class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+        منصة <span class="brand-accent">التفوق</span>
+      </span>
+      <nav>
+        <a href="/home.html">الرئيسية</a>
+        <a href="/store.html">التفوق ستور</a>
+        <a href="/login.html">تسجيل الدخول</a>
+        <a href="/signup.html">إنشاء حساب</a>
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="checkout-hero">
+      <h2>الدفع والتوصيل</h2>
+      <p>أكمل عملية الشراء وحدد عنوان التوصيل</p>
+    </section>
+
+    <div class="container">
+      <div class="checkout-content">
+        <!-- Order Summary (Right) -->
+        <div class="checkout-section">
+          <h3>ملخص الطلب</h3>
+          <div id="cartSummary"></div>
+          
+          <div class="shipping-cost">
+            <strong>💰 سعر التوصيل للجميع المحافظات:</strong><br>
+            <span style="font-size:1.2rem;color:#ff6f00">90 ج.م فقط</span>
+          </div>
+
+          <div class="summary-line">
+            <strong>الإجمالي:</strong>
+            <span id="subtotal">0</span>
+          </div>
+          
+          <div class="summary-line">
+            <strong>التوصيل:</strong>
+            <span id="shippingFee">90 ج.م</span>
+          </div>
+
+          <div class="summary-total">
+            <span>المجموع النهائي:</span>
+            <span id="total">90 ج.م</span>
+          </div>
+
+          <button class="btn" onclick="confirmOrder()">تأكيد الطلب</button>
+          <a href="/store.html" class="btn" style="background-color:#6b7280;margin-top:0.5rem">العودة للمتجر</a>
+        </div>
+
+        <!-- Shipping Info (Left) -->
+        <div class="checkout-section">
+          <h3>بيانات التوصيل</h3>
+          <form id="shippingForm">
+            <label>الاسم الكامل *<input id="customerName" required placeholder="مثال: أحمد محمد" /></label>
+            
+            <label>رقم الهاتف *<input id="customerPhone" required placeholder="01xxxxxxxxx" type="tel" /></label>
+            
+            <label>المحافظة *
+              <select id="governorate" required>
+                <option value="">اختر المحافظة</option>
+                <option value="Cairo">القاهرة</option>
+                <option value="Giza">الجيزة</option>
+                <option value="Alexandria">الإسكندرية</option>
+                <option value="Helwan">حلوان</option>
+                <option value="Qalyubia">القليوبية</option>
+                <option value="Menoufia">المنوفية</option>
+                <option value="Gharbia">الغربية</option>
+                <option value="Kafr El-Sheikh">كفر الشيخ</option>
+                <option value="Damietta">دمياط</option>
+                <option value="Dakahlia">الدقهلية</option>
+                <option value="Port Said">بورسعيد</option>
+                <option value="Ismailia">الإسماعيلية</option>
+                <option value="Suez">السويس</option>
+                <option value="Sharqia">الشرقية</option>
+                <option value="Matruh">مطروح</option>
+                <option value="North Sinai">شمال سيناء</option>
+                <option value="South Sinai">جنوب سيناء</option>
+                <option value="Red Sea">البحر الأحمر</option>
+                <option value="Aswan">أسوان</option>
+                <option value="Luxor">الأقصر</option>
+                <option value="Sohag">سوهاج</option>
+                <option value="Qena">قنا</option>
+                <option value="Assiut">أسيوط</option>
+                <option value="Minya">المنيا</option>
+                <option value="Beni Suef">بني سويف</option>
+                <option value="Fayoum">الفيوم</option>
+              </select>
+            </label>
+            
+            <label>المدينة *<input id="city" required placeholder="مثال: مصر الجديدة" /></label>
+            
+            <label>العنوان التفصيلي *<textarea id="address" required placeholder="مثال: شارع النيل، العمارة 10، الشقة 5" style="resize:vertical;min-height:80px"></textarea></label>
+            
+            <label>ملاحظات إضافية (اختياري)<textarea id="notes" placeholder="أي معلومات إضافية للتوصيل" style="resize:vertical;min-height:60px"></textarea></label>
+          </form>
+
+          <h4 style="color:var(--accent);margin:1.5rem 0 1rem 0;border-top:1px solid #e0c68c;padding-top:1rem">طريقة الدفع</h4>
+          <label style="display:flex;gap:0.8rem;align-items:center;margin-bottom:1rem">
+            <input type="radio" name="paymentMethod" value="vodafone" checked />
+            <span>Vodafone Cash</span>
+          </label>
+          <label style="display:flex;gap:0.8rem;align-items:center;margin-bottom:1rem">
+            <input type="radio" name="paymentMethod" value="installment" />
+            <span>دفع عند الاستلام (للقاهرة والإسكندرية فقط)</span>
+          </label>
+
+          <p style="color:var(--muted);font-size:0.9rem;margin-top:1.5rem">
+            📞 رقم التواصل: <strong>01017365486</strong><br>
+            💬 Vodafone Cash: أرسل المبلغ على هذا الرقم قبل تأكيد الطلب
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© <span id="year"></span> منصة التفوق — جميع الحقوق محفوظة</p>
+    <p style="font-family:Georgia,Garamond,serif;letter-spacing:2px;color:var(--pharaoh);font-weight:bold;margin-top:.5rem">Developed by ELMASRY</p>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded',()=>{
+    const yearEl=document.getElementById('year');if(yearEl)yearEl.textContent=new Date().getFullYear();
+    const themeBtn = document.getElementById('themeToggle');
+    if(themeBtn){
+      themeBtn.onclick = function(){
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('tf_theme',document.body.classList.contains('dark-mode')?'dark':'light');
+      };
+      if(localStorage.getItem('tf_theme')==='dark') document.body.classList.add('dark-mode');
+    }
+
+    // Load cart and display
+    loadCartSummary();
+  });
+
+  const SHIPPING_COST = 90;
+
+  function loadCartSummary(){
+    const cart = JSON.parse(localStorage.getItem('tf_cart')||'[]');
+    const summary = document.getElementById('cartSummary');
+    
+    if(!cart.length){
+      summary.innerHTML = '<p style="color:var(--muted);text-align:center">السلة فارغة</p>';
+      updateTotal(0);
+      return;
+    }
+
+    let subtotal = 0;
+    let html = '';
+
+    cart.forEach(item => {
+      const itemTotal = item.productPrice * item.quantity;
+      subtotal += itemTotal;
+      html += `
+        <div class="cart-item">
+          <div class="item-details">
+            <h5>${item.productName}</h5>
+            <small>الكمية: ${item.quantity}</small>
+          </div>
+          <div class="item-price">${itemTotal} ج.م</div>
+        </div>
+      `;
+    });
+
+    summary.innerHTML = html;
+    updateTotal(subtotal);
+  }
+
+  function updateTotal(subtotal){
+    const subEl = document.getElementById('subtotal');
+    const totalEl = document.getElementById('total');
+    subEl.textContent = subtotal + ' ج.م';
+    totalEl.textContent = (subtotal + SHIPPING_COST) + ' ج.م';
+  }
+
+  function confirmOrder(){
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const governorate = document.getElementById('governorate').value;
+    const city = document.getElementById('city').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+    if(!name || !phone || !governorate || !city || !address){
+      alert('برجاء ملء جميع الحقول المطلوبة');
+      return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem('tf_cart')||'[]');
+    if(!cart.length){
+      alert('السلة فارغة');
+      return;
+    }
+
+    const subtotal = cart.reduce((sum, item) => sum + (item.productPrice * item.quantity), 0);
+    const order = {
+      id: 'ord_' + Date.now(),
+      customerName: name,
+      customerPhone: phone,
+      governorate,
+      city,
+      address,
+      notes: document.getElementById('notes').value.trim(),
+      items: cart,
+      subtotal,
+      shipping: SHIPPING_COST,
+      total: subtotal + SHIPPING_COST,
+      paymentMethod,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+
+    let orders = JSON.parse(localStorage.getItem('tf_orders')||'[]');
+    orders.push(order);
+    localStorage.setItem('tf_orders', JSON.stringify(orders));
+
+    // Add payment record
+    let payments = JSON.parse(localStorage.getItem('tf_payments')||'[]');
+    payments.push({
+      id: 'pay_' + Date.now(),
+      studentNumber: phone,
+      studentName: name,
+      amount: order.total,
+      transactionId: 'pending - ' + order.id,
+      status: 'pending',
+      createdAt: Date.now()
+    });
+    localStorage.setItem('tf_payments', JSON.stringify(payments));
+
+    localStorage.removeItem('tf_cart');
+    
+    alert(`✅ تم تسجيل الطلب بنجاح!\n\n📦 رقم الطلب: ${order.id}\n💰 المبلغ الكلي: ${order.total} ج.م\n\n🔴 الرجاء تحويل المبلغ إلى Vodafone Cash: 01017365486\n\nبعد التحويل، سيتم استلام طلبك خلال 48 ساعة`);
+    
+    setTimeout(() => window.location.href = '/store.html', 2000);
+  }
+  </script>
+</body>
+</html>

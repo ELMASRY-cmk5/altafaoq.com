@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تعديل الطلب — التفوق</title>
+  <style>
+    :root {
+      --accent: #1a237e;
+      --accent2: #ffd600;
+      --bg: #f7f3e3;
+      --bg-dark: #181c24;
+      --card: #fffbe6;
+      --card-dark: #23283a;
+      --muted: #6b7280;
+      --muted-dark: #b0b6c3;
+      --radius: 16px;
+      --shadow: 0 8px 40px rgba(12, 32, 63, 0.13);
+      --font: "Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh: #c7a76c;
+      --papyrus: #f5e6c2;
+      --border: #e0c68c;
+      --danger: #d32f2f;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #222;
+      font-family: var(--font);
+      transition: 0.2s;
+    }
+
+    .site-header {
+      background: linear-gradient(90deg, #fffbe6 70%, #f5e6c2 100%);
+      box-shadow: 0 2px 8px rgba(199, 167, 108, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 2px solid var(--border);
+      padding: 1.3rem 1.7rem;
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-family: "Cairo", serif;
+      text-decoration: none;
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.7rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      color: var(--accent2);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      border: 2px solid var(--pharaoh);
+      margin-bottom: 1.5rem;
+    }
+
+    .card h2 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 1rem;
+      background: var(--bg);
+      color: #222;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(255, 214, 0, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .items-list {
+      background: var(--papyrus);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--card);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .item-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    .item-price {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .item-qty {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 1rem;
+    }
+
+    .qty-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .qty-btn:hover {
+      background: var(--accent2);
+      color: var(--accent);
+    }
+
+    .remove-btn {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .remove-btn:hover {
+      opacity: 0.8;
+    }
+
+    .totals {
+      background: var(--papyrus);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .total-row.final {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent);
+      border-top: 2px solid var(--border);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.2s;
+      text-decoration: none;
+      font-family: var(--font);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn.secondary {
+      background: var(--accent2);
+      color: var(--accent);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .alert {
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .alert.active {
+      display: block;
+    }
+
+    .alert.success {
+      background: #c8e6c9;
+      color: #2e7d32;
+      border: 2px solid #81c784;
+    }
+
+    .alert.error {
+      background: #ffccbc;
+      color: #d84315;
+      border: 2px solid #ff7043;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: #f3f6fa;
+    }
+
+    body.dark .site-header {
+      background: linear-gradient(90deg, #23283a, #23283a);
+      border-bottom: 2px solid #444;
+    }
+
+    body.dark .card,
+    body.dark .items-list {
+      background: var(--card-dark);
+      color: #f3f6fa;
+      border-color: #444;
+    }
+
+    body.dark .form-input,
+    body.dark .form-textarea,
+    body.dark .form-select {
+      background: #303a47;
+      border-color: #444;
+      color: #f3f6fa;
+    }
+
+    body.dark .item-row {
+      background: #303a47;
+      border-color: #444;
+    }
+
+    body.dark .totals {
+      background: #303a47;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .item-row {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .item-qty {
+        margin: 0;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+      <a href="/home.html" class="brand">
+        <span>✏️</span> تعديل الطلب
+      </a>
+      <button id="themeToggle" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">🌓</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <a href="/student-dashboard.html?tab=orders" class="back-link">← العودة للطلبات</a>
+
+    <div id="alertBox" class="alert"></div>
+
+    <!-- معلومات الطلب -->
+    <div class="card">
+      <h2>معلومات الطلب</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">رقم الطلب</label>
+          <input type="text" id="orderId" class="form-input" disabled />
+        </div>
+        <div class="form-group">
+          <label class="form-label">حالة الطلب</label>
+          <div style="padding: 0.8rem; display: flex; align-items: center;">
+            <span class="status-badge" id="orderStatus">قيد الانتظار</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">تاريخ الطلب</label>
+          <input type="text" id="orderDate" class="form-input" disabled />
+        </div>
+        <div class="form-group">
+          <label class="form-label">التاريخ المتوقع للتسليم</label>
+          <input type="text" id="deliveryDate" class="form-input" disabled />
+        </div>
+      </div>
+    </div>
+
+    <!-- المنتجات -->
+    <div class="card">
+      <h2>المنتجات المطلوبة</h2>
+      <div class="items-list" id="itemsList">
+        <!-- يتم ملؤه ديناميكياً -->
+      </div>
+    </div>
+
+    <!-- عنوان التسليم -->
+    <div class="card">
+      <h2>عنوان التسليم</h2>
+      <div class="form-group">
+        <label class="form-label">المحافظة *</label>
+        <select id="governorate" class="form-select" required>
+          <option value="">اختر محافظة</option>
+          <option value="القاهرة">القاهرة</option>
+          <option value="الجيزة">الجيزة</option>
+          <option value="الإسكندرية">الإسكندرية</option>
+          <option value="المنيا">المنيا</option>
+          <option value="سوهاج">سوهاج</option>
+          <option value="الأقصر">الأقصر</option>
+          <option value="أسوان">أسوان</option>
+          <option value="قنا">قنا</option>
+          <option value="الفيوم">الفيوم</option>
+          <option value="بني سويف">بني سويف</option>
+          <option value="الغربية">الغربية</option>
+          <option value="كفر الشيخ">كفر الشيخ</option>
+          <option value="الدقهلية">الدقهلية</option>
+          <option value="الشرقية">الشرقية</option>
+          <option value="بورسعيد">بورسعيد</option>
+          <option value="الإسماعيلية">الإسماعيلية</option>
+          <option value="السويس">السويس</option>
+          <option value="شمال سيناء">شمال سيناء</option>
+          <option value="جنوب سيناء">جنوب سيناء</option>
+          <option value="البحر الأحمر">البحر الأحمر</option>
+          <option value="الوادي الجديد">الوادي الجديد</option>
+          <option value="مطروح">مطروح</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">المدينة *</label>
+        <input type="text" id="city" class="form-input" placeholder="مثال: القاهرة" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">العنوان التفصيلي *</label>
+        <input type="text" id="address" class="form-input" placeholder="مثال: شارع النيل، بناء 123" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ملاحظات (اختياري)</label>
+        <textarea id="notes" class="form-textarea" placeholder="مثال: توصيل إلى الطابق الثاني"></textarea>
+      </div>
+    </div>
+
+    <!-- طريقة الدفع -->
+    <div class="card">
+      <h2>طريقة الدفع</h2>
+      <div class="form-group">
+        <label class="form-label">اختر طريقة الدفع *</label>
+        <select id="paymentMethod" class="form-select" required>
+          <option value="">اختر الطريقة</option>
+          <option value="vodafone_cash">Vodafone Cash</option>
+          <option value="cash_on_delivery">الدفع عند الاستقبال</option>
+        </select>
+      </div>
+
+      <div id="vodafoneFields" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">رقم محفظة Vodafone *</label>
+          <input type="tel" id="vodafoneNumber" class="form-input" placeholder="مثال: 01001234567" />
+        </div>
+      </div>
+    </div>
+
+    <!-- الملخص المالي -->
+    <div class="totals">
+      <div class="total-row">
+        <span>السعر الفرعي</span>
+        <span id="subtotal">0.00</span>
+      </div>
+      <div class="total-row">
+        <span>رسوم التوصيل</span>
+        <span id="shipping">90.00</span>
+      </div>
+      <div class="total-row final">
+        <span>الإجمالي</span>
+        <span id="total">0.00</span>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a href="/student-dashboard.html?tab=orders" class="btn" style="background: var(--muted);">←‌ العودة</a>
+      <button class="btn secondary" onclick="saveChanges()">💾 حفظ التعديلات</button>
+    </div>
+  </main>
+
+  <script>
+    const orderId = new URLSearchParams(window.location.search).get('id');
+    let currentOrder = null;
+
+    // Dark mode
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('tf_theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+
+    // Payment method change
+    document.getElementById('paymentMethod').addEventListener('change', (e) => {
+      const vodafoneFields = document.getElementById('vodafoneFields');
+      if (e.target.value === 'vodafone_cash') {
+        vodafoneFields.style.display = 'block';
+      } else {
+        vodafoneFields.style.display = 'none';
+      }
+    });
+
+    // Load order
+    document.addEventListener('DOMContentLoaded', () => {
+      loadOrder();
+    });
+
+    function loadOrder() {
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      currentOrder = orders.find(o => o.id === orderId);
+
+      if (!currentOrder) {
+        showAlert('الطلب غير موجود', 'error');
+        return;
+      }
+
+      // Check if order can be edited (only pending orders)
+      if (currentOrder.status !== 'pending') {
+        showAlert('لا يمكن تعديل الطلب - تم بدء معالجته بالفعل', 'error');
+        setTimeout(() => window.history.back(), 2000);
+        return;
+      }
+
+      // Fill order info
+      document.getElementById('orderId').value = currentOrder.id;
+      document.getElementById('orderStatus').textContent = getStatusText(currentOrder.status);
+      document.getElementById('orderDate').value = new Date(currentOrder.createdAt).toLocaleDateString('ar-EG');
+      document.getElementById('deliveryDate').value = currentOrder.estimatedDelivery
+        ? new Date(currentOrder.estimatedDelivery).toLocaleDateString('ar-EG')
+        : 'قريباً';
+
+      // Fill items
+      renderItems();
+
+      // Fill shipping
+      if (currentOrder.shippingAddress) {
+        document.getElementById('governorate').value = currentOrder.shippingAddress.governorate || '';
+        document.getElementById('city').value = currentOrder.shippingAddress.city || '';
+        document.getElementById('address').value = currentOrder.shippingAddress.address || '';
+        document.getElementById('notes').value = currentOrder.shippingAddress.notes || '';
+      }
+
+      // Fill payment
+      document.getElementById('paymentMethod').value = currentOrder.paymentMethod || '';
+      if (currentOrder.paymentMethod === 'vodafone_cash') {
+        document.getElementById('vodafoneFields').style.display = 'block';
+        document.getElementById('vodafoneNumber').value = currentOrder.vodafoneNumber || '';
+      }
+
+      updateTotals();
+    }
+
+    function renderItems() {
+      const itemsList = document.getElementById('itemsList');
+      itemsList.innerHTML = currentOrder.items
+        .map(
+          (item, idx) => `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">${item.price} ج.م</div>
+          </div>
+          <div class="item-qty">
+            <button class="qty-btn" onclick="updateQty(${idx}, -1)">−</button>
+            <input type="number" value="${item.quantity}" style="width: 50px; text-align: center; border: 1px solid var(--border); border-radius: 5px; padding: 0.3rem;" readonly />
+            <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${idx})">🗑️ حذف</button>
+        </div>
+      `
+        )
+        .join('');
+    }
+
+    function updateQty(idx, change) {
+      currentOrder.items[idx].quantity += change;
+      if (currentOrder.items[idx].quantity < 1) {
+        currentOrder.items[idx].quantity = 1;
+      }
+      renderItems();
+      updateTotals();
+    }
+
+    function removeItem(idx) {
+      if (confirm('هل تريد إزالة هذا المنتج من الطلب؟')) {
+        currentOrder.items.splice(idx, 1);
+        if (currentOrder.items.length === 0) {
+          showAlert('لا يمكن حذف جميع المنتجات', 'error');
+          loadOrder();
+          return;
+        }
+        renderItems();
+        updateTotals();
+      }
+    }
+
+    function updateTotals() {
+      const subtotal = currentOrder.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+      document.getElementById('total').textContent = (subtotal + 90).toFixed(2);
+    }
+
+    function saveChanges() {
+      // Validate shipping info
+      const gov = document.getElementById('governorate').value;
+      const city = document.getElementById('city').value.trim();
+      const addr = document.getElementById('address').value.trim();
+      const payment = document.getElementById('paymentMethod').value;
+
+      if (!gov || !city || !addr || !payment) {
+        showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
+        return;
+      }
+
+      if (payment === 'vodafone_cash' && !document.getElementById('vodafoneNumber').value.trim()) {
+        showAlert('يرجى إدخال رقم محفظة Vodafone', 'error');
+        return;
+      }
+
+      // Update order
+      currentOrder.shippingAddress = {
+        governorate: gov,
+        city: city,
+        address: addr,
+        notes: document.getElementById('notes').value.trim()
+      };
+      currentOrder.paymentMethod = payment;
+      if (payment === 'vodafone_cash') {
+        currentOrder.vodafoneNumber = document.getElementById('vodafoneNumber').value.trim();
+      }
+
+      // Recalculate totals
+      const subtotal = currentOrder.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      currentOrder.subtotal = subtotal;
+      currentOrder.shipping = 90;
+      currentOrder.total = subtotal + 90;
+
+      // Save
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const idx = orders.findIndex(o => o.id === orderId);
+      if (idx !== -1) {
+        orders[idx] = currentOrder;
+        localStorage.setItem('tf_orders', JSON.stringify(orders));
+        showAlert('✅ تم حفظ التعديلات بنجاح', 'success');
+        setTimeout(() => window.history.back(), 1500);
+      }
+    }
+
+    function getStatusText(status) {
+      const map = {
+        pending: 'قيد الانتظار',
+        processing: 'قيد المعالجة',
+        shipped: 'تم الشحن',
+        delivered: 'تم التسليم'
+      };
+      return map[status] || status;
+    }
+
+    function showAlert(message, type) {
+      const alert = document.getElementById('alertBox');
+      alert.textContent = message;
+      alert.className = `alert active ${type}`;
+      setTimeout(() => {
+        alert.classList.remove('active');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

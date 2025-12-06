@@ -1,0 +1,1456 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة المدير المتقدمة — التفوق</title>
+  <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    .container{max-width:1200px;margin:0 auto;padding:1.7rem}
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:1.3rem 1.7rem}
+    .brand{font-size:2rem;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;color:var(--accent);text-decoration:none}
+    .brand img{height:2.5rem}
+    .brand-accent{color:var(--accent2)}
+    .header-actions{display:flex;gap:1rem;align-items:center}
+    .theme-toggle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#ffb300);border:2px solid var(--pharaoh);cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:.3s}
+    .theme-toggle:hover{transform:scale(1.1)}
+    .logout-btn{padding:.6rem 1.2rem;background:#d32f2f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+    .logout-btn:hover{opacity:.8}
+    .card{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2rem;border:2px solid var(--pharaoh)}
+    .card h2,.card h3{color:var(--accent);font-family:"Cairo",serif;margin-bottom:1.5rem}
+    .tabs{display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:2px solid var(--border);flex-wrap:wrap;overflow-x:auto}
+    .tab-btn{background:none;border:none;padding:.8rem 1.2rem;font-size:1rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;font-family:var(--font);font-weight:500;white-space:nowrap}
+    .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+    .tab-content{display:none}
+    .tab-content.active{display:block;animation:fadeIn .3s}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:1rem;transition:.2s;font-family:var(--font)}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .btn.secondary{background:var(--accent2);color:var(--accent)}
+    .btn.danger{background:#d32f2f}
+    .btn.small{padding:.5rem 1rem;font-size:.9rem}
+    table{width:100%;border-collapse:collapse;margin-top:1rem;background:var(--papyrus);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:1rem;border-bottom:1px solid #e0c68c;text-align:right}
+    th{background:var(--accent2);color:var(--accent);font-weight:600}
+    tr:hover{background:rgba(255,214,0,.1)}
+    .form-group{margin-bottom:1.5rem}
+    .form-label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--accent)}
+    input,textarea,select{width:100%;padding:.8rem;border:2px solid var(--border);border-radius:8px;font-family:var(--font);font-size:1rem;background:var(--bg);color:#222}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(255,214,0,.1)}
+    textarea{resize:vertical;min-height:80px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+    .modal.active{display:flex}
+    .modal-content{background:var(--card);border-radius:var(--radius);padding:2rem;max-width:700px;width:90%;max-height:90vh;overflow-y:auto;border:2px solid var(--pharaoh)}
+    .modal-header{font-size:1.5rem;font-weight:600;color:var(--accent);margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+    .modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+    .stat-card{background:var(--papyrus);padding:1.5rem;border-radius:10px;border-left:4px solid var(--accent2);margin-bottom:1rem}
+    .stat-card strong{color:var(--accent);font-size:1.3rem;display:block;margin-bottom:.5rem}
+    .order-detail{background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1rem;border:2px solid var(--pharaoh)}
+    .order-detail strong{color:var(--accent);display:block;margin:.5rem 0}
+    .session-badge{display:inline-block;padding:.4rem .8rem;border-radius:6px;font-size:.85rem;font-weight:600;background:#c8e6c9;color:#2e7d32}
+    .session-badge.inactive{background:#ffccbc;color:#d84315}
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a);border-bottom:2px solid #444}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    body.dark table{background:var(--card-dark)}
+    body.dark th{background:var(--accent2);color:#1a237e}
+    body.dark input,body.dark textarea,body.dark select{background:#303a47;color:#f3f6fa;border-color:#555}
+    body.dark .modal-content{background:var(--card-dark)}
+    body.dark .order-detail,body.dark .stat-card{background:#303a47;border-color:#555}
+    .image-preview{max-width:200px;max-height:200px;border-radius:8px;margin-top:.5rem;border:2px solid var(--border)}
+    .empty-state{text-align:center;padding:2rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/home.html" class="brand">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBcTf0pcoW5Bwz1GdzTdJyWqlTc9_RIS2G5Q&s" alt="شعار التفوق" style="height:2.5rem;vertical-align:middle;filter:drop-shadow(0 2px 6px #c7a76c80);margin-left:.7rem" /> لوحة <span class="brand-accent">الأدمن</span>
+    </a>
+    <div class="header-actions">
+      <span id="adminName" style="color:var(--accent);font-weight:600"></span>
+      <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      <button class="logout-btn" onclick="logoutAdmin()">تسجيل الخروج</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="notAuth" class="card">
+      <h2 style="text-align:center">🔒 تحقق من الوصول</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:2rem">
+        يجب أن تكون مسجل دخول كأدمن للوصول إلى لوحة التحكم
+      </p>
+      <div style="text-align:center">
+        <a href="/login.html" class="btn secondary">← العودة لصفحة الدخول</a>
+      </div>
+    </div>
+
+    <div id="adminPanel" style="display:none">
+      <!-- Statistics -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-bottom:2rem">
+        <div class="stat-card">
+          <strong id="totalUsers">0</strong>
+          <small>👥 إجمالي الطلاب</small>
+        </div>
+        <div class="stat-card">
+          <strong id="totalOrders">0</strong>
+          <small>📦 إجمالي الطلبات</small>
+        </div>
+        <div class="stat-card">
+          <strong id="totalRevenue">0</strong>
+          <small>💰 إجمالي المبيعات</small>
+        </div>
+        <div class="stat-card">
+          <strong id="activeSessions">0</strong>
+          <small>🔌 جلسات نشطة</small>
+        </div>
+      </div>
+
+      <!-- Main Card -->
+      <div class="card">
+        <h2 style="text-align:center;margin-bottom:2rem">⚙️ لوحة التحكم الشاملة</h2>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="dashboard">📊 الرئيسية</button>
+          <button class="tab-btn" data-tab="students">👥 الطلاب</button>
+          <button class="tab-btn" data-tab="assignments">✏️ الواجبات</button>
+          <button class="tab-btn" data-tab="exams">🧪 الامتحانات</button>
+          <button class="tab-btn" data-tab="orders">📦 الطلبات</button>
+          <button class="tab-btn" data-tab="payments">💳 طلبات الدفع</button>
+          <button class="tab-btn" data-tab="courses">📚 الكورسات</button>
+          <button class="tab-btn" data-tab="uploads">📤 التحميلات</button>
+          <button class="tab-btn" data-tab="sessions">🔌 الجلسات</button>
+          <button class="tab-btn" data-tab="admins">👑 الأدمنز</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+          <h3>📊 نظرة عامة على النظام</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1.5rem">
+            <p style="margin:0;color:var(--muted)">
+              ✅ النظام يعمل بنجاح مع نظام إدارة جلسات متقدم
+            </p>
+            <p style="margin:1rem 0 0 0;color:var(--muted)">
+              🔒 كل طالب محدود بجلسة واحدة نشطة فقط - إذا سجل من جهاز آخر تُغلق جلسته القديمة
+            </p>
+          </div>
+          
+          <h4 style="color:var(--accent);margin-top:2rem;margin-bottom:1rem">🚀 الميزات المتاحة:</h4>
+          <ul style="text-align:right;color:var(--muted);line-height:2">
+            <li>✓ عرض كامل بيانات الطلاب مع جميع التفاصيل</li>
+            <li>✓ تعديل بيانات الطلاب مباشرة من لوحة الأدمن</li>
+            <li>✓ عرض تفاصيل الطلبات بالكامل (العناوين، المنتجات، الأسعار)</li>
+            <li>✓ إدارة الجلسات - طالب واحد في جهاز واحد فقط</li>
+            <li>✓ تحميل صور للكورسات والكتب والمنتجات</li>
+            <li>✓ تتبع الجلسات والأنشطة</li>
+            <li>✓ إدارة الكورسات والدروس والاختبارات</li>
+            <li>✓ إدارة الواجبات والامتحانات لكل طالب</li>
+            <li>✓ عرض إحصائيات الطلاب الكاملة</li>
+          </ul>
+
+          <div style="background:var(--pharaoh);padding:2rem;border-radius:10px;margin-top:2rem;text-align:center">
+            <h4 style="color:#fff;margin-bottom:1rem">🎓 الكورسات والدروس</h4>
+            <p style="color:#fff;margin-bottom:1.5rem">استخدم الزر أدناه لإدارة الكورسات والدروس والاختبارات بشكل كامل</p>
+            <a href="/manage-courses.html" class="btn secondary" style="background:white;color:var(--accent);font-weight:bold;padding:1rem 2rem;font-size:1.1rem">
+              🎓 إدارة الكورسات والدروس
+            </a>
+          </div>
+
+          <div style="background:var(--accent);padding:2rem;border-radius:10px;margin-top:2rem;text-align:center">
+            <h4 style="color:#fff;margin-bottom:1rem">📊 إحصائيات الطلاب</h4>
+            <p style="color:#fff;margin-bottom:1.5rem">عرض شامل لإحصائيات كل طالب (محاضرات، واجبات، امتحانات)</p>
+            <a href="/student-statistics.html" class="btn secondary" style="background:white;color:var(--accent);font-weight:bold;padding:1rem 2rem;font-size:1.1rem">
+              📊 عرض الإحصائيات
+            </a>
+          </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+          <h3>👥 إدارة الطلاب</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد</th>
+                <th>الهاتف</th>
+                <th>الجلسة النشطة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="studentsList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Assignments Tab -->
+        <div id="assignments" class="tab-content">
+          <h3>✏️ إدارة الواجبات</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة واجب جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">اسم الواجب</label>
+                <input type="text" id="assignmentName" placeholder="مثال: حل المسائل من الكتاب" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الطالب (البريد)</label>
+                <input type="email" id="assignmentStudent" placeholder="student@example.com" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">من (الدرجة)</label>
+                <input type="number" id="assignmentTotal" placeholder="100" value="100" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الدرجة المحققة</label>
+                <input type="number" id="assignmentGrade" placeholder="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الملاحظات</label>
+              <textarea id="assignmentNotes" placeholder="أي ملاحظات على الواجب"></textarea>
+            </div>
+            <button class="btn secondary" onclick="addAssignment()">➕ إضافة الواجب</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">قائمة الواجبات:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الواجب</th>
+                <th>الطالب</th>
+                <th>الدرجة</th>
+                <th>النسبة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="assignmentsList">
+              <tr><td colspan="5" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Exams Tab -->
+        <div id="exams" class="tab-content">
+          <h3>🧪 إدارة الامتحانات</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة امتحان جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">اسم الامتحان</label>
+                <input type="text" id="examName" placeholder="مثال: اختبار الفصل الأول" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الطالب (البريد)</label>
+                <input type="email" id="examStudent" placeholder="student@example.com" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">من (الدرجة)</label>
+                <input type="number" id="examTotal" placeholder="100" value="100" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الدرجة المحققة</label>
+                <input type="number" id="examGrade" placeholder="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">المادة/الموضوع</label>
+              <input type="text" id="examSubject" placeholder="الرياضيات، العربية، إلخ" />
+            </div>
+            <button class="btn secondary" onclick="addExam()">➕ إضافة الامتحان</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">قائمة الامتحانات:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الامتحان</th>
+                <th>المادة</th>
+                <th>الطالب</th>
+                <th>الدرجة</th>
+                <th>النسبة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="examsList">
+              <tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+          <h3>📦 تفاصيل الطلبات</h3>
+          <div id="ordersList">
+            <p class="empty-state">جاري التحميل...</p>
+          </div>
+        </div>
+
+        <!-- Payment Requests Tab -->
+        <div id="payments" class="tab-content">
+          <h3>💳 طلبات الدفع من الطلاب</h3>
+          <div id="paymentStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+            <div class="stat-card">
+              <strong id="pendingPayments">0</strong>
+              <small>⏳ قيد الانتظار</small>
+            </div>
+            <div class="stat-card">
+              <strong id="approvedPayments">0</strong>
+              <small>✅ موافق عليها</small>
+            </div>
+            <div class="stat-card">
+              <strong id="rejectedPayments">0</strong>
+              <small>❌ مرفوضة</small>
+            </div>
+            <div class="stat-card">
+              <strong id="totalPaymentAmount">0</strong>
+              <small>💰 إجمالي المبالغ</small>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>الطالب</th>
+                <th>الكورس</th>
+                <th>المبلغ</th>
+                <th>طريقة الدفع</th>
+                <th>رقم العملية</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsList">
+              <tr><td colspan="8" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="courses" class="tab-content">
+          <h3>📚 إدارة الكورسات</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">➕ إضافة كورس جديد</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">اسم الكورس</label>
+                <input type="text" id="courseTitle" placeholder="مثال: الرياضيات - الجبر" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الصف</label>
+                <select id="courseGrade">
+                  <option value="">اختر الصف</option>
+                  <option value="1">الصف الأول الثانوي</option>
+                  <option value="2">الصف الثاني الثانوي</option>
+                  <option value="3">الصف الثالث الثانوي</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الوصف</label>
+              <textarea id="courseDesc" placeholder="وصف الكورس"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">صورة الكورس (رابط URL)</label>
+              <input type="url" id="courseImage" placeholder="https://example.com/image.jpg" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">عدد الدروس</label>
+                <input type="number" id="courseLessons" placeholder="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">السعر (ج.م)</label>
+                <input type="number" id="coursePrice" step="0.01" placeholder="0" />
+              </div>
+            </div>
+            <button class="btn secondary" onclick="addCourse()">➕ إضافة الكورس</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">الكورسات الموجودة:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>الصورة</th>
+                <th>الاسم</th>
+                <th>الصف</th>
+                <th>الدروس</th>
+                <th>السعر</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="coursesList">
+              <tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Uploads Tab -->
+        <div id="uploads" class="tab-content">
+          <h3>📤 إدارة التحميلات</h3>
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:2rem;border:2px solid var(--pharaoh)">
+            <h4 style="color:var(--accent);margin-bottom:1rem">📤 تحميل صورة</h4>
+            <div class="form-group">
+              <label class="form-label">اختر نوع التحميل</label>
+              <select id="uploadType" onchange="updateUploadInfo()">
+                <option value="">اختر النوع</option>
+                <option value="course">صورة كورس</option>
+                <option value="book">صورة كتاب</option>
+                <option value="product">صورة منتج</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">رابط الصورة (URL)</label>
+              <input type="url" id="uploadUrl" placeholder="https://example.com/image.jpg" />
+              <div id="uploadPreview" style="margin-top:1rem"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الاسم/الوصف</label>
+              <input type="text" id="uploadName" placeholder="اسم الكورس أو الكتاب" />
+            </div>
+            <button class="btn secondary" onclick="uploadImage()">📤 تحميل الصورة</button>
+          </div>
+
+          <h4 style="color:var(--accent);margin-bottom:1rem">الصور المحملة:</h4>
+          <div id="uploadsList"></div>
+        </div>
+
+        <!-- Sessions Tab -->
+        <div id="sessions" class="tab-content">
+          <h3>🔌 إدارة الجلسات</h3>
+          <p style="color:var(--muted);margin-bottom:1.5rem">
+            النظام يوفر جلسة واحدة نشطة فقط لكل طالب. إذا سجل من جهاز آخر تُغلق الجلسة القديمة تلقائياً.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>الطالب</th>
+                <th>رقم الجلسة</th>
+                <th>وقت البداية</th>
+                <th>المدة</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="sessionsList">
+              <tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Admins Tab -->
+        <div id="admins" class="tab-content">
+          <h3>👑 إدارة الأدمنز</h3>
+          <button class="btn secondary" style="margin-bottom:1.5rem" onclick="openModal('addAdminModal')">➕ إضافة أدمن جديد</button>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد</th>
+                <th>الهاتف</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="adminsList">
+              <tr><td colspan="4" class="empty-state">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Admin Modal -->
+  <div id="addAdminModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>إضافة أدمن جديد</span>
+        <button class="modal-close" onclick="closeModal('addAdminModal')">✕</button>
+      </div>
+      <form onsubmit="addAdmin(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">الاسم</label>
+            <input type="text" id="adminNameInput" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" id="adminEmailInput" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="tel" id="adminPhoneInput" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">كلمة المرور</label>
+            <input type="password" id="adminPasswordInput" required />
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:2rem">
+          <button type="button" class="btn" style="background:var(--muted)" onclick="closeModal('addAdminModal')">إلغاء</button>
+          <button type="submit" class="btn secondary">➕ إضافة الأدمن</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Student Modal -->
+  <div id="editStudentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>تعديل بيانات الطالب</span>
+        <button class="modal-close" onclick="closeModal('editStudentModal')">✕</button>
+      </div>
+      <form onsubmit="saveStudentChanges(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">الاسم</label>
+            <input type="text" id="editStudentName" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" id="editStudentEmail" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="tel" id="editStudentPhone" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">رقم الطالب</label>
+            <input type="text" id="editStudentNumber" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">الصف</label>
+            <select id="editStudentGrade">
+              <option value="1">الصف الأول الثانوي</option>
+              <option value="2">الصف الثاني الثانوي</option>
+              <option value="3">الصف الثالث الثانوي</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">المدرسة</label>
+            <input type="text" id="editStudentSchool" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الملاحظات</label>
+          <textarea id="editStudentNotes" placeholder="ملاحظات إدارية"></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:2rem">
+          <button type="button" class="btn" style="background:var(--muted)" onclick="closeModal('editStudentModal')">إلغاء</button>
+          <button type="submit" class="btn secondary">💾 حفظ التعديلات</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div id="orderDetailsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>تفاصيل الطلب</span>
+        <button class="modal-close" onclick="closeModal('orderDetailsModal')">✕</button>
+      </div>
+      <div id="orderDetailsContent"></div>
+    </div>
+  </div>
+
+  <script src="/advanced-storage.js"></script>
+  <script>
+    let currentAdmin = null;
+    let currentEditStudent = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('tf_theme') === 'dark') {
+        document.body.classList.add('dark');
+      }
+
+      currentAdmin = JSON.parse(localStorage.getItem('tf_current') || 'null');
+      if (!currentAdmin || currentAdmin.role !== 'admin') {
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('notAuth').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('notAuth').style.display = 'none';
+      document.getElementById('adminName').textContent = `👋 ${currentAdmin.name}`;
+
+      loadAllData();
+      setupTabSwitching();
+      loadAdmins();
+    });
+
+    function setupTabSwitching() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          const tabName = btn.dataset.tab;
+          document.getElementById(tabName).classList.add('active');
+          
+          if (tabName === 'courses') loadCourses();
+          if (tabName === 'sessions') loadSessions();
+          if (tabName === 'admins') loadAdmins();
+          if (tabName === 'assignments') loadAssignments();
+          if (tabName === 'exams') loadExams();
+        });
+      });
+    }
+
+    function loadAllData() {
+      loadStudents();
+      loadOrders();
+      loadCourses();
+      loadUploads();
+      loadSessions();
+      updateStats();
+      loadAdmins();
+      loadAssignments();
+      loadExams();
+    }
+
+    // Admins Management
+    function loadAdmins() {
+      const admins = JSON.parse(localStorage.getItem('tf_admins') || '[]');
+      const tbody = document.getElementById('adminsList');
+      if (!tbody) return;
+      if (admins.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">📋 لا يوجد أدمنز حالياً</td></tr>';
+        return;
+      }
+      tbody.innerHTML = admins.map(a => `
+        <tr>
+          <td><strong>${a.name}</strong></td>
+          <td>${a.email || '-'}</td>
+          <td>${a.phone || '-'}</td>
+          <td>
+            <button class="btn small danger" onclick="deleteAdmin('${a.id}')">🗑️ حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addAdmin(e) {
+      e.preventDefault();
+      const name = document.getElementById('adminNameInput').value.trim();
+      const email = document.getElementById('adminEmailInput').value.trim();
+      const phone = document.getElementById('adminPhoneInput').value.trim();
+      const password = document.getElementById('adminPasswordInput').value.trim();
+      if (!name || !email || !phone || !password) {
+        alert('⚠️ يرجى ملء جميع الحقول');
+        return;
+      }
+      const admins = JSON.parse(localStorage.getItem('tf_admins') || '[]');
+      if (admins.find(a => a.email === email)) {
+        alert('⚠️ يوجد أدمن بنفس البريد الإلكتروني');
+        return;
+      }
+      admins.push({
+        id: 'admin_' + Date.now(),
+        name,
+        email,
+        phone,
+        password: btoa(password),
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('tf_admins', JSON.stringify(admins));
+      closeModal('addAdminModal');
+      loadAdmins();
+      alert('✅ تم إضافة الأدمن بنجاح');
+      document.getElementById('adminNameInput').value = '';
+      document.getElementById('adminEmailInput').value = '';
+      document.getElementById('adminPhoneInput').value = '';
+      document.getElementById('adminPasswordInput').value = '';
+    }
+
+    function deleteAdmin(id) {
+      if (!confirm('هل تريد حذف هذا الأدمن؟')) return;
+      const admins = JSON.parse(localStorage.getItem('tf_admins') || '[]');
+      const filtered = admins.filter(a => a.id !== id);
+      localStorage.setItem('tf_admins', JSON.stringify(filtered));
+      loadAdmins();
+      alert('✅ تم حذف الأدمن بنجاح');
+    }
+
+    // Students Management
+    function loadStudents() {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const tbody = document.getElementById('studentsList');
+      
+      if (students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">📋 لا يوجد طلاب حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = students.map(s => `
+        <tr>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.email || '-'}</td>
+          <td>${s.phone || '-'}</td>
+          <td>
+            ${s.sessionId ? `<span class="session-badge">${s.sessionId.substring(0, 8)}</span>` : '<span class="session-badge inactive">لا توجد</span>'}
+          </td>
+          <td>
+            <button class="btn small" onclick="editStudent('${s.id}')">✏️ تعديل</button>
+            <button class="btn small danger" onclick="deleteStudent('${s.id}')">🗑️ حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function editStudent(studentId) {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      currentEditStudent = student;
+      document.getElementById('editStudentName').value = student.name;
+      document.getElementById('editStudentEmail').value = student.email || '';
+      document.getElementById('editStudentPhone').value = student.phone || '';
+      document.getElementById('editStudentNumber').value = student.studentNumber || '';
+      document.getElementById('editStudentGrade').value = student.grade || '1';
+      document.getElementById('editStudentSchool').value = student.schoolName || '';
+      document.getElementById('editStudentNotes').value = student.notes || '';
+
+      openModal('editStudentModal');
+    }
+
+    function saveStudentChanges(e) {
+      e.preventDefault();
+      if (!currentEditStudent) return;
+
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const idx = students.findIndex(s => s.id === currentEditStudent.id);
+      if (idx === -1) return;
+
+      students[idx] = {
+        ...students[idx],
+        name: document.getElementById('editStudentName').value,
+        email: document.getElementById('editStudentEmail').value,
+        phone: document.getElementById('editStudentPhone').value,
+        studentNumber: document.getElementById('editStudentNumber').value,
+        grade: document.getElementById('editStudentGrade').value,
+        schoolName: document.getElementById('editStudentSchool').value,
+        notes: document.getElementById('editStudentNotes').value
+      };
+
+      localStorage.setItem('tf_students', JSON.stringify(students));
+      closeModal('editStudentModal');
+      loadStudents();
+      alert('✅ تم تحديث بيانات الطالب بنجاح');
+    }
+
+    function deleteStudent(studentId) {
+      if (!confirm('هل تريد حذف هذا الطالب بشكل نهائي؟')) return;
+      
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const filtered = students.filter(s => s.id !== studentId);
+      localStorage.setItem('tf_students', JSON.stringify(filtered));
+      loadStudents();
+      updateStats();
+      alert('✅ تم حذف الطالب بنجاح');
+    }
+
+    // Orders Management
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const container = document.getElementById('ordersList');
+      
+      if (orders.length === 0) {
+        container.innerHTML = '<p class="empty-state">📋 لا توجد طلبات حالياً</p>';
+        return;
+      }
+
+      container.innerHTML = orders.map(o => `
+        <div class="order-detail">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem">
+            <div>
+              <strong>🆔 رقم الطلب:</strong> #${o.id.substring(0, 12)}<br>
+              <strong>👤 الطالب:</strong> ${o.customerName || 'غير محدد'}<br>
+              <strong>📱 الهاتف:</strong> ${o.customerPhone || '-'}<br>
+              <strong>📍 العنوان:</strong> ${o.shippingAddress?.governorate || '-'} - ${o.shippingAddress?.city || '-'}<br>
+              <strong>🏠 التفاصيل:</strong> ${o.shippingAddress?.address || '-'}
+            </div>
+            <div style="text-align:center">
+              <strong style="font-size:1.3rem;color:var(--accent2)">${o.total} ج.م</strong><br>
+              <span style="display:inline-block;background:${o.status === 'delivered' ? '#4caf50' : o.status === 'pending' ? '#ff9800' : '#2196F3'};color:#fff;padding:.4rem .8rem;border-radius:6px;font-size:.85rem;margin-top:.5rem">${o.status}</span>
+            </div>
+          </div>
+          
+          <div style="background:rgba(0,0,0,.05);padding:1rem;border-radius:8px;margin:1rem 0">
+            <strong>📦 المنتجات:</strong>
+            ${o.items.map(i => `
+              <div style="padding:.5rem 0;border-bottom:1px solid rgba(0,0,0,.1)">
+                • ${i.name} x${i.quantity} = ${(i.price * i.quantity).toFixed(2)} ج.م
+              </div>
+            `).join('')}
+            <div style="margin-top:.5rem;font-weight:600">
+              <div>الفرعي: ${o.subtotal?.toFixed(2) || '0.00'} ج.م</div>
+              <div>التوصيل: 90.00 ج.م</div>
+              <div style="color:var(--accent2)">الإجمالي: ${o.total.toFixed(2)} ج.م</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:1rem;margin-top:1rem">
+            <button class="btn small secondary" onclick="viewOrderDetails('${o.id}')">👁️ عرض كامل</button>
+            <button class="btn small" style="background:#2196F3" onclick="updateOrderStatus('${o.id}')">🔄 تحديث الحالة</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Payment Requests Management
+    function loadPaymentRequests() {
+      let payments = [];
+      try {
+        payments = JSON.parse(localStorage.getItem('tf_payments') || '[]');
+      } catch (e) {
+        payments = JSON.parse(sessionStorage.getItem('tf_payments') || '[]');
+      }
+
+      const container = document.getElementById('paymentsList');
+      
+      if (payments.length === 0) {
+        container.innerHTML = '<tr><td colspan="8" class="empty-state">لا توجد طلبات دفع حالياً</td></tr>';
+        updatePaymentStats(payments);
+        return;
+      }
+
+      updatePaymentStats(payments);
+
+      container.innerHTML = payments.map(p => `
+        <tr>
+          <td>${p.studentName}</td>
+          <td>${p.courseTitle}</td>
+          <td>${p.totalAmount} ج.م</td>
+          <td>${p.paymentMethod === 'fawry' ? '📱 فودافون كاش' : '💳 فاوري'}</td>
+          <td style="direction:ltr;font-family:monospace">${p.transactionId}</td>
+          <td>
+            <span style="display:inline-block;padding:.4rem .8rem;border-radius:6px;font-weight:600;
+              background:${p.status === 'pending' ? '#ff9800' : p.status === 'approved' ? '#4caf50' : '#d32f2f'};
+              color:#fff">
+              ${p.status === 'pending' ? '⏳ قيد الانتظار' : p.status === 'approved' ? '✅ موافق' : '❌ مرفوض'}
+            </span>
+          </td>
+          <td>${new Date(p.createdAt).toLocaleDateString('ar-EG')}</td>
+          <td>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn small secondary" onclick="viewPaymentDetails('${p.id}')">👁️</button>
+              ${p.status === 'pending' ? `
+                <button class="btn small" style="background:#4caf50;font-size:.75rem" onclick="approvePayment('${p.id}')">✅ وافق</button>
+                <button class="btn small" style="background:#d32f2f;font-size:.75rem" onclick="rejectPayment('${p.id}')">❌ رفض</button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function updatePaymentStats(payments) {
+      const pending = payments.filter(p => p.status === 'pending').length;
+      const approved = payments.filter(p => p.status === 'approved').length;
+      const rejected = payments.filter(p => p.status === 'rejected').length;
+      const total = payments.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+
+      document.getElementById('pendingPayments').textContent = pending;
+      document.getElementById('approvedPayments').textContent = approved;
+      document.getElementById('rejectedPayments').textContent = rejected;
+      document.getElementById('totalPaymentAmount').textContent = total.toFixed(2) + ' ج.م';
+    }
+
+    function viewPaymentDetails(paymentId) {
+      let payments = [];
+      try {
+        payments = JSON.parse(localStorage.getItem('tf_payments') || '[]');
+      } catch (e) {
+        payments = JSON.parse(sessionStorage.getItem('tf_payments') || '[]');
+      }
+
+      const payment = payments.find(p => p.id === paymentId);
+      if (!payment) return alert('❌ لم يتم العثور على الطلب');
+
+      const modal = document.getElementById('detailsModal');
+      document.getElementById('modalDetails').innerHTML = `
+        <div class="order-detail">
+          <strong>🆔 معرف الطلب:</strong> ${payment.id}<br>
+          <strong>👤 بيانات الطالب:</strong><br>
+          • الاسم: ${payment.studentName}<br>
+          • الهاتف: ${payment.studentPhone}<br>
+          • المعرف: ${payment.studentId}
+        </div>
+
+        <div class="order-detail">
+          <strong>📚 بيانات الكورس:</strong><br>
+          • الكورس: ${payment.courseTitle}<br>
+          • السعر: ${payment.amount} ج.م<br>
+          • الضريبة: ${payment.tax} ج.م<br>
+          • الإجمالي: ${payment.totalAmount} ج.م
+        </div>
+
+        <div class="order-detail">
+          <strong>💳 بيانات الدفع:</strong><br>
+          • الطريقة: ${payment.paymentMethod === 'fawry' ? '📱 فودافون كاش' : '💳 فاوري'}<br>
+          • رقم الهاتف: ${payment.phoneNumber}<br>
+          • رقم العملية: <code>${payment.transactionId}</code><br>
+          • الملاحظات: ${payment.notes || 'لا توجد'}
+        </div>
+
+        <div class="order-detail">
+          <strong>📅 معلومات إضافية:</strong><br>
+          • الحالة: <strong>${payment.status === 'pending' ? '⏳ قيد الانتظار' : payment.status === 'approved' ? '✅ موافق عليها' : '❌ مرفوضة'}</strong><br>
+          • التاريخ: ${new Date(payment.createdAt).toLocaleDateString('ar-EG')}<br>
+          • الوقت: ${new Date(payment.createdAt).toLocaleTimeString('ar-EG')}
+        </div>
+      `;
+      modal.classList.add('active');
+    }
+
+    function approvePayment(paymentId) {
+      if (!confirm('هل تريد الموافقة على هذا الطلب؟')) return;
+
+      let payments = [];
+      try {
+        payments = JSON.parse(localStorage.getItem('tf_payments') || '[]');
+      } catch (e) {
+        payments = JSON.parse(sessionStorage.getItem('tf_payments') || '[]');
+      }
+
+      const payment = payments.find(p => p.id === paymentId);
+      if (!payment) return alert('❌ لم يتم العثور على الطلب');
+
+      payment.status = 'approved';
+      payment.approvedAt = new Date().toISOString();
+
+      // حفظ الطلب المحدث
+      try {
+        localStorage.setItem('tf_payments', JSON.stringify(payments));
+      } catch (e) {
+        sessionStorage.setItem('tf_payments', JSON.stringify(payments));
+      }
+
+      // إضافة الطالب للاشتراك
+      const students = advancedStorage.getAllStudents() || [];
+      const student = students.find(s => s.id === payment.studentId);
+      if (student) {
+        if (!student.subscriptions) student.subscriptions = [];
+        if (!student.subscriptions.includes(payment.courseId)) {
+          student.subscriptions.push(payment.courseId);
+          // تحديث الطالب
+          const updatedStudents = students.map(s => s.id === student.id ? student : s);
+          try {
+            localStorage.setItem('tf_students', JSON.stringify(updatedStudents));
+          } catch (e) {
+            sessionStorage.setItem('tf_students', JSON.stringify(updatedStudents));
+          }
+        }
+      }
+
+      alert('✅ تمت الموافقة على الطلب وإضافة الاشتراك للطالب');
+      loadPaymentRequests();
+    }
+
+    function rejectPayment(paymentId) {
+      const reason = prompt('أدخل سبب الرفض:');
+      if (!reason) return;
+
+      let payments = [];
+      try {
+        payments = JSON.parse(localStorage.getItem('tf_payments') || '[]');
+      } catch (e) {
+        payments = JSON.parse(sessionStorage.getItem('tf_payments') || '[]');
+      }
+
+      const payment = payments.find(p => p.id === paymentId);
+      if (!payment) return alert('❌ لم يتم العثور على الطلب');
+
+      payment.status = 'rejected';
+      payment.rejectionReason = reason;
+      payment.rejectedAt = new Date().toISOString();
+
+      try {
+        localStorage.setItem('tf_payments', JSON.stringify(payments));
+      } catch (e) {
+        sessionStorage.setItem('tf_payments', JSON.stringify(payments));
+      }
+
+      alert('❌ تم رفض الطلب');
+      loadPaymentRequests();
+    }
+
+    function viewOrderDetails(orderId) {
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const detailsHTML = `
+        <div style="display:grid;gap:1rem">
+          <div class="order-detail">
+            <strong>معلومات الطالب:</strong><br>
+            الاسم: ${order.customerName}<br>
+            الهاتف: ${order.customerPhone}<br>
+            البريد: ${order.email || '-'}<br>
+            الصف: ${order.grade || '-'}
+          </div>
+
+          <div class="order-detail">
+            <strong>عنوان التسليم:</strong><br>
+            المحافظة: ${order.shippingAddress?.governorate}<br>
+            المدينة: ${order.shippingAddress?.city}<br>
+            العنوان: ${order.shippingAddress?.address}<br>
+            ملاحظات: ${order.shippingAddress?.notes || 'لا توجد'}
+          </div>
+
+          <div class="order-detail">
+            <strong>المنتجات (${order.items.length}):</strong><br>
+            ${order.items.map(i => `
+              <div style="margin:.5rem 0">
+                📦 ${i.name}<br>
+                السعر: ${i.price} ج.م × ${i.quantity} = ${(i.price * i.quantity).toFixed(2)} ج.م
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="order-detail">
+            <strong>الملخص المالي:</strong><br>
+            السعر الفرعي: ${order.subtotal?.toFixed(2)} ج.م<br>
+            التوصيل: 90.00 ج.م<br>
+            <strong style="color:var(--accent2);font-size:1.1rem">الإجمالي: ${order.total?.toFixed(2)} ج.م</strong>
+          </div>
+
+          <div class="order-detail">
+            <strong>طريقة الدفع:</strong> ${order.paymentMethod === 'vodafone_cash' ? 'Vodafone Cash' : 'الدفع عند الاستقبال'}<br>
+            <strong>الحالة:</strong> ${order.status}<br>
+            <strong>التاريخ:</strong> ${new Date(order.createdAt).toLocaleDateString('ar-EG')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('orderDetailsContent').innerHTML = detailsHTML;
+      openModal('orderDetailsModal');
+    }
+
+    function updateOrderStatus(orderId) {
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const statuses = ['pending', 'processing', 'shipped', 'delivered'];
+      const currentIndex = statuses.indexOf(order.status);
+      const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+
+      order.status = nextStatus;
+      localStorage.setItem('tf_orders', JSON.stringify(orders));
+      loadOrders();
+      alert(`✅ تم تحديث حالة الطلب إلى: ${nextStatus}`);
+    }
+
+    // Courses Management
+    function loadCourses() {
+      const courses = advancedStorage.getCourses();
+      const tbody = document.getElementById('coursesList');
+      
+      if (courses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => `
+        <tr>
+          <td>
+            ${c.image ? `<img src="${c.image}" alt="${c.title}" style="width:50px;height:50px;border-radius:8px;object-fit:cover">` : '📸'}
+          </td>
+          <td>${c.title}</td>
+          <td>الصف ${c.grade}</td>
+          <td>${c.lessons || 0}</td>
+          <td>${c.price ? c.price + ' ج.م' : 'مجاني'}</td>
+          <td>
+            <button class="btn small danger" onclick="deleteCourse('${c.id}')">حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addCourse() {
+      const title = document.getElementById('courseTitle').value.trim();
+      const grade = document.getElementById('courseGrade').value;
+      const desc = document.getElementById('courseDesc').value.trim();
+      const image = document.getElementById('courseImage').value.trim();
+      const lessons = parseInt(document.getElementById('courseLessons').value) || 0;
+      const price = parseFloat(document.getElementById('coursePrice').value) || null;
+
+      if (!title || !grade) {
+        alert('⚠️ يرجى ملء البيانات المطلوبة');
+        return;
+      }
+
+      const result = advancedStorage.addCourse({
+        title,
+        grade,
+        description: desc,
+        image,
+        lessons,
+        price
+      });
+
+      if (result.success) {
+        document.getElementById('courseTitle').value = '';
+        document.getElementById('courseGrade').value = '';
+        document.getElementById('courseDesc').value = '';
+        document.getElementById('courseImage').value = '';
+        document.getElementById('courseLessons').value = '';
+        document.getElementById('coursePrice').value = '';
+        
+        alert('✅ تم إضافة الكورس بنجاح');
+        loadCourses();
+        updateStats();
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function deleteCourse(id) {
+      if (!confirm('هل تريد حذف هذا الكورس؟')) return;
+      
+      const result = advancedStorage.deleteCourse(id);
+      if (result.success) {
+        loadCourses();
+        updateStats();
+        alert('✅ تم حذف الكورس بنجاح');
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    // Uploads Management
+    function updateUploadInfo() {
+      const type = document.getElementById('uploadType').value;
+      if (!type) {
+        document.getElementById('uploadPreview').innerHTML = '';
+      }
+    }
+
+    function uploadImage() {
+      const type = document.getElementById('uploadType').value;
+      const url = document.getElementById('uploadUrl').value.trim();
+      const name = document.getElementById('uploadName').value.trim();
+
+      if (!type || !url || !name) {
+        alert('⚠️ يرجى ملء جميع الحقول');
+        return;
+      }
+
+      const uploads = JSON.parse(localStorage.getItem('tf_uploads') || '[]');
+      uploads.push({
+        id: 'u_' + Date.now(),
+        type,
+        url,
+        name,
+        uploadedAt: new Date().toISOString()
+      });
+
+      localStorage.setItem('tf_uploads', JSON.stringify(uploads));
+      document.getElementById('uploadType').value = '';
+      document.getElementById('uploadUrl').value = '';
+      document.getElementById('uploadName').value = '';
+      
+      alert('✅ تم تحميل الصورة بنجاح');
+      loadUploads();
+    }
+
+    function loadUploads() {
+      const uploads = JSON.parse(localStorage.getItem('tf_uploads') || '[]');
+      const container = document.getElementById('uploadsList');
+      
+      if (uploads.length === 0) {
+        container.innerHTML = '<p class="empty-state">لا توجد تحميلات حالياً</p>';
+        return;
+      }
+
+      container.innerHTML = uploads.map(u => `
+        <div class="order-detail">
+          <div style="display:flex;gap:1rem;align-items:start">
+            <img src="${u.url}" alt="${u.name}" class="image-preview" onerror="this.src='📸'">
+            <div style="flex:1">
+              <strong>${u.name}</strong><br>
+              <small style="color:var(--muted)">النوع: ${u.type}</small><br>
+              <small style="color:var(--muted)">التاريخ: ${new Date(u.uploadedAt).toLocaleDateString('ar-EG')}</small><br>
+              <small style="color:var(--accent2);word-break:break-all">${u.url}</small>
+            </div>
+          </div>
+          <button class="btn small danger" style="margin-top:1rem" onclick="deleteUpload('${u.id}')">حذف</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteUpload(id) {
+      if (!confirm('هل تريد حذف هذه الصورة؟')) return;
+      
+      const uploads = JSON.parse(localStorage.getItem('tf_uploads') || '[]');
+      const filtered = uploads.filter(u => u.id !== id);
+      localStorage.setItem('tf_uploads', JSON.stringify(filtered));
+      loadUploads();
+    }
+
+    // Sessions Management
+    function loadSessions() {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const tbody = document.getElementById('sessionsList');
+      
+      const activeSessions = students.filter(s => s.sessionId);
+      
+      if (activeSessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">لا توجد جلسات نشطة</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = activeSessions.map(s => `
+        <tr>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.sessionId.substring(0, 12)}...</td>
+          <td>${new Date(s.lastActive).toLocaleDateString('ar-EG')} ${new Date(s.lastActive).toLocaleTimeString('ar-EG')}</td>
+          <td>جديدة</td>
+          <td><span class="session-badge">✓ نشطة</span></td>
+          <td>
+            <button class="btn small danger" onclick="terminateSession('${s.id}')">إنهاء</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function terminateSession(studentId) {
+      if (!confirm('هل تريد إنهاء جلسة هذا الطالب؟')) return;
+
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const student = students.find(s => s.id === studentId);
+      if (student) {
+        student.sessionId = null;
+        student.lastActive = new Date().toISOString();
+        localStorage.setItem('tf_students', JSON.stringify(students));
+        loadSessions();
+        alert('✅ تم إنهاء الجلسة بنجاح');
+      }
+    }
+
+    // Stats
+    function updateStats() {
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+      const activeSessions = students.filter(s => s.sessionId).length;
+      
+      document.getElementById('totalUsers').textContent = students.length;
+      document.getElementById('totalOrders').textContent = orders.length;
+      document.getElementById('activeSessions').textContent = activeSessions;
+      
+      const revenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      document.getElementById('totalRevenue').textContent = revenue.toFixed(2) + ' ج.م';
+    }
+
+    // Assignments Management
+    function addAssignment() {
+      const name = document.getElementById('assignmentName').value.trim();
+      const studentEmail = document.getElementById('assignmentStudent').value.trim();
+      const total = parseInt(document.getElementById('assignmentTotal').value) || 100;
+      const grade = parseFloat(document.getElementById('assignmentGrade').value) || 0;
+      const notes = document.getElementById('assignmentNotes').value.trim();
+
+      if (!name || !studentEmail) {
+        alert('⚠️ يرجى ملء جميع الحقول المطلوبة');
+        return;
+      }
+
+      const students = advancedStorage.getAllStudents();
+      const student = students.find(s => s.email === studentEmail);
+      if (!student) {
+        alert('⚠️ لم يتم العثور على الطالب');
+        return;
+      }
+
+      const result = advancedStorage.addAssignment({
+        name,
+        studentId: student.id,
+        studentName: student.name,
+        studentEmail,
+        totalGrade: total,
+        grade,
+        notes,
+        submitted: true
+      });
+
+      if (result.success) {
+        document.getElementById('assignmentName').value = '';
+        document.getElementById('assignmentStudent').value = '';
+        document.getElementById('assignmentTotal').value = '100';
+        document.getElementById('assignmentGrade').value = '';
+        document.getElementById('assignmentNotes').value = '';
+
+        alert('✅ تم إضافة الواجب بنجاح');
+        loadAssignments();
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function loadAssignments() {
+      const assignments = advancedStorage.getAssignments();
+      const tbody = document.getElementById('assignmentsList');
+
+      if (assignments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">لا توجد واجبات بعد</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = assignments.map(a => `
+        <tr>
+          <td><strong>${a.name}</strong></td>
+          <td>${a.studentName}</td>
+          <td>${a.grade}/${a.totalGrade}</td>
+          <td>${((a.grade / a.totalGrade) * 100).toFixed(1)}%</td>
+          <td>
+            <button class="btn small danger" onclick="deleteAssignment('${a.id}')">🗑️ حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteAssignment(id) {
+      if (!confirm('هل تريد حذف هذا الواجب؟')) return;
+
+      const result = advancedStorage.deleteAssignment(id);
+      if (result.success) {
+        loadAssignments();
+        alert('✅ تم حذف الواجب بنجاح');
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    // Exams Management
+    function addExam() {
+      const name = document.getElementById('examName').value.trim();
+      const studentEmail = document.getElementById('examStudent').value.trim();
+      const total = parseInt(document.getElementById('examTotal').value) || 100;
+      const grade = parseFloat(document.getElementById('examGrade').value) || 0;
+      const subject = document.getElementById('examSubject').value.trim();
+
+      if (!name || !studentEmail || !subject) {
+        alert('⚠️ يرجى ملء جميع الحقول المطلوبة');
+        return;
+      }
+
+      const students = advancedStorage.getAllStudents();
+      const student = students.find(s => s.email === studentEmail);
+      if (!student) {
+        alert('⚠️ لم يتم العثور على الطالب');
+        return;
+      }
+
+      const result = advancedStorage.addExam({
+        name,
+        subject,
+        studentId: student.id,
+        studentName: student.name,
+        studentEmail,
+        totalGrade: total,
+        grade
+      });
+
+      if (result.success) {
+        document.getElementById('examName').value = '';
+        document.getElementById('examStudent').value = '';
+        document.getElementById('examTotal').value = '100';
+        document.getElementById('examGrade').value = '';
+        document.getElementById('examSubject').value = '';
+
+        alert('✅ تم إضافة الامتحان بنجاح');
+        loadExams();
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function loadExams() {
+      const exams = advancedStorage.getExams();
+      const tbody = document.getElementById('examsList');
+
+      if (exams.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">لا توجد امتحانات بعد</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = exams.map(e => `
+        <tr>
+          <td><strong>${e.name}</strong></td>
+          <td>${e.subject}</td>
+          <td>${e.studentName}</td>
+          <td>${e.grade}/${e.totalGrade}</td>
+          <td>${((e.grade / e.totalGrade) * 100).toFixed(1)}%</td>
+          <td>
+            <button class="btn small danger" onclick="deleteExam('${e.id}')">🗑️ حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteExam(id) {
+      if (!confirm('هل تريد حذف هذا الامتحان؟')) return;
+
+      const result = advancedStorage.deleteExam(id);
+      if (result.success) {
+        loadExams();
+        alert('✅ تم حذف الامتحان بنجاح');
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    // Modal functions
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Theme Toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Logout
+    function logoutAdmin() {
+      if (confirm('هل تريد تسجيل الخروج؟')) {
+        localStorage.removeItem('tf_current');
+        window.location.href = '/login.html';
+      }
+    }
+
+    // Close modal on background click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

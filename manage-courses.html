@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>إدارة الكورسات — لوحة الأدمن</title>
+  <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    .container{max-width:1200px;margin:0 auto;padding:1.7rem}
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:1.3rem 1.7rem}
+    .brand{font-size:2rem;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;color:var(--accent);text-decoration:none}
+    .brand-accent{color:var(--accent2)}
+    .header-actions{display:flex;gap:1rem;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:1rem;transition:.2s;font-family:var(--font)}
+    .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .btn.secondary{background:var(--accent2);color:var(--accent)}
+    .btn.danger{background:#d32f2f}
+    .btn.small{padding:.5rem 1rem;font-size:.9rem}
+    .btn.success{background:#4caf50}
+    .card{background:var(--card);padding:2rem;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2rem;border:2px solid var(--pharaoh)}
+    .card h2,.card h3{color:var(--accent);font-family:"Cairo",serif;margin-bottom:1.5rem}
+    table{width:100%;border-collapse:collapse;margin-top:1rem;background:var(--papyrus);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:1rem;border-bottom:1px solid #e0c68c;text-align:right}
+    th{background:var(--accent2);color:var(--accent);font-weight:600}
+    tr:hover{background:rgba(255,214,0,.1)}
+    .form-group{margin-bottom:1.5rem}
+    .form-label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--accent)}
+    input,textarea,select{width:100%;padding:.8rem;border:2px solid var(--border);border-radius:8px;font-family:var(--font);font-size:1rem;background:var(--bg);color:#222}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(255,214,0,.1)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+    .modal.active{display:flex}
+    .modal-content{background:var(--card);border-radius:var(--radius);padding:2rem;max-width:800px;width:90%;max-height:90vh;overflow-y:auto;border:2px solid var(--pharaoh)}
+    .modal-header{font-size:1.5rem;font-weight:600;color:var(--accent);margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+    .modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+    .tab-btn{padding:.8rem 1.2rem;font-size:1rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;font-family:var(--font);font-weight:500;background:none;border:none;white-space:nowrap}
+    .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+    .lesson-card{background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1rem;border-left:4px solid var(--accent2)}
+    .lesson-card strong{display:block;color:var(--accent);margin-bottom:.5rem}
+    .question-item{background:#f5f5f5;padding:1rem;border-radius:8px;margin-bottom:1rem;border:1px solid var(--border)}
+    .success-msg{color:#4caf50;padding:.8rem;background:#e8f5e9;border-radius:8px;margin-bottom:1rem}
+    .error-msg{color:#d32f2f;padding:.8rem;background:#ffebee;border-radius:8px;margin-bottom:1rem}
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    body.dark input,body.dark textarea,body.dark select{background:#303a47;color:#f3f6fa;border-color:#555}
+    body.dark .modal-content{background:var(--card-dark)}
+    .tabs-container{display:flex;border-bottom:2px solid var(--border);overflow-x:auto}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/admin-dashboard.html" class="brand">
+      <span>📚</span> إدارة <span class="brand-accent">الكورسات</span>
+    </a>
+    <div class="header-actions">
+      <button class="btn secondary" onclick="goBack()">← العودة</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Courses List -->
+    <div class="card">
+      <h2>📚 الكورسات المتاحة</h2>
+      <div style="margin-bottom:2rem">
+        <button class="btn secondary" onclick="openModal('addCourseModal')">➕ إضافة كورس جديد</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>الكورس</th>
+            <th>الصف</th>
+            <th>الدروس</th>
+            <th>الطلاب</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="coursesList">
+          <tr><td colspan="5" style="text-align:center">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Lessons Management -->
+    <div class="card" id="lessonsCard" style="display:none">
+      <h2>📝 إدارة دروس الكورس</h2>
+      <div style="margin-bottom:1.5rem;padding:1rem;background:var(--papyrus);border-radius:8px">
+        <strong id="selectedCourseName" style="color:var(--accent)">-</strong>
+      </div>
+
+      <div style="margin-bottom:2rem">
+        <button class="btn secondary" onclick="openModal('addLessonModal')">➕ إضافة درس جديد</button>
+      </div>
+
+      <div id="lessonsList"></div>
+    </div>
+
+    <!-- Quiz Management -->
+    <div class="card" id="quizCard" style="display:none">
+      <h2>✏️ إدارة اختبار الدرس</h2>
+      <div id="quizContent"></div>
+    </div>
+
+    <!-- Student Requests -->
+    <div class="card">
+      <h2>👥 طلبات التحاق الطلاب</h2>
+      <p style="color:var(--muted);margin-bottom:1.5rem">طلبات الطلاب الجدد للالتحاق بالكورسات</p>
+      <table>
+        <thead>
+          <tr>
+            <th>الطالب</th>
+            <th>الكورس</th>
+            <th>التاريخ</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="requestsList">
+          <tr><td colspan="5" style="text-align:center">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Add Course Modal -->
+  <div id="addCourseModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>إضافة كورس جديد</span>
+        <button class="modal-close" onclick="closeModal('addCourseModal')">✕</button>
+      </div>
+      <form onsubmit="addNewCourse(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">اسم الكورس</label>
+            <input type="text" id="courseTitle" placeholder="مثال: الرياضيات - الجبر" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الصف</label>
+            <select id="courseGrade" required>
+              <option value="">اختر الصف</option>
+              <option value="1">الصف الأول الثانوي</option>
+              <option value="2">الصف الثاني الثانوي</option>
+              <option value="3">الصف الثالث الثانوي</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea id="courseDesc" placeholder="وصف الكورس" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">صورة الكورس (رابط)</label>
+            <input type="url" id="courseImage" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">السعر (ج.م)</label>
+            <input type="number" id="coursePrice" step="0.01" />
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem">
+          <button type="button" class="btn" style="background:var(--muted)" onclick="closeModal('addCourseModal')">إلغاء</button>
+          <button type="submit" class="btn secondary">➕ إضافة الكورس</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Lesson Modal -->
+  <div id="addLessonModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>إضافة درس جديد</span>
+        <button class="modal-close" onclick="closeModal('addLessonModal')">✕</button>
+      </div>
+      <form onsubmit="addNewLesson(event)">
+        <div class="form-group">
+          <label class="form-label">عنوان الدرس</label>
+          <input type="text" id="lessonTitle" placeholder="مثال: درس المعادلات الخطية" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea id="lessonDesc" placeholder="وصف الدرس" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">رابط المحتوى (PDF/صورة)</label>
+            <input type="url" id="lessonContentUrl" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">رابط الفيديو (YouTube)</label>
+            <input type="url" id="lessonVideoUrl" placeholder="https://youtube.com/..." />
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem">
+          <button type="button" class="btn" style="background:var(--muted)" onclick="closeModal('addLessonModal')">إلغاء</button>
+          <button type="submit" class="btn secondary">➕ إضافة الدرس</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Quiz Modal -->
+  <div id="addQuizModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>إضافة اختبار جديد</span>
+        <button class="modal-close" onclick="closeModal('addQuizModal')">✕</button>
+      </div>
+      <form onsubmit="addNewQuiz(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">عنوان الاختبار</label>
+            <input type="text" id="quizTitle" placeholder="مثال: اختبار الدرس الأول" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">مدة الاختبار (دقيقة)</label>
+            <input type="number" id="quizDuration" value="30" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">درجة النجاح (%)</label>
+            <input type="number" id="quizPassingScore" value="50" min="0" max="100" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">عدد الأسئلة</label>
+            <input type="number" id="quizQuestionCount" value="1" min="1" required />
+          </div>
+        </div>
+        <div id="questionsContainer"></div>
+        <div style="display:flex;gap:1rem">
+          <button type="button" class="btn" style="background:var(--muted)" onclick="closeModal('addQuizModal')">إلغاء</button>
+          <button type="submit" class="btn secondary">➕ إنشاء الاختبار</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/advanced-storage.js"></script>
+  <script src="/storage-system.js"></script>
+  <script>
+    let currentCourse = null;
+    let currentLesson = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCourses();
+      loadStudentRequests();
+      setupQuestionCount();
+    });
+
+    function loadCourses() {
+      const courses = advancedStorage.getCourses();
+      const tbody = document.getElementById('coursesList');
+
+      if (courses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا توجد كورسات حالياً</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = courses.map(c => `
+        <tr>
+          <td><strong>${c.title}</strong></td>
+          <td>الصف ${c.grade}</td>
+          <td>${c.lessons || 0}</td>
+          <td>0</td>
+          <td>
+            <button class="btn small secondary" onclick="manageLessons('${c.id}')">📝 دروس</button>
+            <button class="btn small danger" onclick="deleteCourse('${c.id}')">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addNewCourse(e) {
+      e.preventDefault();
+      const result = advancedStorage.addCourse({
+        title: document.getElementById('courseTitle').value,
+        grade: document.getElementById('courseGrade').value,
+        description: document.getElementById('courseDesc').value,
+        image: document.getElementById('courseImage').value,
+        price: parseFloat(document.getElementById('coursePrice').value) || 0
+      });
+
+      if (result.success) {
+        alert('✅ ' + result.message);
+        closeModal('addCourseModal');
+        document.getElementById('addCourseModal').querySelector('form').reset();
+        loadCourses();
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function deleteCourse(courseId) {
+      if (!confirm('هل تريد حذف هذا الكورس وجميع دروسه؟')) return;
+      const result = advancedStorage.deleteCourse(courseId);
+      alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+      loadCourses();
+    }
+
+    function manageLessons(courseId) {
+      currentCourse = advancedStorage.getCourses().find(c => c.id === courseId);
+      if (!currentCourse) return;
+
+      document.getElementById('selectedCourseName').textContent = `📚 ${currentCourse.title}`;
+      document.getElementById('lessonsCard').style.display = 'block';
+      loadLessons(courseId);
+      window.scrollTo(0, document.getElementById('lessonsCard').offsetTop - 100);
+    }
+
+    function loadLessons(courseId) {
+      const allLessons = advancedStorage.getLessons();
+      const lessons = allLessons.filter(l => l.courseId === courseId);
+      const container = document.getElementById('lessonsList');
+
+      if (lessons.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted)">لا توجد دروس حالياً</p>';
+        return;
+      }
+
+      container.innerHTML = lessons.map(lesson => `
+        <div class="lesson-card">
+          <strong>📝 ${lesson.title}</strong>
+          <small style="color:var(--muted);display:block;margin:.5rem 0">${lesson.description}</small>
+          <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap">
+            ${lesson.contentUrl ? `<a href="${lesson.contentUrl}" target="_blank" class="btn small secondary">📖 افتح الآن</a>` : ''}
+            ${lesson.videoUrl ? `<a href="${lesson.videoUrl}" target="_blank" class="btn small" style="background:#ff0000">▶️ افتح الفيديو</a>` : ''}
+            <button class="btn small" style="background:#2196F3" onclick="manageQuiz('${lesson.id}')">✏️ اختبار</button>
+            <button class="btn small danger" onclick="deleteLesson('${lesson.id}')">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addNewLesson(e) {
+      e.preventDefault();
+      if (!currentCourse) {
+        alert('⚠️ الرجاء اختيار كورس أولاً');
+        return;
+      }
+
+      const result = advancedStorage.addLesson({
+        courseId: currentCourse.id,
+        title: document.getElementById('lessonTitle').value,
+        description: document.getElementById('lessonDesc').value,
+        contentUrl: document.getElementById('lessonContentUrl').value,
+        videoUrl: document.getElementById('lessonVideoUrl').value
+      });
+
+      if (result.success) {
+        alert('✅ ' + result.message);
+        closeModal('addLessonModal');
+        document.getElementById('addLessonModal').querySelector('form').reset();
+        loadLessons(currentCourse.id);
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function deleteLesson(lessonId) {
+      if (!confirm('هل تريد حذف هذا الدرس؟')) return;
+      const result = advancedStorage.deleteLesson(lessonId);
+      alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+      if (currentCourse) loadLessons(currentCourse.id);
+    }
+
+    function manageQuiz(lessonId) {
+      currentLesson = storageSystem.getLesson(lessonId);
+      if (!currentLesson) return;
+
+      const quizzes = storageSystem.getLessonQuizzes(lessonId);
+      const container = document.getElementById('quizContent');
+
+      let html = `<div style="margin-bottom:2rem">
+        <button class="btn secondary" onclick="openModal('addQuizModal')">➕ إضافة اختبار جديد</button>
+      </div>`;
+
+      if (quizzes.length === 0) {
+        html += '<p style="color:var(--muted)">لا توجد اختبارات حالياً</p>';
+      } else {
+        html += quizzes.map(quiz => `
+          <div style="background:var(--papyrus);padding:1.5rem;border-radius:10px;margin-bottom:1rem">
+            <strong style="display:block;color:var(--accent);margin-bottom:.5rem">${quiz.title}</strong>
+            <small style="color:var(--muted)">
+              ${quiz.totalQuestions} أسئلة | ${quiz.durationMinutes} دقيقة | درجة النجاح: ${quiz.passingScore}%
+            </small>
+            <button class="btn small danger" style="margin-top:1rem" onclick="deleteQuiz('${quiz.id}')">🗑️ حذف</button>
+          </div>
+        `).join('');
+      }
+
+      container.innerHTML = html;
+      document.getElementById('quizCard').style.display = 'block';
+      window.scrollTo(0, document.getElementById('quizCard').offsetTop - 100);
+    }
+
+    function setupQuestionCount() {
+      const input = document.getElementById('quizQuestionCount');
+      if (input) {
+        input.addEventListener('change', () => {
+          generateQuestionFields(parseInt(input.value));
+        });
+      }
+    }
+
+    function generateQuestionFields(count) {
+      const container = document.getElementById('questionsContainer');
+      let html = '';
+
+      for (let i = 1; i <= count; i++) {
+        html += `
+          <div class="question-item">
+            <strong>السؤال ${i}</strong>
+            <div class="form-group">
+              <label class="form-label">نص السؤال أو رابط الصورة</label>
+              <textarea id="q${i}Text" placeholder="اكتب السؤال أو ضع رابط الصورة" required></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">الخيار أ</label>
+                <input type="text" id="q${i}A" placeholder="الخيار الأول" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الخيار ب</label>
+                <input type="text" id="q${i}B" placeholder="الخيار الثاني" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">الخيار ج</label>
+                <input type="text" id="q${i}C" placeholder="الخيار الثالث" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">الخيار د</label>
+                <input type="text" id="q${i}D" placeholder="الخيار الرابع" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">الإجابة الصحيحة</label>
+              <select id="q${i}Answer" required>
+                <option value="">اختر الإجابة الصحيحة</option>
+                <option value="A">أ</option>
+                <option value="B">ب</option>
+                <option value="C">ج</option>
+                <option value="D">د</option>
+              </select>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function addNewQuiz(e) {
+      e.preventDefault();
+      if (!currentLesson) {
+        alert('⚠️ الرجاء اختيار درس أولاً');
+        return;
+      }
+
+      const questionCount = parseInt(document.getElementById('quizQuestionCount').value);
+      const questions = [];
+
+      for (let i = 1; i <= questionCount; i++) {
+        questions.push({
+          text: document.getElementById(`q${i}Text`).value,
+          options: {
+            A: document.getElementById(`q${i}A`).value,
+            B: document.getElementById(`q${i}B`).value,
+            C: document.getElementById(`q${i}C`).value,
+            D: document.getElementById(`q${i}D`).value
+          },
+          correctAnswer: document.getElementById(`q${i}Answer`).value
+        });
+      }
+
+      const result = storageSystem.addQuiz(currentLesson.id, {
+        title: document.getElementById('quizTitle').value,
+        durationMinutes: parseInt(document.getElementById('quizDuration').value),
+        passingScore: parseInt(document.getElementById('quizPassingScore').value),
+        questions
+      });
+
+      if (result.success) {
+        alert('✅ ' + result.message);
+        closeModal('addQuizModal');
+        manageQuiz(currentLesson.id);
+      } else {
+        alert('❌ ' + result.message);
+      }
+    }
+
+    function deleteQuiz(quizId) {
+      if (!confirm('هل تريد حذف هذا الاختبار؟')) return;
+      const result = storageSystem.deleteQuiz(quizId);
+      alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+      if (currentLesson) manageQuiz(currentLesson.id);
+    }
+
+    function loadStudentRequests() {
+      const requests = storageSystem.getPendingRequests();
+      const tbody = document.getElementById('requestsList');
+      const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+      const courses = storageSystem.getAllCourses();
+
+      if (requests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا توجد طلبات معلقة</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = requests.map(req => {
+        const student = students.find(s => s.id === req.studentId);
+        const course = courses.find(c => c.id === req.courseId);
+
+        return `
+          <tr>
+            <td>${student?.name || 'غير معروف'}</td>
+            <td>${course?.title || 'غير معروف'}</td>
+            <td>${new Date(req.requestedAt).toLocaleDateString('ar-EG')}</td>
+            <td><span style="background:#ff9800;color:#fff;padding:.3rem .6rem;border-radius:4px;font-size:.85rem">معلق</span></td>
+            <td>
+              <button class="btn small success" onclick="approveRequest('${req.id}')">✓ موافقة</button>
+              <button class="btn small danger" onclick="rejectRequest('${req.id}')">✕ رفض</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function approveRequest(requestId) {
+      const result = storageSystem.approveRequest(requestId);
+      alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+      loadStudentRequests();
+    }
+
+    function rejectRequest(requestId) {
+      const reason = prompt('سبب الرفض:');
+      if (!reason) return;
+      const result = storageSystem.rejectRequest(requestId, reason);
+      alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+      loadStudentRequests();
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function goBack() {
+      window.location.href = '/admin-dashboard.html';
+    }
+
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

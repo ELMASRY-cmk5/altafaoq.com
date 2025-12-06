@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>حسابي — منصة التفوق</title>
+  <style>
+    :root{
+      --accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;--gold:#ffd700;--sand:#d4a574;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --card: var(--card-dark);
+        --muted: var(--muted-dark);
+      }
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    
+    /* الـ Header الفرعوني */
+    .site-header{
+      background:linear-gradient(90deg,#fffbe6 0%,#f5e6c2 50%,#fffbe6 100%);
+      box-shadow:0 4px 15px rgba(199,167,108,.25);
+      position:sticky;top:0;z-index:10;border-bottom:4px solid var(--gold);
+      padding:1.5rem 2rem;
+      position:relative;
+      overflow:hidden;
+    }
+    .site-header::before{
+      content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+      background:repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(199,167,108,.05) 20px,rgba(199,167,108,.05) 40px);
+      pointer-events:none;
+    }
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    
+    .brand{margin:0;font-size:2.2rem;letter-spacing:2px;display:flex;align-items:center;gap:1rem;font-family:"Cairo",serif;text-decoration:none;color:var(--accent);font-weight:bold;text-shadow:2px 2px 4px rgba(0,0,0,.05)}
+    .brand img{height:2.5rem;vertical-align:middle;filter:drop-shadow(0 3px 8px rgba(199,167,108,.3))}
+    .brand-accent{color:var(--gold);text-shadow:1px 1px 2px rgba(0,0,0,.1)}
+    
+    .header-right{display:flex;align-items:center;gap:2rem}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{text-decoration:none;color:var(--accent);font-weight:600;transition:.3s;position:relative;font-size:1.05rem}
+    .nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:var(--gold);transition:.3s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-links a:hover::after{width:100%}
+    
+    .account-section{position:relative}
+    .account-icon{cursor:pointer;font-size:2.2rem;background:linear-gradient(135deg,var(--gold),#ffb300);border:3px solid var(--pharaoh);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;transition:.3s;box-shadow:0 4px 10px rgba(199,167,108,.3)}
+    .account-icon:hover{background:linear-gradient(135deg,#ffb300,var(--gold));transform:scale(1.15);box-shadow:0 6px 15px rgba(199,167,108,.4)}
+    
+    .dropdown-menu{position:absolute;top:100%;right:0;background:var(--card);border:3px solid var(--pharaoh);border-radius:15px;box-shadow:0 15px 50px rgba(0,0,0,.25);min-width:300px;margin-top:15px;display:none;z-index:1000;overflow:hidden}
+    .dropdown-menu.active{display:block;animation:slideDown .3s ease-out}
+    body.dark .dropdown-menu{background:var(--card-dark);color:#f3f6fa}
+    
+    @keyframes slideDown{
+      from{opacity:0;transform:translateY(-10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    
+    .dropdown-header{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;padding:1.5rem;text-align:center;border-bottom:3px solid var(--pharaoh);position:relative}
+    .dropdown-header::before{content:'✡';position:absolute;top:5px;left:50%;transform:translateX(-50%);font-size:1.5rem;opacity:.3}
+    .dropdown-header .student-name{font-size:1.3rem;font-weight:700;margin-bottom:.5rem;letter-spacing:1px}
+    .dropdown-header .student-id{font-size:.9rem;opacity:.95;letter-spacing:.5px}
+    
+    .dropdown-item{padding:1.2rem 1.5rem;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:1.2rem;cursor:pointer;transition:.3s}
+    .dropdown-item:hover{background:var(--papyrus);transform:translateX(5px)}
+    body.dark .dropdown-item:hover{background:#303a47}
+    .dropdown-item icon{font-size:1.5rem}
+    .dropdown-item-text{flex:1}
+    .dropdown-item-label{font-size:.85rem;color:var(--muted);font-weight:500}
+    .dropdown-item-value{font-size:1.1rem;font-weight:700;color:var(--accent);margin-top:.3rem}
+    
+    .dropdown-divider{height:2px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1rem 0}
+    
+    .logout-btn{background:linear-gradient(135deg,#f44336,#d32f2f);color:#fff;border:none;padding:1rem 1.5rem;width:100%;cursor:pointer;font-weight:700;transition:.3s;font-size:1rem}
+    .logout-btn:hover{background:linear-gradient(135deg,#d32f2f,#c62828);transform:scale(1.02)}
+    
+    .container{max-width:1200px;margin:0 auto;padding:2rem}
+    
+    .dashboard-header{text-align:center;margin-bottom:3rem;position:relative}
+    .dashboard-header::before{content:'';position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:60px;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .dashboard-header h1{font-size:2.5rem;color:var(--accent);margin-bottom:.7rem;font-weight:bold;letter-spacing:1px}
+    .dashboard-header p{color:var(--muted);font-size:1.15rem;font-weight:500}
+    
+    .tabs{display:flex;gap:1.5rem;margin-bottom:2.5rem;border-bottom:3px solid var(--border);overflow-x:auto;padding-bottom:1rem}
+    .tab-btn{background:none;border:none;padding:1rem 1.8rem;font-size:1.05rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:4px solid transparent;transition:.3s;position:relative;text-transform:uppercase;letter-spacing:1px}
+    .tab-btn.active{color:var(--accent2);border-bottom-color:var(--gold);box-shadow:0 2px 8px rgba(255,215,0,.2)}
+    .tab-btn:hover{color:var(--accent);transform:translateY(-2px)}
+    
+    .tab-content{display:none}
+    .tab-content.active{display:block;animation:fadeIn .4s}
+    
+    @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+    
+    .card{
+      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;border:3px solid var(--pharaoh);margin-bottom:2rem;
+      position:relative;overflow:hidden;
+    }
+    .card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:4px;
+      background:linear-gradient(90deg,var(--accent),var(--gold),var(--accent2));
+    }
+    .card h2{color:var(--accent);font-size:1.6rem;margin-bottom:1.5rem;font-weight:bold;letter-spacing:.5px;padding-top:0.5rem}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#555}
+    
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-bottom:2.5rem}
+    .stat-card{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));padding:2rem;border-radius:15px;text-align:center;color:#fff;
+      box-shadow:0 8px 25px rgba(199,167,108,.25);
+      border:2px solid var(--gold);
+      position:relative;overflow:hidden;
+      transition:.3s;
+    }
+    .stat-card::before{
+      content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;
+      background:radial-gradient(circle,rgba(255,255,255,.1),transparent);
+      animation:pulse 3s ease-in-out infinite;
+    }
+    .stat-card:hover{transform:translateY(-8px);box-shadow:0 12px 35px rgba(199,167,108,.35)}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .stat-card h3{font-size:1rem;opacity:.95;margin-bottom:1rem;font-weight:600;letter-spacing:.5px;position:relative;z-index:1}
+    .stat-card .number{font-size:2.8rem;font-weight:900;position:relative;z-index:1;text-shadow:2px 2px 4px rgba(0,0,0,.2)}
+    
+    .course-item{
+      background:linear-gradient(135deg,var(--papyrus),#f9ead4);padding:1.5rem;border-radius:12px;margin-bottom:1.2rem;
+      border-left:5px solid var(--accent2);
+      box-shadow:0 4px 12px rgba(199,167,108,.15);
+      transition:.3s;
+    }
+    .course-item:hover{transform:translateX(5px);box-shadow:0 6px 18px rgba(199,167,108,.25)}
+    body.dark .course-item{background:#303a47;border-left-color:var(--accent2)}
+    .course-name{font-size:1.2rem;font-weight:700;color:var(--accent);margin-bottom:.5rem;letter-spacing:.5px}
+    .course-progress{width:100%;height:10px;background:rgba(0,0,0,.1);border-radius:10px;margin:1rem 0;overflow:hidden;border:1px solid var(--border)}
+    .course-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent2),#ffb300);width:0%;transition:.4s;box-shadow:0 0 8px rgba(255,215,0,.4)}
+    .course-info{display:flex;justify-content:space-between;font-size:.95rem;color:var(--muted);font-weight:500}
+    
+    .security-item{
+      background:var(--papyrus);padding:1.5rem;border-radius:12px;margin-bottom:1.2rem;display:flex;justify-content:space-between;align-items:center;
+      border:2px solid var(--border);
+      box-shadow:0 2px 8px rgba(0,0,0,.05);
+    }
+    body.dark .security-item{background:#303a47;color:#f3f6fa}
+    .security-status{font-weight:700;color:#4caf50;font-size:1.1rem}
+    .security-btn{background:linear-gradient(135deg,var(--accent2),#ffb300);color:var(--accent);border:none;padding:.8rem 1.5rem;border-radius:10px;cursor:pointer;font-weight:700;transition:.3s;font-size:.95rem;box-shadow:0 4px 10px rgba(255,215,0,.2)}
+    .security-btn:hover{background:linear-gradient(135deg,#ffb300,var(--accent2));transform:scale(1.05)}
+    
+    .grade-card{
+      background:var(--papyrus);padding:1.3rem;border-radius:12px;margin-bottom:1.2rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;
+      border:2px solid var(--border);
+      box-shadow:0 2px 8px rgba(0,0,0,.05);
+    }
+    body.dark .grade-card{background:#303a47}
+    .grade-item{text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(199,167,108,.1));border-radius:10px;border:1px solid var(--border)}
+    body.dark .grade-item{background:rgba(255,255,255,.05)}
+    .grade-label{font-size:.9rem;color:var(--muted);margin-bottom:.5rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .grade-value{font-size:1.6rem;font-weight:900;color:var(--accent2);text-shadow:1px 1px 2px rgba(0,0,0,.05)}
+    
+    .order-card{
+      background:var(--papyrus);padding:1.5rem;border-radius:12px;margin-bottom:1.2rem;border-left:5px solid var(--accent);
+      box-shadow:0 4px 12px rgba(199,167,108,.15);
+    }
+    body.dark .order-card{background:#303a47}
+    .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .order-id{font-weight:700;color:var(--accent);font-size:1.1rem;letter-spacing:.5px}
+    .order-status{padding:.5rem 1rem;border-radius:8px;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .status-pending{background:#ff9800;color:#fff}
+    .status-processing{background:#2196F3;color:#fff}
+    .status-shipped{background:#4caf50;color:#fff}
+    .status-delivered{background:#8bc34a;color:#000}
+    .order-items{font-size:.95rem;color:var(--muted);margin-bottom:.8rem;font-weight:500}
+    .order-total{font-weight:700;color:var(--accent2);font-size:1.2rem;margin-bottom:1rem}
+    .order-btn{background:linear-gradient(135deg,var(--accent),#0d1b5e);color:#fff;border:none;padding:.8rem 1.5rem;border-radius:10px;cursor:pointer;font-weight:700;transition:.3s;font-size:.95rem;box-shadow:0 4px 10px rgba(26,35,126,.2)}
+    .order-btn:hover{transform:scale(1.05);box-shadow:0 6px 15px rgba(26,35,126,.3)}
+    
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a);border-bottom-color:#444}
+    
+    .theme-toggle{cursor:pointer;font-size:1.8rem;background:none;border:none;color:var(--accent);transition:.3s;padding:.5rem}
+    .theme-toggle:hover{transform:scale(1.25);transition:.3s}
+    
+    @media(max-width:768px){
+      .tabs{flex-wrap:wrap}
+      .grade-card{grid-template-columns:1fr}
+      .stat-grid{grid-template-columns:1fr}
+      .dropdown-menu{right:auto;left:0}
+      .nav-links{gap:1rem}
+      .brand{font-size:1.8rem}
+      .header-right{gap:1rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-right" style="margin-right:auto">
+      <a href="/home.html" class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="التفوق" />
+        التفوق
+      </a>
+    </div>
+    
+    <div class="header-right">
+      <ul class="nav-links">
+        <li><a href="/home.html">الرئيسية</a></li>
+        <li><a href="/store.html">المتجر</a></li>
+        <li><a href="/courses.html">الكورسات</a></li>
+      </ul>
+      
+      <div class="account-section">
+        <div class="account-icon" id="accountIcon">👤</div>
+        
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div class="dropdown-header">
+            <div class="student-name" id="studentName">الطالب</div>
+            <div class="student-id" id="studentId">ID: 0000</div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('profile')">
+            <span>👤</span>
+            <div>
+              <div class="dropdown-item-label">البيانات الشخصية</div>
+              <div class="dropdown-item-value">حسابي</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('courses')">
+            <span>📚</span>
+            <div>
+              <div class="dropdown-item-label">الكورسات</div>
+              <div class="dropdown-item-value" id="coursesCount">0 كورس</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('subscriptions')">
+            <span>⭐</span>
+            <div>
+              <div class="dropdown-item-label">الاشتراكات</div>
+              <div class="dropdown-item-value" id="subscriptionsCount">0 اشتراك</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('grades')">
+            <span>📊</span>
+            <div>
+              <div class="dropdown-item-label">الدرجات</div>
+              <div class="dropdown-item-value" id="gradeAverage">0.0</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('orders')">
+            <span>🛒</span>
+            <div>
+              <div class="dropdown-item-label">الطلبات</div>
+              <div class="dropdown-item-value" id="ordersCount">0 طلب</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-item" onclick="goToTab('security')">
+            <span>🔒</span>
+            <div>
+              <div class="dropdown-item-label">الأمان</div>
+              <div class="dropdown-item-value">آمن</div>
+            </div>
+          </div>
+          
+          <div class="dropdown-divider"></div>
+          
+          <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+        </div>
+      </div>
+      
+      <button class="theme-toggle" id="themeToggle">🌓</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="dashboard-header">
+      <h1>لوحة تحكم الطالب</h1>
+      <p>أدر حسابك وتابع تقدمك الدراسي</p>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="stat-grid" id="statsGrid">
+      <div class="stat-card">
+        <h3>الكورسات المشترك بها</h3>
+        <div class="number" id="statCourses">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>المتوسط العام</h3>
+        <div class="number" id="statAverage">0.0</div>
+      </div>
+      <div class="stat-card">
+        <h3>الواجبات المعلقة</h3>
+        <div class="number" id="statPending">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>الطلبات النشطة</h3>
+        <div class="number" id="statOrders">0</div>
+      </div>
+    </div>
+
+    <!-- التبويبات -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('profile')">حسابي</button>
+      <button class="tab-btn" onclick="switchTab('courses')">الكورسات</button>
+      <button class="tab-btn" onclick="switchTab('subscriptions')">الاشتراكات</button>
+      <button class="tab-btn" onclick="switchTab('grades')">الدرجات</button>
+      <button class="tab-btn" onclick="switchTab('orders')">الطلبات</button>
+      <button class="tab-btn" onclick="switchTab('security')">الأمان</button>
+    </div>
+
+    <!-- تبويب حسابي -->
+    <div class="tab-content active" id="profile">
+      <div class="card">
+        <h2>بيانات حسابي</h2>
+        <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">الاسم الكامل</label>
+            <p id="profileName" style="font-size:1.1rem;font-weight:600;margin-top:.3rem">-</p>
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">رقم الجلسة الحالية</label>
+            <p id="profileSession" style="font-size:1.1rem;font-weight:600;margin-top:.3rem;color:var(--accent2)">-</p>
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">البريد الإلكتروني</label>
+            <p id="profileEmail" style="font-size:1.1rem;margin-top:.3rem">-</p>
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">رقم الهاتف</label>
+            <p id="profilePhone" style="font-size:1.1rem;margin-top:.3rem">-</p>
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">تاريخ التسجيل</label>
+            <p id="profileJoined" style="font-size:1.1rem;margin-top:.3rem">-</p>
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:.9rem">آخر تسجيل دخول</label>
+            <p id="profileLastLogin" style="font-size:1.1rem;margin-top:.3rem">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب الكورسات -->
+    <div class="tab-content" id="courses">
+      <div class="card">
+        <h2>الكورسات المشترك بها</h2>
+        <div id="coursesList" style="margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الاشتراكات -->
+    <div class="tab-content" id="subscriptions">
+      <div class="card">
+        <h2>الاشتراكات النشطة</h2>
+        <div id="subscriptionsList" style="margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الدرجات -->
+    <div class="tab-content" id="grades">
+      <div class="card">
+        <h2>درجاتي في الامتحانات</h2>
+        <div id="gradesList" style="margin-top:1rem"></div>
+      </div>
+      <div class="card">
+        <h2>درجاتي في الواجبات</h2>
+        <div id="assignmentsList" style="margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الطلبات -->
+    <div class="tab-content" id="orders">
+      <div class="card">
+        <h2>طلباتي من المتجر</h2>
+        <div id="ordersList" style="margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الأمان -->
+    <div class="tab-content" id="security">
+      <div class="card">
+        <h2>أمان الحساب</h2>
+        <div style="margin-top:1.5rem">
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;color:var(--accent)">كلمة المرور</div>
+              <div style="font-size:.9rem;color:var(--muted);margin-top:.3rem">تم تحديثها منذ 3 أشهر</div>
+            </div>
+            <button class="security-btn" onclick="alert('تحديث كلمة المرور')">تغيير</button>
+          </div>
+          
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;color:var(--accent)">المصادقة الثنائية</div>
+              <div style="font-size:.9rem;color:var(--muted);margin-top:.3rem">غير مفعلة حالياً</div>
+            </div>
+            <button class="security-btn" onclick="alert('تفعيل المصادقة الثنائية')">تفعيل</button>
+          </div>
+          
+          <div class="security-item">
+            <div>
+              <div style="font-weight:600;color:var(--accent)">جلسات نشطة</div>
+              <div style="font-size:.9rem;color:var(--muted);margin-top:.3rem" id="activeSessions">جلسة واحدة</div>
+            </div>
+            <button class="security-btn" onclick="alert('إدارة الجلسات')">إدارة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtS52bC8UEZ4EG4qK3tk7jV7iF1bPRTx8",
+    authDomain: "altafaouq.firebaseapp.com",
+    projectId: "altafaouq",
+    storageBucket: "altafaouq.firebasestorage.app",
+    messagingSenderId: "125346827754",
+    appId: "1:125346827754:web:4286d194fa05094fe4b693",
+    measurementId: "G-PNQS7VTSHT"
+  };
+
+  let currentStudent = null;
+  let sessionId = 'sess_' + Date.now();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check auth
+    const current = JSON.parse(localStorage.getItem('tf_current') || 'null');
+    if(!current || current.role !== 'student') {
+      window.location.href = '/login.html';
+      return;
+    }
+
+    currentStudent = current;
+    loadStudentData();
+    setupUI();
+  });
+
+  function loadStudentData() {
+    const students = JSON.parse(localStorage.getItem('tf_students') || '[]');
+    const student = students.find(s => s.id === currentStudent.id);
+    
+    if(student) {
+      currentStudent = {...currentStudent, ...student};
+      document.getElementById('studentName').textContent = student.name || 'الطالب';
+      document.getElementById('studentId').textContent = `ID: ${student.id}`;
+      document.getElementById('profileName').textContent = student.name || '-';
+      document.getElementById('profileEmail').textContent = student.email || '-';
+      document.getElementById('profilePhone').textContent = student.phone || '-';
+      document.getElementById('profileJoined').textContent = new Date(student.createdAt).toLocaleDateString('ar-EG');
+      document.getElementById('profileLastLogin').textContent = new Date(student.lastLogin || Date.now()).toLocaleDateString('ar-EG');
+      document.getElementById('profileSession').textContent = sessionId;
+    }
+  }
+
+  function setupUI() {
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.onclick = () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    };
+    if(localStorage.getItem('tf_theme') === 'dark') document.body.classList.add('dark');
+
+    // Account icon toggle
+    document.getElementById('accountIcon').onclick = () => {
+      document.getElementById('dropdownMenu').classList.toggle('active');
+    };
+    document.addEventListener('click', (e) => {
+      if(!e.target.closest('.account-section')) {
+        document.getElementById('dropdownMenu').classList.remove('active');
+      }
+    });
+
+    // Load data
+    loadCourses();
+    loadSubscriptions();
+    loadGrades();
+    loadOrders();
+    updateStats();
+  }
+
+  function loadCourses() {
+    const courses = JSON.parse(localStorage.getItem('tf_student_courses') || '[]');
+    const courseList = document.getElementById('coursesList');
+    
+    if(courses.length === 0) {
+      courseList.innerHTML = '<p style="color:var(--muted);text-align:center">لا توجد كورسات مشترك بها حتى الآن</p>';
+      return;
+    }
+
+    courseList.innerHTML = courses.map(c => `
+      <div class="course-item">
+        <div class="course-name">${c.name}</div>
+        <div class="course-progress">
+          <div class="course-progress-bar" style="width:${c.progress || 0}%"></div>
+        </div>
+        <div class="course-info">
+          <span>التقدم: ${c.progress || 0}%</span>
+          <span>${c.lessonsCompleted || 0}/${c.totalLessons || 0} دروس</span>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('coursesCount').textContent = `${courses.length} كورس`;
+    document.getElementById('statCourses').textContent = courses.length;
+  }
+
+  function loadSubscriptions() {
+    const subs = JSON.parse(localStorage.getItem('tf_student_subscriptions') || '[]');
+    const subsList = document.getElementById('subscriptionsList');
+    
+    if(subs.length === 0) {
+      subsList.innerHTML = '<p style="color:var(--muted);text-align:center">لا توجد اشتراكات نشطة</p>';
+      return;
+    }
+
+    subsList.innerHTML = subs.map(s => `
+      <div class="course-item" style="border-left-color:var(--accent2)">
+        <div class="course-name">⭐ ${s.name}</div>
+        <div style="margin-top:.8rem;display:flex;justify-content:space-between;font-size:.9rem;color:var(--muted)">
+          <span>الصلاحية: ${new Date(s.expiryDate).toLocaleDateString('ar-EG')}</span>
+          <span>${s.features || 'ميزات حصرية'}</span>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('subscriptionsCount').textContent = `${subs.length} اشتراك`;
+  }
+
+  function loadGrades() {
+    const exams = JSON.parse(localStorage.getItem('tf_student_exams') || '[]');
+    const assignments = JSON.parse(localStorage.getItem('tf_student_assignments') || '[]');
+
+    const gradesList = document.getElementById('gradesList');
+    const assignmentsList = document.getElementById('assignmentsList');
+
+    if(exams.length === 0) {
+      gradesList.innerHTML = '<p style="color:var(--muted);text-align:center">لا توجد امتحانات بعد</p>';
+    } else {
+      const avgExam = (exams.reduce((sum, e) => sum + e.grade, 0) / exams.length).toFixed(1);
+      document.getElementById('gradeAverage').textContent = avgExam;
+      document.getElementById('statAverage').textContent = avgExam;
+
+      gradesList.innerHTML = exams.map(e => `
+        <div class="grade-card">
+          <div class="grade-item">
+            <div class="grade-label">المادة</div>
+            <div style="color:var(--accent)">${e.subject}</div>
+          </div>
+          <div class="grade-item">
+            <div class="grade-label">الدرجة</div>
+            <div class="grade-value">${e.grade}/${e.totalGrade || 100}</div>
+          </div>
+          <div class="grade-item">
+            <div class="grade-label">التاريخ</div>
+            <div style="color:var(--muted);font-size:.9rem">${new Date(e.date).toLocaleDateString('ar-EG')}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    if(assignments.length === 0) {
+      assignmentsList.innerHTML = '<p style="color:var(--muted);text-align:center">لا توجد واجبات بعد</p>';
+      document.getElementById('statPending').textContent = 0;
+    } else {
+      const pending = assignments.filter(a => !a.submitted).length;
+      document.getElementById('statPending').textContent = pending;
+
+      assignmentsList.innerHTML = assignments.map(a => `
+        <div class="grade-card">
+          <div class="grade-item">
+            <div class="grade-label">الواجب</div>
+            <div style="color:var(--accent)">${a.name}</div>
+          </div>
+          <div class="grade-item">
+            <div class="grade-label">الحالة</div>
+            <div style="color:${a.submitted ? '#4caf50' : '#ff9800'};font-weight:600">${a.submitted ? '✓ تم الإرسال' : '⏳ معلق'}</div>
+          </div>
+          <div class="grade-item">
+            <div class="grade-label">الموعد</div>
+            <div style="color:var(--muted);font-size:.9rem">${new Date(a.dueDate).toLocaleDateString('ar-EG')}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  function loadOrders() {
+    const orders = JSON.parse(localStorage.getItem('tf_orders') || '[]');
+    const myOrders = orders.filter(o => o.studentId === currentStudent.id);
+
+    const ordersList = document.getElementById('ordersList');
+    
+    if(myOrders.length === 0) {
+      ordersList.innerHTML = '<p style="color:var(--muted);text-align:center">لا توجد طلبات حتى الآن</p>';
+      document.getElementById('statOrders').textContent = 0;
+      return;
+    }
+
+    document.getElementById('statOrders').textContent = myOrders.length;
+
+    ordersList.innerHTML = myOrders.map(o => `
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">الطلب #${o.id}</div>
+          <span class="order-status status-${o.status}">${o.status === 'pending' ? 'قيد الانتظار' : o.status === 'processing' ? 'قيد المعالجة' : o.status === 'shipped' ? 'تم الشحن' : 'تم التسليم'}</span>
+        </div>
+        <div class="order-items">${o.items.map(i => `${i.name} (${i.quantity})`).join(', ')}</div>
+        <div class="order-total">الإجمالي: ${o.total} ج.م</div>
+        <button class="order-btn" onclick="viewOrder('${o.id}')">عرض التفاصيل</button>
+      </div>
+    `).join('');
+  }
+
+  function updateStats() {
+    // Stats already updated in loadGrades
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function goToTab(tab) {
+    switchTab(tab);
+    document.getElementById('dropdownMenu').classList.remove('active');
+  }
+
+  function viewOrder(orderId) {
+    alert(`عرض تفاصيل الطلب: ${orderId}`);
+    // Will redirect to order details page
+  }
+
+  function logout() {
+    const current = JSON.parse(localStorage.getItem('tf_current') || 'null');
+    if (current && current.sessionId) {
+      sessionManager.closeSession(current.sessionId);
+    }
+    localStorage.removeItem('tf_current');
+    window.location.href = '/login.html';
+  }
+  </script>
+  
+  <!-- Session Manager -->
+  <script src="/session-manager.js"></script>
+  </script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>لوحة المدير — التفوق</title>
+    <style>
+    :root{--accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;--pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font)}
+    .container{max-width:1150px;margin:0 auto;padding:1.7rem}
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:1.3rem 1.7rem}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:0;margin:0;max-width:100%;flex:1}
+    .brand{margin:0;font-size:2.3rem;letter-spacing:1px;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif}
+    .brand img{height:2.7rem;vertical-align:middle;filter:drop-shadow(0 2px 6px #c7a76c80)}
+    .brand-accent{color:var(--accent2);font-weight:bold;text-shadow:0 2px 8px #c7a76c60}
+    .theme-toggle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#ffb300);border:2px solid var(--pharaoh);cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:.3s;box-shadow:0 2px 8px #c7a76c30}
+    .theme-toggle:hover{transform:scale(1.1);box-shadow:0 4px 12px #c7a76c50}
+    .card{background:var(--card);padding:2rem 1.5rem;border-radius:var(--radius);box-shadow:var(--shadow);max-width:900px;margin:0 auto;border:2px solid var(--pharaoh)}
+    .btn{display:inline-block;padding:.8rem 1.4rem;border-radius:10px;border:2px solid var(--pharaoh);background:var(--accent2);color:#1a237e;font-weight:600;font-size:1.13rem;box-shadow:var(--shadow);transition:.2s;cursor:pointer;text-decoration:none}
+    .btn.primary{background:var(--accent);color:#fff}
+    table{width:100%;border-collapse:collapse;background:var(--papyrus);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:.8rem;border-bottom:1px solid #e0c68c;text-align:right}
+    th{background:var(--accent2);color:var(--accent);font-weight:600}
+    .tabs{display:flex;gap:1rem;margin-bottom:1.5rem;border-bottom:2px solid var(--border);flex-wrap:wrap}
+    .tab-btn{background:none;border:none;padding:.8rem 1.2rem;font-size:1.1rem;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:.2s}
+    .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    .payment-card{background:var(--papyrus);border:2px solid var(--pharaoh);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.2rem}
+    .payment-card.verified{background:#e8f5e9;border-color:#4caf50}
+    .payment-card.pending{background:#fff3e0;border-color:#ff9800}
+    .payment-card.rejected{background:#ffebee;border-color:#f44336}
+    .course-item{background:var(--papyrus);border:2px solid var(--pharaoh);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+    .course-info{flex:1}
+    .course-item h5{margin:.3rem 0;color:var(--accent);font-size:1.1rem}
+    .course-item small{color:var(--muted);display:block;margin:.3rem 0}
+    .course-actions{display:flex;gap:.5rem}
+    .course-actions button{padding:.5rem .8rem;font-size:.9rem;cursor:pointer;border:none;border-radius:6px;transition:.2s}
+    .btn-edit{background:var(--accent2);color:#222}
+    .btn-delete{background:#f44336;color:#fff}
+    input,textarea,select{padding:.8rem;border:1px solid #ccc;border-radius:6px;font-family:inherit;color:#222}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 8px #ffd60040}
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a 100%);border-bottom:2px solid #444}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    body.dark .btn{background:var(--accent2);color:#1a237e}
+    body.dark .btn.primary{background:var(--accent2);color:#fff}
+    body.dark table{background:var(--card-dark);color:#f3f6fa}
+    body.dark th{background:var(--accent2);color:#23283a}
+    body.dark .payment-card{background:var(--card-dark);border-color:#666}
+    body.dark .payment-card.verified{background:#1b5e20;border-color:#4caf50}
+    body.dark .payment-card.pending{background:#e65100;border-color:#ff9800}
+    body.dark .payment-card.rejected{background:#b71c1c;border-color:#f44336}
+    body.dark .course-item{background:var(--card-dark);border-color:#666}
+    body.dark input,body.dark textarea,body.dark select{background:var(--bg-dark);color:#f3f6fa;border-color:#555}
+    </style>
+  </head>
+  <body>
+    <header class="site-header"><div class="container"><span class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+        لوحة المدير <span class="brand-accent">التفوق</span>
+      </span>
+      <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      </div></header>
+    <main class="container" style="padding:2.5rem 0">
+      <div class="card">
+        <h2 style="text-align:center;color:var(--accent);font-family:'Cairo',serif;margin-bottom:1.5rem">لوحة المدير — التفوق</h2>
+        <div id="notAuth" class="muted" style="text-align:center">يجب تسجيل الدخول كـ<strong>مدير</strong> لعرض البيانات. يمكنك تهيئة مدير تجريبي بالزر أدناه.</div>
+        <div style="margin:12px 0;text-align:center"><button id="seedBtn" class="btn">تهيئة مدير تجريبي (admin/admin123)</button></div>
+        <div id="panel" style="display:none">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="registrations">طلبات التسجيل</button>
+            <button class="tab-btn" data-tab="payments">دفع Vodafone Cash</button>
+            <button class="tab-btn" data-tab="courses">الكورسات</button>
+            <button class="tab-btn" data-tab="teachers">المدرسين</button>
+            <button class="tab-btn" data-tab="subjects">المواد الدراسية</button>
+            <button class="tab-btn" data-tab="store">المتجر</button>
+            <button class="tab-btn" data-tab="orders">الطلبات</button>
+            <button class="tab-btn" data-tab="management">إدارة الطلاب</button>
+          </div>
+
+          <!-- Registrations Tab -->
+          <div id="registrations" class="tab-content active">
+            <table>
+              <thead><tr><th>الاسم</th><th>رقم الطالب</th><th>ولي الأمر</th><th>المحافظة</th><th>السنة</th><th>إجراءات</th></tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <!-- Payments Tab -->
+          <div id="payments" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">عمليات الدفع عبر Vodafone Cash</h3>
+            <p style="color:var(--muted);margin-bottom:1.5rem">رقم الحساب: <strong style="color:var(--accent2)">01017365486</strong></p>
+            <div id="paymentsList"></div>
+            <div style="margin-top:1.5rem;padding:1rem;background:var(--papyrus);border-radius:var(--radius)">
+              <h4 style="color:var(--accent);margin-bottom:.8rem">إضافة عملية دفع جديدة</h4>
+              <div style="display:grid;gap:.8rem;max-width:500px">
+                <input id="payStudentNumber" placeholder="رقم الطالب" />
+                <input id="payAmount" placeholder="المبلغ (جنيه)" type="number" />
+                <input id="payTransactionId" placeholder="رقم العملية من Vodafone Cash" />
+                <button id="addPayment" class="btn primary">إضافة العملية</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Courses Tab -->
+          <div id="courses" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">إدارة الكورسات</h3>
+            <div style="margin-bottom:1.5rem;padding:1rem;background:var(--papyrus);border-radius:var(--radius);border:2px solid var(--pharaoh)">
+              <h4 style="color:var(--accent);margin-bottom:1rem">إضافة كورس جديد</h4>
+              <div style="display:grid;gap:.8rem;max-width:600px">
+                <input id="courseTitle" placeholder="اسم الكورس" />
+                <textarea id="courseDesc" placeholder="وصف الكورس" style="padding:.8rem;border:1px solid #ccc;border-radius:6px;font-family:inherit;resize:vertical;min-height:80px"></textarea>
+                <select id="courseGrade" style="padding:.8rem;border:1px solid #ccc;border-radius:6px">
+                  <option value="">اختر الصف</option>
+                  <option value="1">الصف الأول الثانوي</option>
+                  <option value="2">الصف الثاني الثانوي</option>
+                  <option value="3">الصف الثالث الثانوي</option>
+                </select>
+                <input id="courseLessons" placeholder="عدد الدروس" type="number" />
+                <input id="coursePrice" placeholder="السعر (جنيه) - اتركه فارغاً للمجاني" type="number" />
+                <input id="courseImage" placeholder="رابط الصورة (URL)" />
+                <button id="addCourse" class="btn primary">إضافة الكورس</button>
+              </div>
+            </div>
+            <h4 style="color:var(--accent);margin-bottom:1rem">الكورسات المتاحة</h4>
+            <div id="coursesList"></div>
+          </div>
+
+          <!-- Teachers Tab -->
+          <div id="teachers" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">إدارة المدرسين</h3>
+            <div style="margin-bottom:1.5rem;padding:1rem;background:var(--papyrus);border-radius:var(--radius);border:2px solid var(--pharaoh)">
+              <h4 style="color:var(--accent);margin-bottom:1rem">إضافة مدرس جديد</h4>
+              <div style="display:grid;gap:.8rem;max-width:500px">
+                <input id="teacherName" placeholder="اسم المدرس" />
+                <input id="teacherEmail" placeholder="البريد الإلكتروني" />
+                <input id="teacherPhone" placeholder="رقم الهاتف" />
+                <textarea id="teacherBio" placeholder="نبذة عن المدرس (مؤهلات، خبرة)" style="padding:.8rem;border:1px solid #ccc;border-radius:6px;font-family:inherit;resize:vertical;min-height:60px"></textarea>
+                <select id="teacherSubjects" multiple style="padding:.8rem;border:1px solid #ccc;border-radius:6px;height:100px">
+                  <option value="">اختر المواد التي يدرسها</option>
+                  <option value="math">الرياضيات</option>
+                  <option value="physics">الفيزياء</option>
+                  <option value="chemistry">الكيمياء</option>
+                  <option value="biology">الأحياء</option>
+                  <option value="english">اللغة الإنجليزية</option>
+                  <option value="arabic">اللغة العربية</option>
+                  <option value="history">التاريخ</option>
+                  <option value="geology">الجيولوجيا</option>
+                </select>
+                <button id="addTeacher" class="btn primary">إضافة المدرس</button>
+              </div>
+            </div>
+            <h4 style="color:var(--accent);margin-bottom:1rem">المدرسين المسجلين</h4>
+            <div id="teachersList"></div>
+          </div>
+
+          <!-- Subjects Tab -->
+          <div id="subjects" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">إدارة المواد الدراسية</h3>
+            <div style="margin-bottom:1.5rem;padding:1rem;background:var(--papyrus);border-radius:var(--radius);border:2px solid var(--pharaoh)">
+              <h4 style="color:var(--accent);margin-bottom:1rem">إضافة مادة دراسية</h4>
+              <div style="display:grid;gap:.8rem;max-width:500px">
+                <input id="subjectName" placeholder="اسم المادة (مثال: الرياضيات)" />
+                <textarea id="subjectDesc" placeholder="وصف المادة" style="padding:.8rem;border:1px solid #ccc;border-radius:6px;font-family:inherit;resize:vertical;min-height:60px"></textarea>
+                <select id="subjectGrade" style="padding:.8rem;border:1px solid #ccc;border-radius:6px">
+                  <option value="">اختر الصف</option>
+                  <option value="1">الصف الأول الثانوي</option>
+                  <option value="2">الصف الثاني الثانوي</option>
+                  <option value="3">الصف الثالث الثانوي</option>
+                </select>
+                <input id="subjectHours" placeholder="عدد الساعات أسبوعياً" type="number" />
+                <button id="addSubject" class="btn primary">إضافة المادة</button>
+              </div>
+            </div>
+            <h4 style="color:var(--accent);margin-bottom:1rem">المواد الدراسية</h4>
+            <div id="subjectsList"></div>
+          </div>
+
+          <!-- Store Tab -->
+          <div id="store" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">إدارة المتجر</h3>
+            <div style="margin-bottom:1.5rem;padding:1rem;background:var(--papyrus);border-radius:var(--radius);border:2px solid var(--pharaoh)">
+              <h4 style="color:var(--accent);margin-bottom:1rem">إضافة منتج جديد</h4>
+              <div style="display:grid;gap:.8rem;max-width:600px">
+                <input id="productName" placeholder="اسم المنتج" />
+                <textarea id="productDesc" placeholder="وصف المنتج" style="padding:.8rem;border:1px solid #ccc;border-radius:6px;font-family:inherit;resize:vertical;min-height:60px"></textarea>
+                <input id="productPrice" placeholder="السعر (جنيه)" type="number" step="0.01" />
+                <input id="productImage" placeholder="رابط الصورة (URL)" />
+                <select id="productCategory" style="padding:.8rem;border:1px solid #ccc;border-radius:6px">
+                  <option value="">اختر الفئة</option>
+                  <option value="books">كتب</option>
+                  <option value="notes">ملخصات وملفات</option>
+                  <option value="tools">أدوات مساعدة</option>
+                  <option value="subscriptions">اشتراكات</option>
+                </select>
+                <input id="productStock" placeholder="الكمية المتاحة" type="number" />
+                <button id="addProduct" class="btn primary">إضافة المنتج</button>
+              </div>
+            </div>
+            <h4 style="color:var(--accent);margin-bottom:1rem">المنتجات المتاحة</h4>
+            <div id="productsList"></div>
+          </div>
+
+          <!-- Orders Tab -->
+          <div id="orders" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">طلبات التوصيل من المتجر</h3>
+            <p style="color:var(--muted);margin-bottom:1.5rem">📍 سعر التوصيل الموحد لجميع المحافظات: <strong>90 جنيه</strong></p>
+            <div id="ordersList"></div>
+          </div>
+
+          <!-- Management Tab -->
+          <div id="management" class="tab-content">
+            <h3 style="color:var(--accent);margin-bottom:1.2rem">إدارة الطلاب والصلاحيات</h3>
+            <p style="color:var(--muted);margin-bottom:1.5rem">هنا يمكنك إدارة صلاحيات الطلاب والمحتوى والدورات</p>
+            <div style="padding:1rem;background:var(--papyrus);border-radius:var(--radius);border:2px solid var(--pharaoh)">
+              <p style="color:var(--accent);margin:0;font-weight:bold">الصلاحيات المتاحة للمدير:</p>
+              <ul style="margin:1rem 0;color:var(--muted);text-align:right">
+                <li>✓ قبول أو رفض طلبات التسجيل</li>
+                <li>✓ التحقق من عمليات الدفع</li>
+                <li>✓ إدارة الطلاب وإلغاء الحسابات</li>
+                <li>✓ عرض التقارير والإحصائيات</li>
+                <li>✓ إضافة المحتوى والدورات</li>
+                <li>✓ التواصل مع الطلاب والأهالي</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer container">
+      <div class="footer-social">
+        <a href="https://wa.me/201234567890" target="_blank" title="واتساب"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-whatsapp.svg" alt="واتساب" /></a>
+        <a href="https://t.me/altafaoq" target="_blank" title="تليجرام"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-telegram.svg" alt="تليجرام" /></a>
+        <a href="https://facebook.com/altafaoq" target="_blank" title="فيسبوك"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-facebook.svg" alt="فيسبوك" /></a>
+        <a href="https://youtube.com/@altafaoq" target="_blank" title="يوتيوب"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-youtube.svg" alt="يوتيوب" /></a>
+        <a href="mailto:info@altafaoq.com" target="_blank" title="البريد الإلكتروني"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-email.svg" alt="البريد الإلكتروني" /></a>
+        <a href="tel:+201234567890" target="_blank" title="اتصل بنا"><img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/social-phone.svg" alt="اتصل بنا" /></a>
+      </div>
+      <p>© <span id="year"></span> منصة التفوق — جميع الحقوق محفوظة</p>
+      <p style="font-family:Georgia,Garamond,serif;letter-spacing:2px;color:var(--pharaoh);font-weight:bold;margin-top:.5rem">Developed by ELMASRY</p>
+    </footer>
+    <script>
+    // admin panel logic
+    const Auth=(function(){return{signup:async({email,password,name,role='student'})=>{const users=JSON.parse(localStorage.getItem('tf_users')||'[]');if(users.find(u=>u.email===email))throw new Error('المستخدم موجود بالفعل');const id='u_'+Date.now();const user={id,name,email,role,createdAt:Date.now(),status:'active'};users.push({...user,password});localStorage.setItem('tf_users',JSON.stringify(users));return user},login:async({studentNumber,password})=>{const users=JSON.parse(localStorage.getItem('tf_users')||'[]');const u=users.find(x=>x.studentNumber===studentNumber&&x.password===password&&x.status==='active');if(!u)throw new Error('بيانات الدخول غير صحيحة');const user={id:u.id,name:u.name,studentNumber:u.studentNumber,role:u.role};localStorage.setItem('tf_current',JSON.stringify(user));return user},logout:()=>{localStorage.removeItem('tf_current')},currentUser:()=>JSON.parse(localStorage.getItem('tf_current')||'null'),requestRegistration:async(reg)=>{const regs=JSON.parse(localStorage.getItem('tf_registrations')||'[]');if(regs.find(r=>r.studentNumber===reg.studentNumber))throw new Error('يوجد طلب سابق لهذا الرقم');reg.id='r_'+Date.now();reg.status='pending';regs.push(reg);localStorage.setItem('tf_registrations',JSON.stringify(regs));return reg}})();
+    window.TF = window.TF || {};
+    window.TF.Auth = Auth;
+
+    function seedAdmin(){
+      const users = JSON.parse(localStorage.getItem('tf_users')||'[]');
+      if(!users.find(u=>u.role==='admin')){
+        const admin = {id:'u_admin',name:'المدير',studentNumber:'admin',password:'admin123',role:'admin',status:'active',createdAt:Date.now()};
+        users.push(admin);localStorage.setItem('tf_users',JSON.stringify(users));alert('تم إنشاء مدير تجريبي: admin / admin123');
+      }else alert('يوجد مدير بالفعل');
+      render();
+    }
+
+    function render(){
+      const current = JSON.parse(localStorage.getItem('tf_current')||'null');
+      const panel = document.getElementById('panel');
+      const notAuth = document.getElementById('notAuth');
+      if(current && current.role==='admin'){
+        notAuth.style.display='none'; panel.style.display='block';
+        const regs = JSON.parse(localStorage.getItem('tf_registrations')||'[]');
+        const rows = document.getElementById('rows');
+        rows.innerHTML = regs.map(r=>`<tr><td>${r.name}</td><td>${r.studentNumber}</td><td>${r.parentPhone}</td><td>${r.governorate}</td><td>${r.academicYear||''}</td><td><button class=\"btn\" data-id=\"${r.id}\">وافق</button><button class=\"btn\" data-rej=\"${r.id}\">رفض</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">لا توجد طلبات حالياً</td></tr>';
+        document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',e=>approve(b.dataset.id)));
+        document.querySelectorAll('[data-rej]').forEach(b=>b.addEventListener('click',e=>reject(b.dataset.rej)));
+      }else{ notAuth.style.display='block'; panel.style.display='none' }
+    }
+
+    function approve(id){
+      const regs = JSON.parse(localStorage.getItem('tf_registrations')||'[]');
+      const reg = regs.find(r=>r.id===id); if(!reg) return; 
+      const users = JSON.parse(localStorage.getItem('tf_users')||'[]');
+      const user = {id:'u_'+Date.now(),name:reg.name,studentNumber:reg.studentNumber,parentPhone:reg.parentPhone,governorate:reg.governorate,academicYear:reg.academicYear,password:reg.password,role:'student',status:'active',createdAt:Date.now()};
+      users.push(user); localStorage.setItem('tf_users',JSON.stringify(users));
+      const remaining = regs.filter(r=>r.id!==id); localStorage.setItem('tf_registrations',JSON.stringify(remaining));
+      render();
+    }
+
+    function reject(id){
+      let regs = JSON.parse(localStorage.getItem('tf_registrations')||'[]');
+      regs = regs.filter(r=>r.id!==id); localStorage.setItem('tf_registrations',JSON.stringify(regs)); render();
+    }
+
+    document.getElementById('seedBtn').addEventListener('click',seedAdmin);
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        document.getElementById(tab).classList.add('active');
+        if(tab==='payments') renderPayments();
+        if(tab==='courses') renderCourses();
+        if(tab==='teachers') renderTeachers();
+        if(tab==='subjects') renderSubjects();
+        if(tab==='store') renderProducts();
+        if(tab==='orders') renderOrders();
+      });
+    });
+
+    // Payment system
+    function renderPayments(){
+      const payments = JSON.parse(localStorage.getItem('tf_payments')||'[]');
+      const list = document.getElementById('paymentsList');
+      if(!payments.length) return list.innerHTML = '<p class="muted">لا توجد عمليات دفع حالياً</p>';
+      list.innerHTML = payments.map(p=>`
+        <div class="payment-card ${p.status}">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem">
+            <div>
+              <strong>${p.studentName||'طالب'}</strong> - رقم الطالب: ${p.studentNumber}<br>
+              <small style="color:var(--muted)">رقم العملية: ${p.transactionId}</small>
+            </div>
+            <span style="font-size:1.2rem;font-weight:bold;color:var(--accent2)">${p.amount} جنيه</span>
+          </div>
+          <div style="display:flex;gap:.8rem;align-items:center;justify-content:space-between">
+            <span style="padding:.4rem .8rem;border-radius:6px;font-size:.9rem;${p.status==='verified'?'background:#4caf50;color:#fff':''}${p.status==='pending'?'background:#ff9800;color:#fff':''}${p.status==='rejected'?'background:#f44336;color:#fff':''}">${p.status==='verified'?'✓ مُحقق':'لم يُحقق من'}</span>
+            ${p.status==='pending'?`<div style="display:flex;gap:.6rem"><button class="btn" style="padding:.4rem .8rem;font-size:.9rem" onclick="verifyPayment('${p.id}')">تحقق</button><button class="btn" style="padding:.4rem .8rem;font-size:.9rem" onclick="rejectPayment('${p.id}')">رفض</button></div>`:''}
+          </div>
+          <div style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">
+            ${new Date(p.createdAt).toLocaleString('ar-EG')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function verifyPayment(id){
+      const payments = JSON.parse(localStorage.getItem('tf_payments')||'[]');
+      const payment = payments.find(p=>p.id===id);
+      if(payment) payment.status = 'verified';
+      localStorage.setItem('tf_payments',JSON.stringify(payments));
+      renderPayments();
+    }
+
+    function rejectPayment(id){
+      const payments = JSON.parse(localStorage.getItem('tf_payments')||'[]');
+      const payment = payments.find(p=>p.id===id);
+      if(payment) payment.status = 'rejected';
+      localStorage.setItem('tf_payments',JSON.stringify(payments));
+      renderPayments();
+    }
+
+    document.getElementById('addPayment').addEventListener('click',()=>{
+      const studentNumber = document.getElementById('payStudentNumber').value.trim();
+      const amount = document.getElementById('payAmount').value;
+      const transactionId = document.getElementById('payTransactionId').value.trim();
+      if(!studentNumber||!amount||!transactionId) return alert('ملء جميع الحقول مطلوب');
+      const payment = {id:'pay_'+Date.now(),studentNumber,amount:parseFloat(amount),transactionId,status:'pending',createdAt:Date.now()};
+      const payments = JSON.parse(localStorage.getItem('tf_payments')||'[]');
+      payments.push(payment);
+      localStorage.setItem('tf_payments',JSON.stringify(payments));
+      document.getElementById('payStudentNumber').value='';
+      document.getElementById('payAmount').value='';
+      document.getElementById('payTransactionId').value='';
+      renderPayments();
+      alert('تمت إضافة العملية، يمكنك التحقق منها');
+    });
+
+    // Courses management
+    const Courses = (function(){
+      return {
+        list: () => JSON.parse(localStorage.getItem('tf_courses')||'[]'),
+        save: (course) => {
+          const all = Courses.list();
+          if(!course.id) course.id = 'c_' + Date.now();
+          const idx = all.findIndex(c => c.id === course.id);
+          if(idx >= 0) all[idx] = course;
+          else all.push(course);
+          localStorage.setItem('tf_courses', JSON.stringify(all));
+          return course;
+        },
+        delete: (id) => {
+          let all = Courses.list().filter(c => c.id !== id);
+          localStorage.setItem('tf_courses', JSON.stringify(all));
+        }
+      }
+    })();
+
+    function renderCourses(){
+      const courses = Courses.list();
+      const list = document.getElementById('coursesList');
+      if(!courses.length) return list.innerHTML = '<p class="muted">لا توجد كورسات حالياً</p>';
+      list.innerHTML = courses.map(c=>`
+        <div class="course-item">
+          <div class="course-info">
+            <h5>${c.title}</h5>
+            <small>الصف: ${['الصف الأول','الصف الثاني','الصف الثالث'][parseInt(c.grade)-1]} | ${c.lessons || 0} درس | ${c.price ? c.price + ' ج.م' : 'مجاني'}</small>
+            <small>${c.description}</small>
+          </div>
+          <div class="course-actions">
+            <button class="btn-edit" onclick="editCourse('${c.id}')">تعديل</button>
+            <button class="btn-delete" onclick="deleteCourse('${c.id}')">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function editCourse(id){
+      const courses = Courses.list();
+      const course = courses.find(c => c.id === id);
+      if(!course) return;
+      document.getElementById('courseTitle').value = course.title;
+      document.getElementById('courseDesc').value = course.description;
+      document.getElementById('courseGrade').value = course.grade;
+      document.getElementById('courseLessons').value = course.lessons || '';
+      document.getElementById('coursePrice').value = course.price || '';
+      document.getElementById('courseImage').value = course.image || '';
+      document.getElementById('addCourse').textContent = 'تحديث الكورس';
+      document.getElementById('addCourse').dataset.editId = id;
+      document.querySelector('[data-tab="courses"]').scrollIntoView({behavior:'smooth'});
+    }
+
+    function deleteCourse(id){
+      if(confirm('هل تريد حذف هذا الكورس؟')){
+        Courses.delete(id);
+        renderCourses();
+      }
+    }
+
+    document.getElementById('addCourse').addEventListener('click',()=>{
+      const title = document.getElementById('courseTitle').value.trim();
+      const desc = document.getElementById('courseDesc').value.trim();
+      const grade = document.getElementById('courseGrade').value;
+      const lessons = parseInt(document.getElementById('courseLessons').value) || 0;
+      const price = parseFloat(document.getElementById('coursePrice').value) || null;
+      const image = document.getElementById('courseImage').value.trim();
+      
+      if(!title || !desc || !grade) return alert('ملء الحقول المطلوبة');
+      
+      const btn = document.getElementById('addCourse');
+      const editId = btn.dataset.editId;
+      delete btn.dataset.editId;
+      
+      const course = editId ? {id:editId,title,description:desc,grade,lessons,price,image} : {title,description:desc,grade,lessons,price,image};
+      Courses.save(course);
+      
+      document.getElementById('courseTitle').value='';
+      document.getElementById('courseDesc').value='';
+      document.getElementById('courseGrade').value='';
+      document.getElementById('courseLessons').value='';
+      document.getElementById('coursePrice').value='';
+      document.getElementById('courseImage').value='';
+      btn.textContent = 'إضافة الكورس';
+      
+      renderCourses();
+      alert(editId ? 'تم تحديث الكورس بنجاح' : 'تم إضافة الكورس بنجاح');
+    });
+
+    window.verifyPayment = verifyPayment;
+    window.rejectPayment = rejectPayment;
+    window.editCourse = editCourse;
+    window.deleteCourse = deleteCourse;
+    window.TF = window.TF || {};
+    window.TF.Courses = Courses;
+
+    // Teachers management
+    const Teachers = (function(){
+      return {
+        list: () => JSON.parse(localStorage.getItem('tf_teachers')||'[]'),
+        save: (teacher) => {
+          const all = Teachers.list();
+          if(!teacher.id) teacher.id = 't_' + Date.now();
+          const idx = all.findIndex(t => t.id === teacher.id);
+          if(idx >= 0) all[idx] = teacher;
+          else all.push(teacher);
+          localStorage.setItem('tf_teachers', JSON.stringify(all));
+          return teacher;
+        },
+        delete: (id) => {
+          let all = Teachers.list().filter(t => t.id !== id);
+          localStorage.setItem('tf_teachers', JSON.stringify(all));
+        }
+      }
+    })();
+
+    function renderTeachers(){
+      const teachers = Teachers.list();
+      const list = document.getElementById('teachersList');
+      if(!teachers.length) return list.innerHTML = '<p class="muted">لا يوجد مدرسين حالياً</p>';
+      list.innerHTML = teachers.map(t=>`
+        <div class="course-item">
+          <div class="course-info">
+            <h5>${t.name}</h5>
+            <small>📧 ${t.email} | 📱 ${t.phone}</small>
+            <small>${t.bio}</small>
+            <small style="color:var(--accent2)">المواد: ${(t.subjects||[]).join(', ')}</small>
+          </div>
+          <div class="course-actions">
+            <button class="btn-delete" onclick="deleteTeacher('${t.id}')">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteTeacher(id){
+      if(confirm('هل تريد حذف هذا المدرس؟')){
+        Teachers.delete(id);
+        renderTeachers();
+      }
+    }
+
+    document.getElementById('addTeacher').addEventListener('click',()=>{
+      const name = document.getElementById('teacherName').value.trim();
+      const email = document.getElementById('teacherEmail').value.trim();
+      const phone = document.getElementById('teacherPhone').value.trim();
+      const bio = document.getElementById('teacherBio').value.trim();
+      const subjects = Array.from(document.getElementById('teacherSubjects').selectedOptions).map(o => o.text);
+      
+      if(!name || !email || !phone) return alert('ملء الحقول المطلوبة');
+      
+      const teacher = {name,email,phone,bio,subjects};
+      Teachers.save(teacher);
+      
+      document.getElementById('teacherName').value='';
+      document.getElementById('teacherEmail').value='';
+      document.getElementById('teacherPhone').value='';
+      document.getElementById('teacherBio').value='';
+      document.getElementById('teacherSubjects').value='';
+      
+      renderTeachers();
+      alert('تم إضافة المدرس بنجاح');
+    });
+
+    // Subjects management
+    const Subjects = (function(){
+      return {
+        list: () => JSON.parse(localStorage.getItem('tf_subjects')||'[]'),
+        save: (subject) => {
+          const all = Subjects.list();
+          if(!subject.id) subject.id = 's_' + Date.now();
+          const idx = all.findIndex(s => s.id === subject.id);
+          if(idx >= 0) all[idx] = subject;
+          else all.push(subject);
+          localStorage.setItem('tf_subjects', JSON.stringify(all));
+          return subject;
+        },
+        delete: (id) => {
+          let all = Subjects.list().filter(s => s.id !== id);
+          localStorage.setItem('tf_subjects', JSON.stringify(all));
+        }
+      }
+    })();
+
+    function renderSubjects(){
+      const subjects = Subjects.list();
+      const list = document.getElementById('subjectsList');
+      if(!subjects.length) return list.innerHTML = '<p class="muted">لا توجد مواد دراسية حالياً</p>';
+      list.innerHTML = subjects.map(s=>`
+        <div class="course-item">
+          <div class="course-info">
+            <h5>${s.name}</h5>
+            <small>الصف: ${['الصف الأول','الصف الثاني','الصف الثالث'][parseInt(s.grade)-1]} | ${s.hours || 0} ساعة أسبوعياً</small>
+            <small>${s.description}</small>
+          </div>
+          <div class="course-actions">
+            <button class="btn-delete" onclick="deleteSubject('${s.id}')">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteSubject(id){
+      if(confirm('هل تريد حذف هذه المادة؟')){
+        Subjects.delete(id);
+        renderSubjects();
+      }
+    }
+
+    document.getElementById('addSubject').addEventListener('click',()=>{
+      const name = document.getElementById('subjectName').value.trim();
+      const desc = document.getElementById('subjectDesc').value.trim();
+      const grade = document.getElementById('subjectGrade').value;
+      const hours = parseInt(document.getElementById('subjectHours').value) || 0;
+      
+      if(!name || !desc || !grade) return alert('ملء الحقول المطلوبة');
+      
+      const subject = {name,description:desc,grade,hours};
+      Subjects.save(subject);
+      
+      document.getElementById('subjectName').value='';
+      document.getElementById('subjectDesc').value='';
+      document.getElementById('subjectGrade').value='';
+      document.getElementById('subjectHours').value='';
+      
+      renderSubjects();
+      alert('تم إضافة المادة بنجاح');
+    });
+
+    window.deleteTeacher = deleteTeacher;
+    window.deleteSubject = deleteSubject;
+    window.TF.Teachers = Teachers;
+    window.TF.Subjects = Subjects;
+
+    // Store management
+    const Products = (function(){
+      return {
+        list: () => JSON.parse(localStorage.getItem('tf_products')||'[]'),
+        save: (product) => {
+          const all = Products.list();
+          if(!product.id) product.id = 'p_' + Date.now();
+          const idx = all.findIndex(p => p.id === product.id);
+          if(idx >= 0) all[idx] = product;
+          else all.push(product);
+          localStorage.setItem('tf_products', JSON.stringify(all));
+          return product;
+        },
+        delete: (id) => {
+          let all = Products.list().filter(p => p.id !== id);
+          localStorage.setItem('tf_products', JSON.stringify(all));
+        }
+      }
+    })();
+
+    function renderProducts(){
+      const products = Products.list();
+      const list = document.getElementById('productsList');
+      if(!products.length) return list.innerHTML = '<p class="muted">لا توجد منتجات حالياً</p>';
+      list.innerHTML = products.map(p=>`
+        <div class="course-item">
+          <div class="course-info">
+            <h5>${p.name}</h5>
+            <small>الفئة: ${p.category} | السعر: ${p.price} ج.م | المتاح: ${p.stock} وحدة</small>
+            <small>${p.description}</small>
+          </div>
+          <div class="course-actions">
+            <button class="btn-delete" onclick="deleteProduct('${p.id}')">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteProduct(id){
+      if(confirm('هل تريد حذف هذا المنتج؟')){
+        Products.delete(id);
+        renderProducts();
+      }
+    }
+
+    document.getElementById('addProduct').addEventListener('click',()=>{
+      const name = document.getElementById('productName').value.trim();
+      const desc = document.getElementById('productDesc').value.trim();
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const image = document.getElementById('productImage').value.trim();
+      const category = document.getElementById('productCategory').value;
+      const stock = parseInt(document.getElementById('productStock').value) || 0;
+      
+      if(!name || !desc || !price || !category) return alert('ملء الحقول المطلوبة');
+      
+      const product = {name,description:desc,price,image,category,stock};
+      Products.save(product);
+      
+      document.getElementById('productName').value='';
+      document.getElementById('productDesc').value='';
+      document.getElementById('productPrice').value='';
+      document.getElementById('productImage').value='';
+      document.getElementById('productCategory').value='';
+      document.getElementById('productStock').value='';
+      
+      renderProducts();
+      alert('تم إضافة المنتج بنجاح');
+    });
+
+    window.deleteProduct = deleteProduct;
+    window.TF.Products = Products;
+
+    // Orders management
+    function renderOrders(){
+      const orders = JSON.parse(localStorage.getItem('tf_orders')||'[]');
+      const list = document.getElementById('ordersList');
+      if(!orders.length) return list.innerHTML = '<p class="muted">لا توجد طلبات حالياً</p>';
+      
+      list.innerHTML = orders.map(o=>`
+        <div class="payment-card ${o.status==='delivered'?'verified':o.status==='cancelled'?'rejected':'pending'}">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem">
+            <div>
+              <strong>طلب #${o.id.substr(-8)}</strong><br>
+              <small style="color:var(--muted)">الاسم: ${o.customerName}</small><br>
+              <small style="color:var(--muted)">الهاتف: ${o.customerPhone}</small><br>
+              <small style="color:var(--muted)">المحافظة: ${o.governorate}</small><br>
+              <small style="color:var(--muted)">المدينة: ${o.city}</small>
+            </div>
+            <span style="font-size:1.2rem;font-weight:bold;color:var(--accent2)">${o.total} جنيه</span>
+          </div>
+          
+          <div style="background:var(--papyrus);padding:.8rem;border-radius:6px;margin:1rem 0">
+            <strong style="color:var(--accent)">المنتجات:</strong>
+            ${o.items.map(i=>`<div style="font-size:.9rem;margin:.3rem 0">• ${i.productName} x${i.quantity}</div>`).join('')}
+            <div style="margin-top:.8rem;border-top:1px solid #e0c68c;padding-top:.8rem">
+              <div style="display:flex;justify-content:space-between;font-size:.9rem">
+                <span>المنتجات:</span><span>${o.subtotal} ج.م</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:.9rem">
+                <span>التوصيل:</span><span>90 ج.م</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-weight:bold;margin-top:.5rem">
+                <span>الإجمالي:</span><span>${o.total} ج.م</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.8rem;align-items:center;justify-content:space-between">
+            <span style="padding:.4rem .8rem;border-radius:6px;font-size:.9rem;${o.status==='delivered'?'background:#4caf50;color:#fff':''}${o.status==='pending'?'background:#ff9800;color:#fff':''}${o.status==='cancelled'?'background:#f44336;color:#fff':''}">${o.status==='delivered'?'✓ تم التوصيل':o.status==='pending'?'⏳ قيد الانتظار':'❌ ملغاه'}</span>
+            ${o.status==='pending'?`<div style="display:flex;gap:.6rem"><button class="btn" style="padding:.4rem .8rem;font-size:.9rem" onclick="updateOrderStatus('${o.id}','delivered')">تم التوصيل</button><button class="btn" style="padding:.4rem .8rem;font-size:.9rem" onclick="updateOrderStatus('${o.id}','cancelled')">ملغاه</button></div>`:''}
+          </div>
+          
+          <div style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">
+            📍 ${o.address} - ملاحظات: ${o.notes||'بلا ملاحظات'}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateOrderStatus(id, status){
+      const orders = JSON.parse(localStorage.getItem('tf_orders')||'[]');
+      const order = orders.find(o => o.id === id);
+      if(order){
+        order.status = status;
+        localStorage.setItem('tf_orders', JSON.stringify(orders));
+        renderOrders();
+      }
+    }
+
+    window.updateOrderStatus = updateOrderStatus;
+    
+    render();
+    // Theme toggle and Year
+    document.addEventListener('DOMContentLoaded',()=>{
+      const yearEl = document.getElementById('year');
+      if(yearEl) yearEl.textContent = new Date().getFullYear();
+      
+      const themeBtn = document.getElementById('themeToggle');
+      if(themeBtn){
+        themeBtn.onclick = function(){
+          document.body.classList.toggle('dark');
+          localStorage.setItem('tf_theme',document.body.classList.contains('dark')?'dark':'light');
+        };
+        if(localStorage.getItem('tf_theme')==='dark') document.body.classList.add('dark');
+      }
+    });
+    </script>
+  </body>
+  </html>

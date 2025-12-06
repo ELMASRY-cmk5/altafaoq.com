@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إنشاء حساب أدمن — التفوق</title>
+  <style>
+    :root{
+      --accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --card: var(--card-dark);
+        --muted: var(--muted-dark);
+      }
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    
+    .site-header{background:linear-gradient(90deg,#fffbe6 70%,#f5e6c2 100%);box-shadow:0 2px 8px rgba(199,167,108,.08);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border)}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;padding:1.3rem 1.7rem}
+    .brand{margin:0;font-size:2.3rem;letter-spacing:1px;display:flex;align-items:center;gap:.7rem;font-family:"Cairo",serif;text-decoration:none;color:var(--accent)}
+    .brand img{height:2.7rem;vertical-align:middle;filter:drop-shadow(0 2px 6px #c7a76c80)}
+    .brand-accent{color:var(--accent2);font-weight:bold;text-shadow:0 2px 8px #c7a76c60}
+    
+    nav{display:flex;align-items:center;gap:1.3rem}
+    nav a{font-size:1.15rem;text-decoration:none;color:var(--muted);transition:.2s;font-weight:500;letter-spacing:.5px}
+    nav a.active,nav a:hover{color:var(--accent2);text-shadow:0 2px 8px #c7a76c40}
+    
+    .theme-toggle{cursor:pointer;font-size:1.5rem;background:none;border:none;color:var(--accent);padding:.5rem}
+    .theme-toggle:hover{transform:scale(1.15);transition:.2s}
+    
+    .container{max-width:1150px;margin:0 auto;padding:1.7rem}
+    
+    .signup-section{padding:4rem 0;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 120px)}
+    
+    .signup-content{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:900px;width:100%;align-items:center}
+    
+    .signup-text h1{font-size:2.5rem;color:var(--accent);margin-bottom:1.2rem;line-height:1.3}
+    .signup-text p{color:var(--muted);font-size:1.15rem;line-height:1.7;margin-bottom:1.5rem}
+    .signup-text a{color:var(--accent2);font-weight:600;text-decoration:none}
+    .signup-text a:hover{text-decoration:underline}
+    
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem;border:2px solid var(--pharaoh);transition:.2s}
+    body.dark .card{background:var(--card-dark);color:#f3f6fa;border-color:#444}
+    
+    .card h2{text-align:center;margin-bottom:1.5rem;font-size:1.4rem;color:var(--accent)}
+    
+    label{display:block;margin-bottom:.6rem;font-weight:600;color:var(--accent)}
+    
+    input,select,textarea{width:100%;padding:.8rem 1rem;border:1.5px solid var(--pharaoh);border-radius:8px;font-size:1rem;margin-bottom:1.2rem;background:var(--papyrus);color:#222;transition:.2s;font-family:var(--font)}
+    body.dark input,body.dark select,body.dark textarea{background:#303a47;border-color:#404a57;color:#e8e8e8}
+    input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent2);box-shadow:0 0 8px #ffd60040}
+    
+    .btn{display:inline-block;padding:.8rem 1.4rem;border-radius:10px;border:2px solid var(--pharaoh);background:var(--accent2);color:#1a237e;font-weight:600;font-size:1rem;box-shadow:var(--shadow);transition:.2s;cursor:pointer;text-decoration:none;width:100%;text-align:center}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(26,35,126,.2)}
+    .btn.secondary{background:var(--accent);color:#fff}
+    .btn.outline{background:var(--papyrus);color:var(--accent)}
+    body.dark .btn{background:var(--accent2);color:#1a237e}
+    
+    .form-link{text-align:center;margin-top:1.2rem;color:var(--muted);font-size:.95rem}
+    .form-link a{color:var(--accent);text-decoration:none;font-weight:600}
+    .form-link a:hover{text-decoration:underline}
+    
+    #msg{font-size:.9rem;min-height:1.2rem;display:block;margin-top:0.8rem}
+    .success{color:#4caf50}
+    .error{color:#d32f2f}
+    
+    footer{background:var(--card);padding:2rem;text-align:center;margin-top:3rem;border-top:2px solid var(--pharaoh)}
+    body.dark footer{background:var(--card-dark);color:#f3f6fa;border-top-color:#444}
+    footer p{color:var(--muted);margin-bottom:.5rem}
+    footer a{color:var(--accent);text-decoration:none}
+    footer a:hover{text-decoration:underline}
+    
+    .info-box{background:var(--papyrus);border-left:4px solid var(--accent2);padding:1rem;border-radius:8px;margin-bottom:1.5rem}
+    .info-box h4{color:var(--accent);margin-bottom:.5rem}
+    .info-box p{color:var(--muted);font-size:.9rem;margin:0}
+    body.dark .info-box{background:#303a47}
+    
+    @media(max-width:768px){
+      .signup-content{grid-template-columns:1fr;text-align:center}
+      .signup-text h1{font-size:2rem}
+      .signup-section{padding:2rem 0}
+      nav{flex-wrap:wrap}
+    }
+    
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a,#23283a)}
+    body.dark nav a{color:var(--muted-dark)}
+    body.dark nav a.active,body.dark nav a:hover{color:var(--accent2)}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/home.html" class="brand">
+        <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+        منصة <span class="brand-accent">التفوق</span>
+      </a>
+      <nav>
+        <a href="/home.html">الرئيسية</a>
+        <a href="/login.html">دخول</a>
+        <a href="/admin-signup.html" class="active">إنشاء حساب أدمن</a>
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="signup-section">
+    <div class="container">
+      <div class="signup-content">
+        <div class="signup-text">
+          <h1>إنشاء حساب مدير جديد</h1>
+          <p>قم بإنشاء حساب جديد للوصول إلى لوحة التحكم الخاصة بالمدير والإشراف على المنصة.</p>
+          <p><strong>ملاحظة:</strong> هذا الحساب يتطلب موافقة من الإدارة العليا.</p>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="info-box">
+              <h4>📋 معلومات مهمة</h4>
+              <p>تأكد من إدخال البيانات الصحيحة. سيتم التحقق من هويتك قبل تفعيل الحساب.</p>
+            </div>
+
+            <h2>إنشاء حساب جديد</h2>
+            <form id="signupForm">
+              <label>الاسم الكامل</label>
+              <input id="fullName" type="text" required placeholder="مثال: أحمد محمد علي" />
+              
+              <label>البريد الإلكتروني</label>
+              <input id="email" type="email" required placeholder="admin@example.com" />
+              
+              <label>رقم الهاتف</label>
+              <input id="phone" type="tel" required placeholder="01012345678" />
+              
+              <label>اسم المستخدم (لتسجيل الدخول)</label>
+              <input id="username" type="text" required placeholder="admin_username" />
+              
+              <label>كلمة المرور</label>
+              <input id="password" type="password" required placeholder="كلمة مرور قوية" />
+              
+              <label>تأكيد كلمة المرور</label>
+              <input id="confirmPassword" type="password" required placeholder="أدخل كلمة المرور مجدداً" />
+              
+              <label>المؤهل التعليمي</label>
+              <select id="qualification" required>
+                <option value="">-- اختر المؤهل --</option>
+                <option value="bsc">بكالوريوس</option>
+                <option value="master">ماجستير</option>
+                <option value="phd">دكتوراه</option>
+                <option value="other">أخرى</option>
+              </select>
+              
+              <label>المجال التخصصي</label>
+              <input id="specialization" type="text" placeholder="مثال: رياضيات، علوم..." />
+              
+              <label>سنوات الخبرة</label>
+              <input id="experience" type="number" min="0" placeholder="عدد السنوات" />
+              
+              <label>سبب طلب حساب أدمن</label>
+              <textarea id="reason" required placeholder="اشرح لماذا تريد حساب أدمن..."></textarea>
+              
+              <button type="submit" class="btn secondary">إنشاء الحساب</button>
+              <p id="msg" style="text-align:center"></p>
+              
+              <div class="form-link">
+                لديك حساب بالفعل؟ <a href="/login.html">سجل الدخول هنا</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2024 منصة التفوق — جميع الحقوق محفوظة</p>
+    <p style="font-family:Georgia,Garamond,serif;letter-spacing:2px;color:var(--pharaoh);font-weight:bold">Developed by ELMASRY 🏛️</p>
+  </footer>
+
+  <script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtS52bC8UEZ4EG4qK3tk7jV7iF1bPRTx8",
+    authDomain: "altafaouq.firebaseapp.com",
+    projectId: "altafaouq",
+    storageBucket: "altafaouq.firebasestorage.app",
+    messagingSenderId: "125346827754",
+    appId: "1:125346827754:web:4286d194fa05094fe4b693",
+    measurementId: "G-PNQS7VTSHT"
+  };
+
+  // Load Firebase
+  let db, collection, addDoc, serverTimestamp;
+  
+  async function initFirebase() {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js');
+    const { getFirestore, collection: col, addDoc: add, serverTimestamp: ts } = await import('https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js');
+    
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    collection = col;
+    addDoc = add;
+    serverTimestamp = ts;
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    if(themeBtn){
+      themeBtn.onclick = function(){
+        document.body.classList.toggle('dark');
+        localStorage.setItem('tf_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      };
+      if(localStorage.getItem('tf_theme') === 'dark') document.body.classList.add('dark');
+    }
+
+    // Initialize Firebase
+    await initFirebase();
+
+    // Handle signup
+    const form = document.getElementById('signupForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const qualification = document.getElementById('qualification').value;
+      const specialization = document.getElementById('specialization').value.trim();
+      const experience = document.getElementById('experience').value;
+      const reason = document.getElementById('reason').value.trim();
+
+      // Validation
+      if(!fullName || !email || !phone || !username || !password || !qualification || !reason) {
+        msg.textContent = '❌ يرجى ملء جميع الحقول المطلوبة';
+        msg.classList.add('error');
+        return;
+      }
+
+      if(password.length < 6) {
+        msg.textContent = '❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+        msg.classList.add('error');
+        return;
+      }
+
+      if(password !== confirmPassword) {
+        msg.textContent = '❌ كلمات المرور غير متطابقة';
+        msg.classList.add('error');
+        return;
+      }
+
+      try {
+        msg.textContent = '⏳ جاري إنشاء الحساب...';
+        msg.classList.remove('error', 'success');
+
+        // Save to Firebase
+        const adminsRef = collection(db, 'admin_requests');
+        const docRef = await addDoc(adminsRef, {
+          fullName,
+          email,
+          phone,
+          username,
+          password: btoa(password), // Simple encoding (NOT secure for production!)
+          qualification,
+          specialization,
+          experience: parseInt(experience) || 0,
+          reason,
+          status: 'pending',
+          createdAt: serverTimestamp(),
+          role: 'admin_pending'
+        });
+
+        // Also save locally
+        const localAdmins = JSON.parse(localStorage.getItem('tf_admin_requests') || '[]');
+        localAdmins.push({
+          id: docRef.id,
+          fullName,
+          email,
+          phone,
+          username,
+          qualification,
+          specialization,
+          experience,
+          reason,
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('tf_admin_requests', JSON.stringify(localAdmins));
+
+        msg.textContent = '✅ تم إرسال طلب إنشاء الحساب بنجاح! يرجى انتظار الموافقة من الإدارة.';
+        msg.classList.add('success');
+        
+        form.reset();
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 2000);
+
+      } catch(err) {
+        console.error('Error:', err);
+        msg.textContent = '❌ خطأ: ' + (err.message || 'حدث خطأ ما');
+        msg.classList.add('error');
+      }
+    });
+  });
+  </script>
+</body>
+</html>

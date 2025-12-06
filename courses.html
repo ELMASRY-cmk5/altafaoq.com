@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>الكورسات — التفوق</title>
+    <style>
+      :root {
+        --accent: #1a237e;
+        --accent2: #ffd600;
+        --bg: #f7f3e3;
+        --bg-dark: #181c24;
+        --card: #ffffff;
+        --card-dark: #252c38;
+        --text: #222222;
+        --text-dark: #e8e8e8;
+        --muted: #666;
+        --muted-dark: #bbb;
+        --pharaoh: #c7a76c;
+        --papyrus: #f5e6c2;
+        --radius: 8px;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+      }
+      
+      nav {
+        background-color: var(--card);
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s;
+        border-bottom: 2px solid var(--pharaoh);
+      }
+      
+      body.dark-mode nav {
+        background-color: var(--card-dark);
+      }
+      
+      .brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .brand img {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .brand-accent {
+        color: var(--accent2);
+      }
+      
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        align-items: center;
+      }
+      
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 1.15rem;
+        letter-spacing: 0.5px;
+        transition: color 0.3s;
+      }
+      
+      body.dark-mode .nav-links a {
+        color: var(--text-dark);
+      }
+      
+      .nav-links a:hover {
+        color: var(--accent2);
+      }
+      
+      .theme-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent2), #ffb300);
+        border: 2px solid var(--pharaoh);
+        cursor: pointer;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        box-shadow: 0 2px 8px #c7a76c30;
+      }
+      
+      .theme-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px #c7a76c50;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      .page-header {
+        text-align: center;
+        padding: 2rem 0;
+        background: linear-gradient(120deg, #f7f3e3 60%, #f5e6c2 100%);
+        border-bottom: 2px solid var(--pharaoh);
+        margin-bottom: 2rem;
+        border-radius: 8px;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--accent);
+      }
+      
+      .page-header p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+      
+      body.dark-mode .page-header p {
+        color: #bbb;
+      }
+      
+      .courses-section {
+        margin-bottom: 3rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        color: var(--accent);
+        border-bottom: 2px solid var(--pharaoh);
+        padding-bottom: 0.5rem;
+      }
+      
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+      }
+      
+      .course-card {
+        background-color: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        border: 2px solid var(--pharaoh);
+      }
+      
+      body.dark-mode .course-card {
+        background-color: var(--card-dark);
+      }
+      
+      .course-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+      
+      .course-image {
+        width: 100%;
+        height: 180px;
+        background-color: var(--papyrus);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        overflow: hidden;
+      }
+      
+      .course-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .course-content {
+        padding: 1.5rem;
+      }
+      
+      .course-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      
+      .course-description {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+      
+      body.dark-mode .course-description {
+        color: var(--muted-dark);
+      }
+      
+      .course-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .course-lessons {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      
+      .course-price {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--accent2);
+      }
+      
+      .course-footer {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      
+      .btn-course {
+        flex: 1;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        text-align: center;
+      }
+      
+      .btn-subscribe {
+        background-color: var(--accent);
+        color: white;
+        border: 1px solid var(--pharaoh);
+      }
+      
+      .btn-subscribe:hover {
+        background-color: #0d1b5e;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+      }
+      
+      .btn-enrolled {
+        background-color: var(--accent2);
+        color: #222;
+        border: 1px solid var(--pharaoh);
+      }
+      
+      .btn-enrolled:hover {
+        background-color: #ffcc00;
+        transform: translateY(-2px);
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--muted);
+      }
+      
+      .empty-state p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      
+      footer {
+        background-color: var(--card);
+        padding: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+        border-top: 2px solid var(--pharaoh);
+        transition: background-color 0.3s;
+      }
+      
+      body.dark-mode footer {
+        background-color: var(--card-dark);
+        border-top-color: #404a57;
+      }
+      
+      footer p {
+        color: #666;
+        margin: 0.5rem 0;
+      }
+      
+      body.dark-mode footer p {
+        color: #bbb;
+      }
+      
+      .pharaonic-font {
+        font-family: 'Georgia', 'Garamond', serif;
+        letter-spacing: 2px;
+        color: var(--pharaoh);
+        font-weight: bold;
+      }
+      
+      .btn-back {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background-color: var(--accent);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s;
+        border: 1px solid var(--pharaoh);
+      }
+      
+      .btn-back:hover {
+        background-color: #0d1b5e;
+        transform: translateY(-2px);
+      }
+      
+      @media (max-width: 900px) {
+        .courses-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .page-header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <span class="brand">
+          <img src="https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/pharaoh-logo.svg" alt="شعار التفوق الفرعوني" />
+          منصة <span class="brand-accent">التفوق</span>
+        </span>
+        <div class="nav-links">
+          <a href="/home.html">الرئيسية</a>
+          <a href="/store.html">التفوق ستور</a>
+          <a href="/login.html">تسجيل الدخول</a>
+          <a href="/signup.html">إنشاء حساب</a>
+          <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">🌓</button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <a href="/home.html" class="btn-back">← العودة إلى الرئيسية</a>
+      
+      <div class="page-header">
+        <h1 id="gradeTitle">الكورسات</h1>
+        <p id="gradeDesc">اختر كورسك وابدأ التعلم</p>
+      </div>
+
+      <div class="courses-section">
+        <h2 class="section-title">الكورسات المشترك بها</h2>
+        <div class="courses-grid" id="enrolledCourses"></div>
+      </div>
+
+      <div class="courses-section">
+        <h2 class="section-title">الكورسات المتاحة</h2>
+        <div class="courses-grid" id="availableCourses"></div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© <span id="year"></span> منصة التفوق — جميع الحقوق محفوظة</p>
+      <p class="pharaonic-font">Developed by ELMASRY</p>
+    </footer>
+
+    <script>
+      // Auth & Data Management
+      const Auth = (function(){
+        return {
+          login: async ({studentNumber, password}) => {
+            const users = JSON.parse(localStorage.getItem('tf_users')||'[]');
+            const u = users.find(x=>x.studentNumber===studentNumber && x.password===password && x.status==='active');
+            if(!u) throw new Error('بيانات الدخول غير صحيحة');
+            const user = {id:u.id, name:u.name, studentNumber:u.studentNumber, role:u.role};
+            localStorage.setItem('tf_current', JSON.stringify(user));
+            return user;
+          },
+          logout: ()=>{ localStorage.removeItem('tf_current') },
+          currentUser: ()=> JSON.parse(localStorage.getItem('tf_current')||'null')
+        }
+      })();
+
+      const Courses = (function(){
+        return {
+          list: () => JSON.parse(localStorage.getItem('tf_courses')||'[]'),
+          save: (course) => {
+            const all = Courses.list();
+            if(!course.id) course.id = 'c_' + Date.now();
+            const idx = all.findIndex(c => c.id === course.id);
+            if(idx >= 0) all[idx] = course;
+            else all.push(course);
+            localStorage.setItem('tf_courses', JSON.stringify(all));
+            return course;
+          },
+          delete: (id) => {
+            let all = Courses.list().filter(c => c.id !== id);
+            localStorage.setItem('tf_courses', JSON.stringify(all));
+          },
+          getByGrade: (grade) => Courses.list().filter(c => c.grade === grade),
+          getByStudent: (studentId) => {
+            const enrollments = JSON.parse(localStorage.getItem('tf_enrollments')||'[]');
+            return enrollments.filter(e => e.studentId === studentId).map(e => e.courseId);
+          }
+        }
+      })();
+
+      const Enrollments = (function(){
+        return {
+          list: () => JSON.parse(localStorage.getItem('tf_enrollments')||'[]'),
+          enroll: (studentId, courseId) => {
+            const all = Enrollments.list();
+            if(!all.find(e => e.studentId === studentId && e.courseId === courseId)) {
+              all.push({id: 'e_' + Date.now(), studentId, courseId, enrolledAt: new Date().toISOString()});
+              localStorage.setItem('tf_enrollments', JSON.stringify(all));
+            }
+          },
+          isEnrolled: (studentId, courseId) => {
+            const all = Enrollments.list();
+            return all.some(e => e.studentId === studentId && e.courseId === courseId);
+          }
+        }
+      })();
+
+      window.TF = {Auth, Courses, Enrollments};
+
+      // Page logic
+      document.addEventListener('DOMContentLoaded', () => {
+        const yearEl = document.getElementById('year');
+        if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+        // Theme toggle
+        const themeBtn = document.getElementById('themeToggle');
+        if(themeBtn){
+          themeBtn.onclick = function(){
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('tf_theme', document.body.classList.contains('dark-mode')?'dark':'light');
+          };
+          if(localStorage.getItem('tf_theme')==='dark') document.body.classList.add('dark-mode');
+        }
+
+        // Initialize sample courses if empty
+        const courses = Courses.list();
+        if(courses.length === 0) {
+          const sampleCourses = [
+            {id:'c_1',title:'الرياضيات - الجبر',description:'درس شامل في الجبر والمعادلات',grade:'1',lessons:12,price:150,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-math.svg'},
+            {id:'c_2',title:'الفيزياء - الميكانيكا',description:'أساسيات الميكانيكا والقوى',grade:'1',lessons:10,price:120,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-physics.svg'},
+            {id:'c_3',title:'الكيمياء - المواد',description:'كيمياء المواد والعناصر',grade:'1',lessons:15,price:180,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-chemistry.svg'},
+            {id:'c_4',title:'اللغة الإنجليزية',description:'قواعد اللغة والمحادثة',grade:'2',lessons:20,price:200,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-english.svg'},
+            {id:'c_5',title:'الأحياء - الخلية',description:'دراسة الخلية والأنسجة',grade:'2',lessons:14,price:160,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-biology.svg'},
+            {id:'c_6',title:'التاريخ - العصور الإسلامية',description:'الحضارة الإسلامية والفترات',grade:'3',lessons:18,price:190,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-history.svg'},
+            {id:'c_7',title:'الجيولوجيا - الأرض',description:'دراسة طبقات الأرض والمعادن',grade:'3',lessons:12,price:140,image:'https://cdn.jsdelivr.net/gh/ELMASRY-cmk5/placeholder-images/course-geology.svg'}
+          ];
+          sampleCourses.forEach(c => Courses.save(c));
+        }
+
+        // Get grade from URL
+        const params = new URLSearchParams(window.location.search);
+        const grade = params.get('grade');
+        
+        if(!grade) {
+          window.location.href = '/home.html';
+          return;
+        }
+
+        const gradeNames = {
+          '1': 'الصف الأول الثانوي',
+          '2': 'الصف الثاني الثانوي',
+          '3': 'الصف الثالث الثانوي'
+        };
+
+        const gradeTitle = document.getElementById('gradeTitle');
+        const gradeDesc = document.getElementById('gradeDesc');
+        if(gradeTitle) gradeTitle.textContent = gradeNames[grade] + ' - الكورسات';
+        if(gradeDesc) gradeDesc.textContent = 'اختر كورسك المناسب وابدأ رحلتك التعليمية';
+
+        // Load courses
+        const user = Auth.currentUser();
+        const coursesList = Courses.getByGrade(grade);
+        const enrolledIds = user ? Courses.getByStudent(user.id) : [];
+
+        const enrolledCourses = coursesList.filter(c => enrolledIds.includes(c.id));
+        const availableCourses = coursesList.filter(c => !enrolledIds.includes(c.id));
+
+        renderCourses(enrolledCourses, 'enrolledCourses', enrolledIds, user);
+        renderCourses(availableCourses, 'availableCourses', enrolledIds, user);
+      });
+
+      function renderCourses(courses, containerId, enrolledIds, user) {
+        const container = document.getElementById(containerId);
+        if(!container) return;
+
+        if(courses.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>لا توجد كورسات في هذا القسم</p></div>';
+          return;
+        }
+
+        container.innerHTML = courses.map(course => `
+          <div class="course-card">
+            <div class="course-image">
+              ${course.image ? `<img src="${course.image}" alt="${course.title}" />` : '📚'}
+            </div>
+            <div class="course-content">
+              <div class="course-title">${course.title}</div>
+              <div class="course-description">${course.description}</div>
+              <div class="course-meta">
+                <span class="course-lessons">👨‍🏫 ${course.lessons || 0} درس</span>
+                <span class="course-price">${course.price ? course.price + ' ج.م' : 'مجاني'}</span>
+              </div>
+              <div class="course-footer">
+                ${enrolledIds.includes(course.id) 
+                  ? `<button class="btn-course btn-enrolled" onclick="alert('أنت مشترك بهذا الكورس')">✓ مشترك</button>`
+                  : `<button class="btn-course btn-subscribe" onclick="enrollCourse('${course.id}', '${user ? user.id : 'guest'}', '${user ? user.name : 'guest'}')">اشترك الآن</button>`
+                }
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function enrollCourse(courseId, studentId, studentName) {
+        if(studentId === 'guest') {
+          alert('يرجى تسجيل الدخول أولاً');
+          window.location.href = '/login.html';
+          return;
+        }
+        
+        Enrollments.enroll(studentId, courseId);
+        alert('تم الاشتراك في الكورس بنجاح!');
+        location.reload();
+      }
+    </script>
+  </body>
+</html>

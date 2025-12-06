@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>حسابي — منصة التفوق</title>
+  <style>
+    :root{
+      --accent:#1a237e;--accent2:#ffd600;--bg:#f7f3e3;--bg-dark:#181c24;--card:#fffbe6;--card-dark:#23283a;--muted:#6b7280;--muted-dark:#b0b6c3;--radius:16px;--shadow:0 8px 40px rgba(12,32,63,.13);--font:"Cairo", "Segoe UI", Arial, sans-serif;
+      --pharaoh:#c7a76c;--papyrus:#f5e6c2;--border:#e0c68c;--gold:#ffd700;--sand:#d4a574;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --card: var(--card-dark);
+        --muted: var(--muted-dark);
+      }
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#222;font-family:var(--font);transition:.2s}
+    
+    /* الـ Header الفرعوني */
+    .site-header{
+      background:linear-gradient(90deg,#fffbe6 0%,#f5e6c2 50%,#fffbe6 100%);
+      box-shadow:0 4px 15px rgba(199,167,108,.25);
+      position:sticky;top:0;z-index:10;border-bottom:4px solid var(--gold);
+      padding:1.5rem 2rem;
+      position:relative;
+      overflow:hidden;
+    }
+    .site-header::before{
+      content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+      background:repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(199,167,108,.05) 20px,rgba(199,167,108,.05) 40px);
+      pointer-events:none;
+    }
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    
+    .brand{margin:0;font-size:2.2rem;letter-spacing:2px;display:flex;align-items:center;gap:1rem;font-family:"Cairo",serif;text-decoration:none;color:var(--accent);font-weight:bold;text-shadow:2px 2px 4px rgba(0,0,0,.05)}
+    .brand img{height:2.5rem;vertical-align:middle;filter:drop-shadow(0 3px 8px rgba(199,167,108,.3))}
+    .brand-accent{color:var(--gold);text-shadow:1px 1px 2px rgba(0,0,0,.1)}
+    
+    .header-right{display:flex;align-items:center;gap:2rem}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{text-decoration:none;color:var(--accent);font-weight:600;transition:.3s;position:relative;font-size:1.05rem}
+    .nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:var(--gold);transition:.3s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-links a:hover::after{width:100%}
+    
+    .logout-btn{padding:.6rem 1.2rem;background:var(--gold);color:var(--accent);border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+    .logout-btn:hover{background:var(--accent2);transform:scale(1.05)}
+    
+    .container{max-width:1200px;margin:0 auto;padding:2rem}
+    
+    .student-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem}
+    
+    .nav-card{
+      background:var(--card);border:2px solid var(--pharaoh);border-radius:var(--radius);
+      padding:1.5rem;text-align:center;cursor:pointer;transition:.3s;
+      box-shadow:var(--shadow);
+    }
+    body.dark .nav-card{background:var(--card-dark);border-color:#444;color:#f3f6fa}
+    .nav-card:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(199,167,108,.2);background:var(--accent2)}
+    .nav-card:hover h3{color:var(--accent)}
+    .nav-card h3{color:var(--accent);font-size:1.25rem;margin-bottom:.5rem;transition:.2s}
+    .nav-card p{color:var(--muted);font-size:.95rem}
+    
+    .grades-section{margin-top:2rem;padding:2rem;background:var(--card);border:2px solid var(--pharaoh);border-radius:var(--radius);box-shadow:var(--shadow)}
+    body.dark .grades-section{background:var(--card-dark);border-color:#444;color:#f3f6fa}
+    
+    .grades-title{font-size:1.8rem;color:var(--accent);margin-bottom:1.5rem;text-align:center;font-family:"Cairo",serif}
+    
+    .grades-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem}
+    
+    .grade-item{
+      background:var(--papyrus);border:2px solid var(--pharaoh);border-radius:12px;padding:1.5rem;text-align:center;transition:.3s;
+    }
+    body.dark .grade-item{background:rgba(255,255,255,.05);border-color:#555}
+    .grade-item:hover{transform:scale(1.05);box-shadow:0 8px 25px rgba(199,167,108,.15)}
+    
+    .grade-item h4{color:var(--accent);font-size:1.15rem;margin-bottom:.8rem}
+    .grade-item p{color:var(--muted);margin-bottom:.5rem}
+    
+    .select-grade{
+      margin-top:2rem;padding:2rem;background:var(--card);border:2px solid var(--pharaoh);border-radius:var(--radius);box-shadow:var(--shadow);
+    }
+    body.dark .select-grade{background:var(--card-dark);border-color:#444;color:#f3f6fa}
+    
+    .select-grade h3{font-size:1.5rem;color:var(--accent);margin-bottom:1.5rem;text-align:center}
+    
+    .grade-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+    
+    .grade-btn{
+      padding:1rem;border:2px solid var(--pharaoh);background:var(--papyrus);color:var(--accent);
+      border-radius:10px;cursor:pointer;font-weight:600;font-size:1.1rem;transition:.3s;
+      font-family:var(--font);
+    }
+    .grade-btn:hover{background:var(--accent2);transform:translateY(-3px);box-shadow:0 8px 20px rgba(199,167,108,.2)}
+    
+    .courses-view{display:none;margin-top:2rem}
+    .courses-view.active{display:block;animation:fadeIn .3s}
+    
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    
+    .back-btn{
+      display:inline-block;margin-bottom:1.5rem;padding:.6rem 1.2rem;background:var(--muted);
+      color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s;
+    }
+    .back-btn:hover{background:var(--accent);transform:scale(1.05)}
+    
+    .courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+    
+    .course-card{
+      background:var(--card);border:2px solid var(--pharaoh);border-radius:var(--radius);
+      padding:1.5rem;box-shadow:var(--shadow);transition:.3s;position:relative;
+    }
+    body.dark .course-card{background:var(--card-dark);border-color:#444;color:#f3f6fa}
+    .course-card:hover{transform:translateY(-8px);box-shadow:0 15px 40px rgba(199,167,108,.2)}
+    
+    .course-image{width:100%;height:150px;background:linear-gradient(135deg,var(--gold),var(--sand));border-radius:10px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff}
+    
+    .course-title{font-size:1.3rem;color:var(--accent);margin-bottom:.5rem;font-weight:600}
+    .course-desc{color:var(--muted);font-size:.95rem;margin-bottom:1rem;line-height:1.5}
+    .course-price{font-size:1.25rem;color:var(--gold);font-weight:bold;margin-bottom:1rem}
+    
+    .subscribe-status{padding:.8rem;border-radius:8px;margin-bottom:1rem;text-align:center;font-weight:600}
+    .status-subscribed{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+    .status-not-subscribed{background:#fff3cd;color:#856404;border:1px solid #ffeaa7}
+    
+    .subscribe-btn{
+      width:100%;padding:.8rem;background:var(--accent2);color:var(--accent);border:none;
+      border-radius:8px;cursor:pointer;font-weight:600;font-size:1rem;font-family:var(--font);
+      transition:.3s;
+    }
+    .subscribe-btn:hover{background:var(--gold);transform:scale(1.02)}
+    .subscribe-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none}
+    
+    .theme-toggle{cursor:pointer;font-size:1.5rem;background:none;border:none;color:var(--accent);padding:.5rem;transition:.2s}
+    .theme-toggle:hover{transform:scale(1.15)}
+    
+    body.dark{background:var(--bg-dark);color:#f3f6fa}
+    body.dark .site-header{background:linear-gradient(90deg,#23283a 0%,#1a1f2e 50%,#23283a 100%)}
+    body.dark .nav-links a{color:var(--accent2)}
+    
+    footer{background:var(--card);padding:1.5rem;text-align:center;margin-top:3rem;border-top:2px solid var(--pharaoh)}
+    body.dark footer{background:var(--card-dark);border-top-color:#444;color:#f3f6fa}
+    footer p{color:var(--muted);margin:0}
+    
+    @media(max-width:768px){
+      .container{padding:1rem}
+      .student-nav{grid-template-columns:1fr}
+      .nav-links{flex-direction:column;gap:1rem}
+      .nav-links a::after{display:none}
+      .grade-buttons{grid-template-columns:repeat(2,1fr)}
+      .courses-grid{grid-template-columns:1fr}
+    }
+  </style>
+  <script src="/advanced-storage.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/home.html" class="brand">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBcTf0pcoW5Bwz1GdzTdJyWqlTc9_RIS2G5Q&s" alt="شعار التفوق" style="height:2.7rem;vertical-align:middle;filter:drop-shadow(0 2px 6px #c7a76c80)" />
+        منصة <span class="brand-accent">التفوق</span>
+      </a>
+      <div class="header-right">
+        <ul class="nav-links">
+          <li><a href="#" onclick="showGrades(event)">📊 درجاتي</a></li>
+          <li><a href="#" onclick="showSubscriptions(event)">📚 اشتراكاتي</a></li>
+          <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+          <li><button class="logout-btn" onclick="logout()">تسجيل خروج</button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="mainView">
+      <div class="select-grade">
+        <h3>🎓 اختر صفتك الدراسية</h3>
+        <div class="grade-buttons">
+          <button class="grade-btn" onclick="selectGrade('1')">الصف الأول الثانوي</button>
+          <button class="grade-btn" onclick="selectGrade('2')">الصف الثاني الثانوي</button>
+          <button class="grade-btn" onclick="selectGrade('3')">الصف الثالث الثانوي</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="coursesView" class="courses-view">
+      <button class="back-btn" onclick="backToGrades()">← العودة</button>
+      <h3 id="selectedGradeTitle" style="color:var(--accent);font-size:1.5rem;margin-bottom:1.5rem;text-align:center"></h3>
+      <div id="coursesList" class="courses-grid"></div>
+    </div>
+
+    <div id="gradesView" class="grades-section" style="display:none">
+      <button class="back-btn" onclick="backToMain()">← العودة</button>
+      <h3 class="grades-title">📊 درجاتي</h3>
+      <div id="gradesList"></div>
+    </div>
+
+    <div id="subscriptionsView" class="grades-section" style="display:none">
+      <button class="back-btn" onclick="backToMain()">← العودة</button>
+      <h3 class="grades-title">📚 اشتراكاتي</h3>
+      <div id="subscriptionsList"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 منصة التفوق التعليمية. جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script>
+    const currentStudent = JSON.parse(localStorage.getItem('currentStudent') || '{}');
+    let selectedGrade = null;
+
+    function selectGrade(grade) {
+      selectedGrade = grade;
+      document.getElementById('mainView').style.display = 'none';
+      document.getElementById('coursesView').classList.add('active');
+      document.getElementById('coursesView').style.display = 'block';
+      
+      const gradeNames = {'1': 'الصف الأول الثانوي', '2': 'الصف الثاني الثانوي', '3': 'الصف الثالث الثانوي'};
+      document.getElementById('selectedGradeTitle').textContent = '📚 كورسات ' + gradeNames[grade];
+      
+      loadCourses();
+    }
+
+    function loadCourses() {
+      const courses = advancedStorage.getCourses() || [];
+      const filteredCourses = courses.filter(c => c.grade === selectedGrade);
+      const studentSubscriptions = currentStudent.subscriptions || [];
+      
+      const coursesList = document.getElementById('coursesList');
+      coursesList.innerHTML = '';
+
+      if (filteredCourses.length === 0) {
+        coursesList.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">لا توجد كورسات متاحة في هذه الصفة الآن</p>';
+        return;
+      }
+
+      filteredCourses.forEach(course => {
+        const isSubscribed = studentSubscriptions.includes(course.id);
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.innerHTML = `
+          <div class="course-image">📖</div>
+          <h4 class="course-title">${course.title}</h4>
+          <p class="course-desc">${course.description || 'لا توجد وصف'}</p>
+          <p class="course-price">💰 ${course.price} جنيه</p>
+          <div class="subscribe-status ${isSubscribed ? 'status-subscribed' : 'status-not-subscribed'}">
+            ${isSubscribed ? '✅ أنت مشترك' : '❌ غير مشترك'}
+          </div>
+          <button class="subscribe-btn" ${isSubscribed ? 'disabled' : ''} onclick="subscribe('${course.id}', '${course.title}', ${course.price})">
+            ${isSubscribed ? 'أنت مشترك بالفعل' : 'اشترك الآن'}
+          </button>
+        `;
+        coursesList.appendChild(card);
+      });
+    }
+
+    function subscribe(courseId, courseTitle, price) {
+      localStorage.setItem('pendingSubscription', JSON.stringify({
+        courseId,
+        courseTitle,
+        price,
+        studentId: currentStudent.id,
+        studentName: currentStudent.name,
+        studentPhone: currentStudent.phone,
+        timestamp: new Date().toISOString()
+      }));
+      window.location.href = '/payment-fawry.html';
+    }
+
+    function backToGrades() {
+      document.getElementById('coursesView').style.display = 'none';
+      document.getElementById('mainView').style.display = 'block';
+      selectedGrade = null;
+    }
+
+    function backToMain() {
+      document.getElementById('gradesView').style.display = 'none';
+      document.getElementById('subscriptionsView').style.display = 'none';
+      document.getElementById('mainView').style.display = 'block';
+    }
+
+    function showGrades(e) {
+      e.preventDefault();
+      document.getElementById('mainView').style.display = 'none';
+      document.getElementById('coursesView').style.display = 'none';
+      document.getElementById('subscriptionsView').style.display = 'none';
+      document.getElementById('gradesView').style.display = 'block';
+      
+      const grades = advancedStorage.getStudentGrades?.(currentStudent.id) || [];
+      const gradesList = document.getElementById('gradesList');
+      
+      if (grades.length === 0) {
+        gradesList.innerHTML = '<p style="text-align:center;color:var(--muted)">لا توجد درجات بعد</p>';
+        return;
+      }
+
+      gradesList.innerHTML = grades.map(g => `
+        <div class="grade-item">
+          <h4>${g.subject}</h4>
+          <p>الدرجة: <strong>${g.score}</strong>/100</p>
+          <p>التاريخ: ${new Date(g.date).toLocaleDateString('ar-EG')}</p>
+        </div>
+      `).join('');
+    }
+
+    function showSubscriptions(e) {
+      e.preventDefault();
+      document.getElementById('mainView').style.display = 'none';
+      document.getElementById('coursesView').style.display = 'none';
+      document.getElementById('gradesView').style.display = 'none';
+      document.getElementById('subscriptionsView').style.display = 'block';
+      
+      const courses = advancedStorage.getCourses() || [];
+      const studentSubscriptions = currentStudent.subscriptions || [];
+      const subscribedCourses = courses.filter(c => studentSubscriptions.includes(c.id));
+      
+      const subscriptionsList = document.getElementById('subscriptionsList');
+      
+      if (subscribedCourses.length === 0) {
+        subscriptionsList.innerHTML = '<p style="text-align:center;color:var(--muted)">لم تشترك في أي كورس حتى الآن</p>';
+        return;
+      }
+
+      subscriptionsList.innerHTML = subscribedCourses.map(c => `
+        <div class="course-card">
+          <div class="course-image">📖</div>
+          <h4 class="course-title">${c.title}</h4>
+          <p class="course-desc">${c.description || 'لا توجد وصف'}</p>
+          <p class="course-price">💰 ${c.price} جنيه</p>
+          <div style="padding:0.8rem;background:#d4edda;border-radius:8px;text-align:center;color:#155724;font-weight:600">
+            ✅ مشترك
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function logout() {
+      localStorage.removeItem('currentStudent');
+      localStorage.removeItem('currentAdmin');
+      window.location.href = '/login.html';
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    // تحميل الثيم المحفوظ
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+
+    // التحقق من تسجيل الدخول
+    if (!currentStudent.id) {
+      window.location.href = '/login.html';
+    }
+  </script>
+</body>
+</html>
